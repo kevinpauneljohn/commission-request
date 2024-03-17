@@ -5,9 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Finding;
 use App\Http\Requests\StoreFindingRequest;
 use App\Http\Requests\UpdateFindingRequest;
+use App\Services\FindingService;
 
 class FindingController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['permission:add finding'])->only(['store']);
+        $this->middleware(['permission:view finding'])->only(['findingsList']);
+    }
     /**
      * Display a listing of the resource.
      */
@@ -27,9 +33,11 @@ class FindingController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreFindingRequest $request)
+    public function store(StoreFindingRequest $request, FindingService $findingService)
     {
-        //
+        return $findingService->createFinding($request->all()) ?
+            response()->json(['success' => true, 'message' => 'Findings successfully added!']) :
+            response()->json(['success' => false, 'message' => 'An error occurred!']);
     }
 
     /**
@@ -62,5 +70,11 @@ class FindingController extends Controller
     public function destroy(Finding $finding)
     {
         //
+    }
+
+    public function findingsList($requestId, FindingService $findingService)
+    {
+        $findings = Finding::where('request_id',$requestId)->get();
+        return $findingService->findingsList($findings);
     }
 }

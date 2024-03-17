@@ -123,9 +123,13 @@ class RequestService
                 {
                     $causer ='<br/>by <span>'.User::find($activity->causer_id)->full_name.'</span>';
                 }
+                $taskTitle = '';
+                if(collect($activity->properties)->has(['task_title']))
+                {
+                    $taskTitle = '<br/><span class="mb-1">'.$activity->properties['task_title'].'</span>';
+                }
 
-                return '<div class="text-bold">'.$activity->description.'</div>
-                <br/><span class="mb-1">'.$activity->properties['task_title'].'</span><br/><span class="text-info">'
+                return '<div class="text-bold">'.$activity->description.'</div>'.$taskTitle.'<br/><span class="text-info">'
                     .$activity->created_at->format('M d, Y g:i:s a').'</span>'.$causer;
             })
             ->rawColumns(['description'])

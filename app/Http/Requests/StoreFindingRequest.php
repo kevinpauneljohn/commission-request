@@ -22,7 +22,7 @@ class StoreFindingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'findings' => ['required|max:5000']
+            'findings' => ['required','max:5000']
         ];
     }
 }
