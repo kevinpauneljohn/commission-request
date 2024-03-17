@@ -29,9 +29,8 @@ class RequestService
             'cheque_number' => $requestData['cheque_number'],
             'bank_name' => $requestData['bank_name'],
             'cheque_amount' => $requestData['cheque_amount'],
-//            'message' => nl2br($requestData['message']),
             'message' => $requestData['message'],
-            'user_id' => auth()->user()->id,
+            'user_id' => !auth()->user()->hasRole('sales director') ? $requestData['sales_director'] : auth()->user()->id,
             'status' => 'pending'
         ]);
     }

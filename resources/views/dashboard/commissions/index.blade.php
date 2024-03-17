@@ -69,6 +69,19 @@
                             </button>
                         </div>
                         <div class="modal-body">
+                            @if(!auth()->user()->hasRole('sales director'))
+                                <div class="row">
+                                    <div class="col-lg-12 sales_director mb-3">
+                                        <label for="sales_director">Sales Director</label>
+                                        <select class="form-control" name="sales_director" id="sales_director" style="width: 100%">
+                                            <option value=""></option>
+                                            @foreach($salesDirectors as $salesDirector)
+                                                <option value="{{$salesDirector->id}}">{{$salesDirector->full_name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            @endif
                             <fieldset class=" mb-5">
                                 <legend>Buyer</legend>
                                 <div class="row">
@@ -299,12 +312,12 @@
                     requestModal.find('button[type=submit]').attr('disabled',false).text('Create')
                 });
 
-                clear_errors('firstname','lastname','project','model_unit','block','lot','total_contract_price','financing','request_type','sd_rate','cheque_number','bank_name','cheque_amount');
+                clear_errors('sales_director','firstname','lastname','project','model_unit','block','lot','total_contract_price','financing','request_type','sd_rate','cheque_number','bank_name','cheque_amount');
             });
 
         </script>
     @endcan
     <script>
-        $('.select2').select2();
+        $('.select2, #sales_director').select2();
     </script>
 @stop

@@ -23,8 +23,8 @@ class RequestController extends Controller
      */
     public function index()
     {
-
-        return view('dashboard.commissions.index');
+        $salesDirectors = User::whereHas("roles", function($q){ $q->where("name","=","sales director"); })->get();
+        return view('dashboard.commissions.index',compact('salesDirectors'));
     }
 
     /**

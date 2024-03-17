@@ -25,6 +25,7 @@ class UserReqRequest extends FormRequest
     public function rules(Request $request): array
     {
         return [
+            'sales_director' => [Rule::requiredIf(!auth()->user()->hasRole('sales director'))],
             'firstname' => ['required'],
             'lastname' => ['required'],
             'project' => ['required'],
