@@ -42,7 +42,7 @@ class PermissionRoleSeeder extends Seeder
         //end permissions
 
         //Permissions
-        Permission::create(['name' => 'view request'])->assignRole(['sales director']);
+        Permission::create(['name' => 'view request'])->assignRole(['sales director','business admin']);
         Permission::create(['name' => 'add request'])->assignRole(['sales director']);
         Permission::create(['name' => 'edit request'])->assignRole(['sales director']);
         Permission::create(['name' => 'delete request'])->assignRole(['sales director']);

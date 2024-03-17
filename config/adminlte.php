@@ -320,6 +320,11 @@ return [
 //        ],
 //        ['header' => 'account_settings'],
         [
+            'text' => 'Dashboard',
+            'route'  => 'home',
+            'icon' => 'fa fa-tachometer-alt ',
+        ],
+        [
             'text' => 'User Management',
             'route'  => 'user.index',
             'icon' => 'fas fa-fw fa-users',
