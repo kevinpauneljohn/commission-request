@@ -5,12 +5,12 @@
 @section('content_header')
     <div class="row mb-2">
         <div class="col-sm-6">
-            <h3 class="text-cyan"><i class="fas fa-fw fa-tasks"></i> Commission Request</h3>
+            <h3>Requests</h3>
         </div>
         <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Dashboard</a> </li>
-                <li class="breadcrumb-item active">Commission Request</li>
+                <li class="breadcrumb-item active">Requests</li>
             </ol>
         </div>
     </div>

@@ -296,10 +296,10 @@ return [
 //            'text'         => 'search',
 //            'topnav_right' => true,
 //        ],
-        [
-            'type'         => 'fullscreen-widget',
-            'topnav_right' => true,
-        ],
+//        [
+//            'type'         => 'fullscreen-widget',
+//            'topnav_right' => true,
+//        ],
 
         // Sidebar items:
 //        [
@@ -326,7 +326,7 @@ return [
             'can' => 'view user'
         ],
         [
-            'text' => 'Commission Request',
+            'text' => 'Requests',
             'route'  => 'request.index',
             'icon' => 'fas fa-fw fa-tasks',
             'key'  => 'request',
