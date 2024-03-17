@@ -1,0 +1,7 @@
+.required{
+    color:red;
+}
+
+.dataTables_wrapper{
+    overflow-x:auto;
+}
