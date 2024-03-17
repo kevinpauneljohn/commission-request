@@ -50,7 +50,7 @@ class UserSeeder extends Seeder
             'firstname' => 'admin',
             'lastname' => 'admin',
             'email' => 'admin@gmail.com',
-            'username' => 'hello',
+            'username' => 'admin',
             'password' => 123
         ]);
 
