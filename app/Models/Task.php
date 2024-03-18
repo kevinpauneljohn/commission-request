@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -46,5 +47,15 @@ class Task extends Model
     public function actionTakens()
     {
         return $this->hasMany(ActionTaken::class);
+    }
+
+    public function setDueDateAttribute($value)
+    {
+        $this->attributes['due_date'] = Carbon::parse($value)->format('Y-m-d');
+    }
+
+    public function getDueDateAttribute($value)
+    {
+        return Carbon::parse($value)->format('m/d/Y');
     }
 }

@@ -70,107 +70,76 @@
             </div>
         </div>
         <div class="col-lg-9">
-            <div class="card card-info card-outline">
-                <div class="card-header">
-
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-4 mt-3">
-                            <label for="buyer">Buyer</label>
-                            <input type="text" id="buyer" class="form-control" value="{{ucwords($requestDetail->buyer->firstname.' '.$requestDetail->buyer->lastname)}}" readonly>
-                        </div>
-                        <div class="col-lg-4 mt-3">
-                            <label for="project">Project</label>
-                            <input type="text" id="project" class="form-control" value="{{ucwords($requestDetail->project)}}" readonly>
-                        </div>
-                        <div class="col-lg-4 mt-3">
-                            <label for="model_unit">Model Unit</label>
-                            <input type="text" id="model_unit" class="form-control" value="{{ucwords($requestDetail->model_unit)}}" readonly>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-4 mt-3">
-                            <label for="buyer">Buyer</label>
-                            <input type="text" id="buyer" class="form-control" value="{{ucwords($requestDetail->buyer->firstname.' '.$requestDetail->buyer->lastname)}}" readonly>
-                        </div>
-                        <div class="col-lg-4 mt-3">
-                            <label for="project">Project</label>
-                            <input type="text" id="project" class="form-control" value="{{ucwords($requestDetail->project)}}" readonly>
-                        </div>
-                        <div class="col-lg-4 mt-3">
-                            <label for="model_unit">Phase/Block/Lot</label>
-                            @php
-                                $unitLocation ="";
-                                if(!is_null($requestDetail->phase))
-                                    {
-                                        $unitLocation .= 'Phase '.$requestDetail->phase.'  ';
-                                    }
-                                $unitLocation .= 'Block '.$requestDetail->block.'  Lot '.$requestDetail->lot;
-                            @endphp
-                            <input type="text" id="model_unit" class="form-control" value="{{ucwords($unitLocation)}}" readonly>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-4 mt-3 total_contract_price">
-                            <label for="total_contract_price">Total Contract Price</label>
-                            <input name="total_contract_price" type="number" step="any" id="total_contract_price" min="0" class="form-control" value="{{$requestDetail->total_contract_price}}">
-                        </div>
-                        <div class="col-lg-4 mt-3 financing">
-                            <label for="financing">Financing</label><span class="required">*</span>
-                            <select name="financing" class="form-control" id="financing">
-                                <option value="">-- Select Financing --</option>
-                                <option value="hdmf">HDMF</option>
-                                <option value="bank">Bank</option>
-                                <option value="inhouse">Inhouse</option>
-                                <option value="deferred">Deferred Cash</option>
-                                <option value="nhmfc">NHMFC</option>
-                                <option value="cash">Cash</option>
-                            </select>
-                        </div>
-                        <div class="col-lg-4 mt-3">
-                            <label for="sd_rate">Sales Director Rate</label>
-                            <select name="sd_rate" id="sd_rate" class="form-control">
-                                <option value="">-- Select SD Rate --</option>
-                                @php $rate = 0.5; $increment = 0.5;@endphp
-                                @for($count = 1; $rate <= 5.5 ;$count++)
-                                    @php $rate = $rate + $increment; @endphp
-                                    <option value="{{$rate}}">{{$rate}}%</option>
-                                @endfor
-                            </select>
-                        </div>
-                    </div>
-
-                    @if($requestDetail->request_type == "cheque_pickup")
+            <div class="card card-info card-outline request-details">
+                <form id="update-request-details-form">
+                    @csrf
+                    <div class="card-body">
                         <div class="row">
-                            <div class="col-lg-4 mt-3 cheque_number">
-                                <label for="cheque_number">Cheque #</label>
-                                <input type="number" id="cheque_number" class="form-control" value="{{$requestDetail->cheque_number}}" readonly>
+                            <div class="col-lg-4 mt-3">
+                                <label for="buyer">Buyer</label>
+                                <input type="text" id="buyer" class="form-control" value="{{ucwords($requestDetail->buyer->firstname.' '.$requestDetail->buyer->lastname)}}" readonly>
                             </div>
-                            <div class="col-lg-4 mt-3 bank_name">
-                                <label for="bank_name">Bank Name</label>
-                                <input type="text" id="bank_name" class="form-control" value="{{ucwords($requestDetail->bank_name)}}" readonly>
+                            <div class="col-lg-4 mt-3">
+                                <label for="project">Project</label>
+                                <input type="text" id="project" class="form-control" value="{{ucwords($requestDetail->project)}}" readonly>
                             </div>
-                            <div class="col-lg-4 mt-3 cheque_amount">
-                                <label for="cheque_amount">Cheque Amount</label>
-                                <input type="text" id="cheque_amount" class="form-control" value="{{number_format($requestDetail->cheque_amount,2)}}" readonly>
+                            <div class="col-lg-4 mt-3">
+                                <label for="model_unit">Phase/Block/Lot</label>
+                                @php
+                                    $unitLocation ="";
+                                    if(!is_null($requestDetail->phase))
+                                        {
+                                            $unitLocation .= 'Phase '.$requestDetail->phase.'  ';
+                                        }
+                                    $unitLocation .= 'Block '.$requestDetail->block.'  Lot '.$requestDetail->lot;
+                                @endphp
+                                <input type="text" id="model_unit" class="form-control" value="{{ucwords($unitLocation)}}" readonly>
                             </div>
                         </div>
-                    @endif
-                    <div class="row">
-                        <div class="col-lg-12 mt-3 message">
-                            <div class="info-box bg-light">
-                                <div class="info-box-content">
-                                    <span class="info-box-text text-left text-muted">Message</span>
-                                    <span class="info-box-number text-muted">{{$requestDetail->message}}</span>
+                        <div class="row">
+                            <div class="col-lg-4 mt-3 total_contract_price">
+                                <label for="total_contract_price">Total Contract Price</label>
+                                <input name="total_contract_price" type="number" step="any" id="total_contract_price" min="0" class="form-control" value="{{$requestDetail->total_contract_price}}">
+                            </div>
+                            <div class="col-lg-4 mt-3 financing">
+                                <label for="financing">Financing</label><span class="required">*</span>
+                                <select name="financing" class="form-control" id="financing">
+                                    <option value="">-- Select Financing --</option>
+                                    <option value="hdmf">HDMF</option>
+                                    <option value="bank">Bank</option>
+                                    <option value="inhouse">Inhouse</option>
+                                    <option value="deferred">Deferred Cash</option>
+                                    <option value="nhmfc">NHMFC</option>
+                                    <option value="cash">Cash</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4 mt-3 sd_rate">
+                                <label for="sd_rate">Sales Director Rate</label>
+                                <select name="sd_rate" id="sd_rate" class="form-control">
+                                    <option value="">-- Select SD Rate --</option>
+                                    @php $rate = 0.5; $increment = 0.5;@endphp
+                                    @for($count = 1; $rate <= 5.5 ;$count++)
+                                        @php $rate = $rate + $increment; @endphp
+                                        <option value="{{$rate}}">{{$rate}}%</option>
+                                    @endfor
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 mt-3 message">
+                                <div class="info-box bg-light">
+                                    <div class="info-box-content">
+                                        <span class="info-box-text text-left text-muted">Message</span>
+                                        <span class="info-box-number text-muted">{{$requestDetail->message}}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="card-footer">
-                    <button type="submit" class="btn btn-default">Save</button>
-                </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-default">Save</button>
+                    </div>
+                </form>
             </div>
 
             <x-task.task :assignee="$assignee" :createButton="true" :requestId="$requestDetail->id"/>
@@ -210,5 +179,47 @@
             searching: false
         });
 
+
+        @if('edit request')
+            $(document).on('submit','#update-request-details-form',function(form){
+                form.preventDefault();
+                let data = $(this).serializeArray();
+
+                $.ajax({
+                    url: '{{route('request.update',['request' => $requestDetail->id])}}',
+                    type: 'put',
+                    data: data,
+                    beforeSend: function(){
+                        $('#update-request-details-form').find('button[type=submit]').attr('disabled',true).text('Saving...')
+                    }
+                }).done(function(response){
+                    if(response.success === true)
+                    {
+                        Swal.fire(
+                            response.message,
+                            '',
+                            'success'
+                        );
+                        $('#request-activities').DataTable().ajax.reload(null, false);
+                    }
+                    else{
+                        Swal.fire(
+                            response.message,
+                            '',
+                            'warning'
+                        );
+                    }
+                }).fail(function(xhr, status, error){
+                    $.each(xhr.responseJSON.errors, function(key, value){
+                        let element = $('.'+key);
+
+                        element.find('.error-'+key).remove();
+                        element.append('<p class="text-danger error-'+key+'">'+value+'</p>')
+                    });
+                }).always(function(){
+                    $('#update-request-details-form').find('button[type=submit]').attr('disabled',false).text('Save')
+                });
+            })
+        @endif
     </script>
 @stop

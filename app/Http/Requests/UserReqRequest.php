@@ -36,9 +36,9 @@ class UserReqRequest extends FormRequest
             'financing' => ['required'],
             'request_type' => ['required'],
             'sd_rate' => ['required'],
-            'cheque_number' => [Rule::requiredIf($request->request_type === "cheque_pickup"),'numeric','nullable'],
-            'bank_name' => [Rule::requiredIf($request->request_type === "cheque_pickup")],
-            'cheque_amount' => [Rule::requiredIf($request->request_type === "cheque_pickup")],
+            'cheque_number' => ['numeric','nullable'],
+//            'bank_name' => [Rule::requiredIf($request->request_type === "cheque_pickup")],
+//            'cheque_amount' => [Rule::requiredIf($request->request_type === "cheque_pickup")],
         ];
     }
 }

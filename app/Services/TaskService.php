@@ -17,13 +17,30 @@ class TaskService
             'assigned_to' => $task['assign_to'],
             'creator' => auth()->user()->id,
             'status' => 'pending',
-            'due_date' => Carbon::parse($task['due_date'])->format('Y-m-d'),
+            'due_date' => $task['due_date'],
             'request_id' => $task['request_id']
         ]))
         {
             $log = 'Task #'.str_pad($task->id, 5, '0', STR_PAD_LEFT).' was created';
             $properties = ['task_id' => $task->id,'task_title' => $task->title];
             $this->taskLogsActivities($task, $task['request_id'], $log, $properties, true);
+            return true;
+        }
+        return false;
+    }
+
+    public function updateTask(array $taskData, $task)
+    {
+        $task->title = $taskData['title'];
+        $task->description = $taskData['description'];
+        $task->assigned_to = $taskData['assign_to'];
+        $task->due_date = Carbon::parse($taskData['due_date'])->format('Y-m-d');
+        if($task->isDirty())
+        {
+            $task->save();
+            $logs = 'Task #'.str_pad($task->id, 5, '0', STR_PAD_LEFT).' was updated';
+            $properties = $task;
+            $this->taskLogsActivities($task, $task->request_id, $logs,$properties, true);
             return true;
         }
         return false;
@@ -77,8 +94,11 @@ class TaskService
             ->editColumn('created_at',function($task){
                 return $task->created_at->format('M d, Y g:i:s a');
             })
+            ->editColumn('due_date',function($task){
+                return Carbon::parse($task->due_date)->format('M d, Y');
+            })
             ->editColumn('id', function($task){
-                $id = str_pad($task->id, 5, '0', STR_PAD_LEFT);
+                $id = $task->request_id.'-'.str_pad($task->id, 5, '0', STR_PAD_LEFT);
                 return '<a href="'.route('task.show',['task' => $task->id]).'"><span style="color:#007bff">'.$id.'</span></a>';
             })
             ->addColumn('action_taken',function($task){
@@ -89,7 +109,17 @@ class TaskService
 
                 if(auth()->user()->can('view task'))
                 {
-                    $action .= '<a href="'.route('task.show',['task' => $task->id]).'" class="btn btn-xs btn-success view-task-btn" id="'.$task->id.'">View</a>';
+                    $action .= '<a href="'.route('task.show',['task' => $task->id]).'" class="btn btn-xs btn-success view-task-btn mr-1" id="'.$task->id.'">View</a>';
+
+                }
+                if(auth()->user()->can('edit task'))
+                {
+                    $action .= '<button class="btn btn-xs btn-primary edit-task-btn mr-1" id="'.$task->id.'">Edit</button>';
+
+                }
+                if(auth()->user()->can('delete task'))
+                {
+                    $action .= '<button class="btn btn-xs btn-danger delete-task-btn" id="'.$task->id.'">Delete</button>';
 
                 }
                 return $action;

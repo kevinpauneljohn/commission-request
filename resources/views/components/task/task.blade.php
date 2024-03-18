@@ -4,7 +4,7 @@
             <ul class="nav nav-tabs">
                 @if(auth()->user()->can('view task') && !auth()->user()->hasRole('sales director'))
                     <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#task"><i class="fa fa-thumbtack"></i> Tasks</a>
+                        <a class="nav-link active" data-toggle="tab" href="#task"><i class="fa fa-thumbtack"></i> Task</a>
                     </li>
                 @endif
                 @if(auth()->user()->can('view finding') && !auth()->user()->hasRole('sales director'))
@@ -19,20 +19,21 @@
                     <div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
                         @if($createButton)
                             <div class="card-tools mb-5 mt-4">
-                                <button class="btn btn-primary btn-sm" id="create-task-btn">Create task</button>
+                                <button class="btn btn-primary btn-sm" id="create-task-btn">Create Task</button>
                             </div>
                         @endif
                         <table id="task-list" class="table table-bordered table-hover" role="grid" style="width: 100%">
                             <thead>
                             <tr role="row">
-                                <th>Task #</th>
+                                <th style="width: 8%;">Task #</th>
                                 <th>Title</th>
                                 <th>Assigned To</th>
                                 <th>Creator</th>
                                 <th>Date Created</th>
+                                <th>Due Date</th>
                                 <th>Status</th>
-                                <th>Action Taken</th>
-                                <th>Action</th>
+                                <th style="width: 5%;">Action Taken</th>
+                                <th style="width: 11%;">Action</th>
                             </tr>
                             </thead>
                         </table>
@@ -229,6 +230,9 @@
                     taskModal.modal('toggle');
                     taskModal.find('.modal-title').text('Create Task');
                     taskModal.find('form').attr('id','add-task-form')
+                    taskModal.find('form').trigger('reset')
+                    taskModal.find('select[name=assign_to]').val('').change()
+                    taskModal.find('#description').summernote('reset')
                 });
             </script>
         @endcan
@@ -247,6 +251,7 @@
                         { data: 'assigned_to', name: 'assigned_to'},
                         { data: 'creator', name: 'creator'},
                         { data: 'created_at', name: 'created_at'},
+                        { data: 'due_date', name: 'due_date'},
                         { data: 'status', name: 'status'},
                         { data: 'action_taken', name: 'action_taken'},
                         { data: 'action', name: 'action', orderable: false, searchable: false}
@@ -377,4 +382,139 @@
             });
         </script>
     @endcan
+
+    @if(auth()->user()->can('edit task') || auth()->user()->hasRole('super admin'))
+        <script>
+            let taskId;
+            $(document).on('click','.edit-task-btn', function(){
+                taskId = this.id;
+
+                taskModal.find('.modal-title').text('Edit Task');
+                taskModal.find('form').attr('id','edit-task-form')
+                taskModal.modal('toggle');
+
+                $.ajax({
+                    url: '/task/'+taskId+'/edit',
+                    type: 'get',
+                    beforeSend: function(){
+                        taskModal.find('input, select, button').attr('disabled',true);
+                        taskModal.find('#description').summernote('disable')
+                    }
+                }).done(function(response){
+                    console.log(response)
+                    taskModal.find('input[name=title]').val(response.title)
+                    taskModal.find('#description').summernote('code',response.description)
+                    taskModal.find('select[name=assign_to]').val(response.assigned_to).change()
+                    taskModal.find('input[name=due_date]').val(response.due_date).change()
+                }).fail(function(xhr, status, error){
+                    console.log(xhr)
+                }).always(function(){
+                    taskModal.find('input, select, button').attr('disabled',false);
+                    taskModal.find('#description').summernote('enable')
+                })
+            })
+
+            $(document).on('submit','#edit-task-form',function(form){
+                form.preventDefault();
+                let data = $(this).serializeArray();
+
+                $.ajax({
+                    url: '/task/'+taskId,
+                    type: 'put',
+                    data: data,
+                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                    beforeSend: function(){
+                        taskModal.find('input, select, button').attr('disabled',true);
+                        taskModal.find('#description').summernote('disable')
+                    }
+                }).done(function(response){
+                    console.log(response)
+                    if(response.success === true)
+                    {
+                        Toast.fire({
+                            type: "success",
+                            title: response.message
+                        });
+                        $('#task-list').DataTable().ajax.reload(null, false);
+                        $('#request-activities').DataTable().ajax.reload(null, false);
+                        taskModal.modal('toggle')
+                    }else if(response.success === false)
+                    {
+                        Toast.fire({
+                            type: "warning",
+                            title: response.message
+                        });
+                    }
+                }).fail(function(xhr, status, error){
+                    console.log(xhr)
+                    $.each(xhr.responseJSON.errors, function(key, value){
+                        let element = $('.'+key);
+
+                        element.find('.error-'+key).remove();
+                        element.append('<p class="text-danger error-'+key+'">'+value+'</p>')
+                    });
+                }).always(function(){
+                    taskModal.find('input, select, button').attr('disabled',false);
+                    taskModal.find('#description').summernote('enable')
+                })
+                clear_errors('title','description','assign_to','due_date');
+            })
+        </script>
+    @endif
+
+    @if(auth()->user()->can('delete task'))
+        <script>
+            $(document).on('click','.delete-task-btn', function(){
+                let id= this.id;
+
+                $tr = $(this).closest('tr');
+
+                let data = $tr.children("td").map(function () {
+                    return $(this).text();
+                }).get();
+
+                Swal.fire({
+                    title: 'Delete Task #'+data[0]+'?',
+                    text: "You won't be able to revert this!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.value) {
+
+                        $.ajax({
+                            'url' : '/task/'+id,
+                            'type' : 'DELETE',
+                            'headers': {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                            beforeSend: function(){
+
+                            },success: function(response){
+                                if(response.success === true){
+                                    $('#task-list').DataTable().ajax.reload(null, false);
+                                    $('#request-activities').DataTable().ajax.reload(null, false);
+
+                                    Swal.fire(
+                                        'Deleted!',
+                                        response.message,
+                                        'success'
+                                    );
+                                }else{
+                                    Swal.fire(
+                                        'Warning!',
+                                        response.message,
+                                        'warning'
+                                    );
+                                }
+                            },error: function(xhr, status, error){
+                                console.log(xhr);
+                            }
+                        });
+
+                    }
+                });
+            });
+        </script>
+    @endif
 @endpush

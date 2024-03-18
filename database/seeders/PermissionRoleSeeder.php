@@ -14,14 +14,16 @@ class PermissionRoleSeeder extends Seeder
      */
     public function run(): void
     {
-        $superAdmin = Role::create(['name' => 'super admin']);
-        $financeAdmin = Role::create(['name' => 'business admin']);
-        $requestReviewer = Role::create(['name' => 'request reviewer']);
-        $admin = Role::create(['name' => 'admin']);
-        $salesDirector = Role::create(['name' => 'sales director']);
+        Role::create(['name' => 'super admin']);
+        Role::create(['name' => 'business administrator']);
+        Role::create(['name' => 'request reviewer']);
+        Role::create(['name' => 'admin']);
+        Role::create(['name' => 'sales director']);
+        Role::create(['name' => 'sales administrator']);
+        Role::create(['name' => 'finance administrator']);
 
         //user
-        Permission::create(['name' => 'view user'])->assignRole(['admin','business admin']);
+        Permission::create(['name' => 'view user'])->assignRole(['admin','business administrator']);
         Permission::create(['name' => 'add user'])->assignRole(['admin']);
         Permission::create(['name' => 'edit user'])->assignRole(['admin',]);
         Permission::create(['name' => 'delete user'])->assignRole(['admin']);
@@ -42,33 +44,33 @@ class PermissionRoleSeeder extends Seeder
         //end permissions
 
         //Permissions
-        Permission::create(['name' => 'view request'])->assignRole(['sales director','business admin']);
-        Permission::create(['name' => 'add request'])->assignRole(['sales director']);
-        Permission::create(['name' => 'edit request'])->assignRole(['sales director']);
-        Permission::create(['name' => 'delete request'])->assignRole(['sales director']);
+        Permission::create(['name' => 'view request'])->assignRole(['sales director','business administrator','finance administrator','sales administrator']);
+        Permission::create(['name' => 'add request'])->assignRole(['sales director','business administrator','finance administrator','sales administrator']);
+        Permission::create(['name' => 'edit request'])->assignRole(['sales director','business administrator','finance administrator','sales administrator']);
+        Permission::create(['name' => 'delete request'])->assignRole(['sales director','business administrator','finance administrator','sales administrator']);
         //end permissions
 
         //Tasks
-        Permission::create(['name' => 'view task'])->assignRole(['business admin']);
-        Permission::create(['name' => 'add task'])->assignRole(['business admin']);
-        Permission::create(['name' => 'edit task'])->assignRole(['business admin']);
-        Permission::create(['name' => 'delete task'])->assignRole(['business admin']);
-        Permission::create(['name' => 'assign task'])->assignRole(['business admin']);
-        Permission::create(['name' => 'update task status'])->assignRole(['business admin']);
+        Permission::create(['name' => 'view task'])->assignRole(['business administrator','finance administrator','sales administrator']);
+        Permission::create(['name' => 'add task'])->assignRole(['business administrator','finance administrator','sales administrator']);
+        Permission::create(['name' => 'edit task'])->assignRole(['business administrator','finance administrator','sales administrator']);
+        Permission::create(['name' => 'delete task'])->assignRole(['business administrator','finance administrator','sales administrator']);
+        Permission::create(['name' => 'assign task'])->assignRole(['business administrator','finance administrator','sales administrator']);
+        Permission::create(['name' => 'update task status'])->assignRole(['business administrator','finance administrator','sales administrator']);
         //end Tasks
 
         //action taken
-        Permission::create(['name' => 'view action taken'])->assignRole(['business admin']);
-        Permission::create(['name' => 'add action taken'])->assignRole(['business admin']);
-        Permission::create(['name' => 'edit action taken'])->assignRole(['business admin']);
-        Permission::create(['name' => 'delete action taken'])->assignRole(['business admin']);
+        Permission::create(['name' => 'view action taken'])->assignRole(['business administrator','finance administrator','sales administrator']);
+        Permission::create(['name' => 'add action taken'])->assignRole(['business administrator','finance administrator','sales administrator']);
+        Permission::create(['name' => 'edit action taken'])->assignRole(['business administrator','finance administrator','sales administrator']);
+        Permission::create(['name' => 'delete action taken'])->assignRole(['business administrator','finance administrator','sales administrator']);
         //end action taken
 
         //finding
-        Permission::create(['name' => 'view finding'])->assignRole(['business admin']);
-        Permission::create(['name' => 'add finding'])->assignRole(['business admin']);
-        Permission::create(['name' => 'edit finding'])->assignRole(['business admin']);
-        Permission::create(['name' => 'delete finding'])->assignRole(['business admin']);
+        Permission::create(['name' => 'view finding'])->assignRole(['business administrator','finance administrator','sales administrator']);
+        Permission::create(['name' => 'add finding'])->assignRole(['business administrator','finance administrator','sales administrator']);
+        Permission::create(['name' => 'edit finding'])->assignRole(['business administrator','finance administrator','sales administrator']);
+        Permission::create(['name' => 'delete finding'])->assignRole(['business administrator','finance administrator','sales administrator']);
         //end finding
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\AssignedUserOnly;
 use App\Http\Middleware\RequesterAllowedOnly;
+use App\Http\Requests\UpdateCommissionRequest;
 use App\Http\Requests\UserReqRequest;
 use App\Models\User;
 use App\Services\RequestService;
@@ -71,9 +72,21 @@ class RequestController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateCommissionRequest $request, string $id, RequestService $requestService)
     {
-        //
+        $commissionRequest = \App\Models\Request::findOrFail($id);
+        $commissionRequest->total_contract_price = $request->total_contract_price;
+        $commissionRequest->financing = $request->financing;
+        $commissionRequest->sd_rate = $request->sd_rate;
+
+        if($commissionRequest->isDirty())
+        {
+            $commissionRequest->save();
+            $log = 'The request details was updated';
+            $requestService->requestLogsActivities($commissionRequest->id, $log, $commissionRequest, true);
+            return response()->json(['success' => true,'message' => 'Request successfully updated!']);
+        }
+        return response()->json(['success' => false,'message' => 'No changes made!']);
     }
 
     /**

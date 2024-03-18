@@ -58,15 +58,17 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        //
+        return $task;
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateTaskRequest $request, Task $task)
+    public function update(UpdateTaskRequest $request, Task $task, TaskService $taskService)
     {
-        //
+        return $taskService->updateTask($request->all(), $task) ?
+            response()->json(['success' => true, 'message' => 'Task successfully updated!']):
+            response()->json(['success' => false, 'message' => 'No changes made!']);
     }
 
     /**
@@ -74,7 +76,12 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
+        if($task->actionTakens->count() == 0)
+        {
+            $task->delete();
+            return response()->json(['success' => true, 'message' => 'Task successfully deleted!']);
+        }
+        return response()->json(['success' => false, 'message' => 'A task cannot be deleted because there has already been action taken!']);
     }
 
     public function tasks(TaskService $taskService)

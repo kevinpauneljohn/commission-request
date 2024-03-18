@@ -337,6 +337,13 @@ return [
             'key'  => 'request',
             'can' => 'view request'
         ],
+        [
+            'text' => 'Automation',
+            'route'  => 'request.index',
+            'icon' => 'fa fa-magic',
+            'key'  => 'request',
+            'can' => 'view request'
+        ],
     ],
 
     /*

@@ -26,16 +26,13 @@ class RequestService
             'financing' => $requestData['financing'],
             'request_type' => $requestData['request_type'],
             'sd_rate' => $requestData['sd_rate'],
-            'cheque_number' => $requestData['cheque_number'],
-            'bank_name' => $requestData['bank_name'],
-            'cheque_amount' => $requestData['cheque_amount'],
             'message' => $requestData['message'],
             'user_id' => !auth()->user()->hasRole('sales director') ? $requestData['sales_director'] : auth()->user()->id,
             'status' => 'pending'
         ]);
     }
 
-    public function requestIdFormatter($request_type, $request_id)
+    public function requestIdFormatter($request_type, $request_id): string
     {
         $id = str_pad($request_id, 5, '0', STR_PAD_LEFT);
         return match ($request_type) {
@@ -43,6 +40,18 @@ class RequestService
             "commission_request" => 'RQ-COM-' . $id,
             default => "",
         };
+    }
+
+    public function requestLogsActivities($request_id, $log, $properties, $display)
+    {
+        return \activity()
+            ->causedBy(auth()->user()->id)
+            ->withProperties($properties)
+            ->tap(function(\Spatie\Activitylog\Contracts\Activity $activity) use ($request_id, $display){
+                $activity->display = $display;
+                $activity->request_id = $request_id;
+            })
+            ->log($log);
     }
 
     public function requestList($userRequest)

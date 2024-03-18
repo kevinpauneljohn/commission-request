@@ -166,20 +166,20 @@
                                     </div>
                                 </div>
 
-                                <div class="row cheque_details">
-                                    <div class="col-lg-4 cheque_number mt-3">
-                                        <label for="cheque_number">Cheque Number</label><span class="required">*</span>
-                                        <input type="number" id="cheque_number" name="cheque_number" class="form-control">
-                                    </div>
-                                    <div class="col-lg-4 bank_name mt-3">
-                                        <label for="bank_name">Bank name</label><span class="required">*</span>
-                                        <input type="text" id="bank_name" name="bank_name" class="form-control">
-                                    </div>
-                                    <div class="col-lg-4 cheque_amount mt-3">
-                                        <label for="cheque_amount">Cheque Amount</label><span class="required">*</span>
-                                        <input type="number" step="any" id="cheque_amount" name="cheque_amount" class="form-control">
-                                    </div>
-                                </div>
+{{--                                <div class="row cheque_details">--}}
+{{--                                    <div class="col-lg-4 cheque_number mt-3">--}}
+{{--                                        <label for="cheque_number">Cheque Number</label><span class="required">*</span>--}}
+{{--                                        <input type="number" id="cheque_number" name="cheque_number" class="form-control">--}}
+{{--                                    </div>--}}
+{{--                                    <div class="col-lg-4 bank_name mt-3">--}}
+{{--                                        <label for="bank_name">Bank name</label><span class="required">*</span>--}}
+{{--                                        <input type="text" id="bank_name" name="bank_name" class="form-control">--}}
+{{--                                    </div>--}}
+{{--                                    <div class="col-lg-4 cheque_amount mt-3">--}}
+{{--                                        <label for="cheque_amount">Cheque Amount</label><span class="required">*</span>--}}
+{{--                                        <input type="number" step="any" id="cheque_amount" name="cheque_amount" class="form-control">--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
                                 <div class="row mt-3">
                                     <div class="col-lg-12 message">
                                         <label for="message">Custom Message</label> <i>(optional)</i>

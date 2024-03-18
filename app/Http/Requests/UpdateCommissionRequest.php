@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateTaskRequest extends FormRequest
+class UpdateCommissionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return auth()->user()->hasRole('super admin') || auth()->user()->can('edit task');
+        return auth()->user()->can('edit request') || auth()->user()->hasRole('super admin');
     }
 
     /**
@@ -22,11 +22,9 @@ class UpdateTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required','max:250'],
-            'description' => ['required','max:5000'],
-            'assign_to' => ['required'],
-            'due_date' => ['required','date'],
-            'request_id' => ['required']
+            'financing' => ['required'],
+            'sd_rate' => ['required'],
+            'total_contract_price' => ['required','min:0']
         ];
     }
 }

@@ -32,9 +32,6 @@ class RequestFactory extends Factory
             'financing' => collect(['hdmf','bank','inhouse','deferred','cash'])->random(),
             'request_type' => collect(['commission_request','cheque_pickup'])->random(),
             'sd_rate' => rand(1,6),
-            'cheque_number' => rand(123456,999999),
-            'bank_name' => collect(['bdo','security bank','metrobank','rcbc','chinabank'])->random(),
-            'cheque_amount' => rand(10000,500000),
             'message' => fake()->realText,
             'user_id' => collect(collect(User::whereHas("roles", function($q){ $q->where("name","=","sales director"); })->get())->pluck('id'))->random(),
             'status' => 'pending'

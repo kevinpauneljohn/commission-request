@@ -43,7 +43,7 @@ class UserSeeder extends Seeder
             'password' => 123
         ]);
 
-        $user3->assignRole('business admin');
+        $user3->assignRole('business administrator');
         $user3->save();
 
         $admin = new User([
