@@ -19,6 +19,7 @@ require __DIR__ . '/web/requests.php';
 require __DIR__ . '/web/task.php';
 require __DIR__ . '/web/actionTaken.php';
 require __DIR__ . '/web/finding.php';
+require __DIR__ . '/web/automation.php';
 
 Route::get('/', function () {
     return redirect(\route('home'));

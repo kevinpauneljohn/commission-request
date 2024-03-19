@@ -23,10 +23,10 @@ class PermissionRoleSeeder extends Seeder
         Role::create(['name' => 'finance administrator']);
 
         //user
-        Permission::create(['name' => 'view user'])->assignRole(['admin','business administrator']);
-        Permission::create(['name' => 'add user'])->assignRole(['admin']);
-        Permission::create(['name' => 'edit user'])->assignRole(['admin',]);
-        Permission::create(['name' => 'delete user'])->assignRole(['admin']);
+        Permission::create(['name' => 'view user'])->assignRole(['admin','business administrator','sales administrator']);
+        Permission::create(['name' => 'add user'])->assignRole(['admin','sales administrator']);
+        Permission::create(['name' => 'edit user'])->assignRole(['admin','sales administrator']);
+        Permission::create(['name' => 'delete user'])->assignRole(['admin','sales administrator']);
         //end user
 
         //Roles
@@ -71,6 +71,13 @@ class PermissionRoleSeeder extends Seeder
         Permission::create(['name' => 'add finding'])->assignRole(['business administrator','finance administrator','sales administrator']);
         Permission::create(['name' => 'edit finding'])->assignRole(['business administrator','finance administrator','sales administrator']);
         Permission::create(['name' => 'delete finding'])->assignRole(['business administrator','finance administrator','sales administrator']);
+        //end finding
+
+        //automation
+        Permission::create(['name' => 'view automation'])->assignRole(['sales administrator']);
+        Permission::create(['name' => 'add automation'])->assignRole(['sales administrator']);
+        Permission::create(['name' => 'edit automation'])->assignRole(['sales administrator']);
+        Permission::create(['name' => 'delete automation'])->assignRole(['sales administrator']);
         //end finding
     }
 }

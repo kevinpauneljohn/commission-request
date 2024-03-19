@@ -339,10 +339,10 @@ return [
         ],
         [
             'text' => 'Automation',
-            'route'  => 'request.index',
+            'route'  => 'automation.index',
             'icon' => 'fa fa-magic',
-            'key'  => 'request',
-            'can' => 'view request'
+            'key'  => 'automation',
+            'can' => 'view automation'
         ],
     ],
 
