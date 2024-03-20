@@ -13,7 +13,11 @@ return new class extends Migration
     {
         Schema::create('automations', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->foreignUuid('user_id');
+            $table->boolean('is_active');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

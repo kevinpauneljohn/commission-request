@@ -19,7 +19,9 @@ class Task extends Model
         'status',
         'due_date',
         'time',
-        'request_id'
+        'request_id',
+        'automation_id',
+        'automation_task_id'
     ];
 
     protected $appends = ['formatted_request_id'];

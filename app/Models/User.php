@@ -120,4 +120,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Finding::class);
     }
+
+    public function automations()
+    {
+        return $this->hasMany(Automation::class);
+    }
+
+    public function automationTasks()
+    {
+        return $this->hasMany(AutomationTask::class,'creator');
+    }
 }

@@ -11,20 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tasks', function (Blueprint $table) {
+        Schema::create('automation_tasks', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('automation_id');
             $table->string('title');
             $table->text('description');
-            $table->uuid('assigned_to')->nullable();
+            $table->string('assigned_to_role')->nullable();
             $table->uuid('creator');
-            $table->string('status');
-            $table->date('due_date')->nullable();
-            $table->time('time')->nullable();
-            $table->foreignId('request_id')->nullable();
+            $table->unsignedBigInteger('days_before_due_date')->nullable();
+            $table->unsignedBigInteger('sequence_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('assigned_to')->references('id')->on('users');
             $table->foreign('creator')->references('id')->on('users');
         });
     }
@@ -34,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tasks');
+        Schema::dropIfExists('automation_tasks');
     }
 };

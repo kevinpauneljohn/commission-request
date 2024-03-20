@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateAutomationRequest extends FormRequest
+class StoreAutomationTaskRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,7 +23,10 @@ class UpdateAutomationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required','max:250']
+            'title' => ['required','max:500'],
+            'description' => ['required','max:5000'],
+            'assign_to' => ['required'],
+            'days_before_due_date' => ['required','numeric','nullable','min:0','max:90']
         ];
     }
 }

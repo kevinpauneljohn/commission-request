@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Models\Automation;
 use App\Models\Request;
+use App\Models\Task;
 use App\Models\User;
 use Spatie\Activitylog\Models\Activity;
 use Yajra\DataTables\Facades\DataTables;
@@ -11,7 +13,7 @@ class RequestService
 {
     public function createRequest(array $requestData): bool
     {
-        return (bool)Request::create([
+        if($request = Request::create([
             'buyer' => [
                 'firstname' => $requestData['firstname'],
                 'middlename' => $requestData['middlename'],
@@ -29,8 +31,97 @@ class RequestService
             'message' => $requestData['message'],
             'user_id' => !auth()->user()->hasRole('sales director') ? $requestData['sales_director'] : auth()->user()->id,
             'status' => 'pending'
+        ]))
+        {
+            $this->generate_automated_task($request->id);
+            return true;
+        }
+        return false;
+    }
+
+    private function task($request_id)
+    {
+        return Task::where('request_id',$request_id);
+    }
+
+    private function automation()
+    {
+        return Automation::where('is_active',true)->first();
+    }
+
+    /**
+     * this will return the next automation task id to be used
+     * @param $automation
+     * @param $request_id
+     * @return mixed
+     */
+    private function task_template($automation, $request_id): mixed
+    {
+        if($this->is_request_exists_in_tasks($request_id) && $this->is_request_task_template_used($request_id, $automation->id))
+        {
+            return $automation->automationTasks()
+                ->whereNotin('id',$this->excluded_task_template_id($request_id, $automation->id))
+                ->orderBy('sequence_id','asc')->first();
+        }
+        return $automation->automationTasks()
+            ->orderBy('sequence_id','asc')->first();
+    }
+    /**
+     * this will check if there are tasks already in the request
+     * @param $request_id
+     * @return bool
+     */
+    private function is_request_exists_in_tasks($request_id): bool
+    {
+        return $this->task($request_id)->count() > 0;
+    }
+
+    /**
+     * this will check if the task saved came from the automated task templates
+     * @param $request_id
+     * @param $automation_id
+     * @return bool
+     */
+    private function is_request_task_template_used($request_id, $automation_id): bool
+    {
+        return $this->task($request_id)->where('automation_id',$automation_id) > 0;
+    }
+
+//    private function get_task_template_used($request_id, $automation_id)
+//    {
+//        return $this->task($request_id)->where('automation_id', $automation_id)->get();
+//    }
+    private function get_task_template_id_used($request_id, $automation_id): \Illuminate\Support\Collection
+    {
+        return collect($this->task($request_id)->where('automation_id', $automation_id)->get())->pluck('automation_task_id');
+    }
+
+    private function excluded_task_template_id($request_id, $automation_id): \Illuminate\Support\Collection
+    {
+        return $this->get_task_template_id_used($request_id, $automation_id);
+    }
+
+    private function generate_automated_task($request_id): void
+    {
+        $automation = $this->automation();
+
+        $taskTemplate = $this->task_template($automation, $request_id);
+        Task::create([
+            'title' => $taskTemplate->title,
+            'description' => $taskTemplate->description,
+            'assigned_to' => auth()->user()->id,
+            'creator' => $taskTemplate->creator,
+            'status' => 'pending',
+            'due_date' => now()->format('Y-m-d'),
+            'request_id' => $request_id,
+            'automation_id' => $automation->id,
+            'automation_task_id' => $taskTemplate->id
         ]);
     }
+
+
+
+
 
     public function requestIdFormatter($request_type, $request_id): string
     {

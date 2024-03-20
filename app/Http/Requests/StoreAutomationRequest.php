@@ -11,7 +11,8 @@ class StoreAutomationRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        $user = auth()->user();
+        return $user->can('add automation') || $user->hasRole('super admin');
     }
 
     /**
@@ -22,7 +23,7 @@ class StoreAutomationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => ['required','max:250']
         ];
     }
 }
