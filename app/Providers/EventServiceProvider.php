@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Request;
+use App\Observers\RequestObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -26,6 +28,8 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Request::observe(RequestObserver::class);
+
         Event::listen(BuildingMenu::class, function (BuildingMenu $event){
             $event->menu->addAfter('request',[
                 'text' => 'Roles',

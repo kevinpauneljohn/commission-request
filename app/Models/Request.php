@@ -30,6 +30,9 @@ class Request extends Model
         'status'
     ];
 
+    /*Note: a request task automation is fired once a request was created found in
+    EventServiceProviders and RequestObserver*/
+
     public function user()
     {
         return $this->belongsTo(User::class);

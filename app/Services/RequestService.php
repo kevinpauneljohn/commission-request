@@ -33,7 +33,7 @@ class RequestService
             'status' => 'pending'
         ]))
         {
-            $this->generate_automated_task($request->id);
+//            $this->generate_automated_task($request->id);
             return true;
         }
         return false;
@@ -101,26 +101,36 @@ class RequestService
         return $this->get_task_template_id_used($request_id, $automation_id);
     }
 
-    private function generate_automated_task($request_id): void
+    private function get_automation_count()
     {
-        $automation = $this->automation();
-
-        $taskTemplate = $this->task_template($automation, $request_id);
-        Task::create([
-            'title' => $taskTemplate->title,
-            'description' => $taskTemplate->description,
-            'assigned_to' => auth()->user()->id,
-            'creator' => $taskTemplate->creator,
-            'status' => 'pending',
-            'due_date' => now()->format('Y-m-d'),
-            'request_id' => $request_id,
-            'automation_id' => $automation->id,
-            'automation_task_id' => $taskTemplate->id
-        ]);
+        return Automation::where('is_active',true)->count();
     }
 
+    private function get_automation_task_count()
+    {
+        return $this->automation()->automationTasks->count();
+    }
 
+    public function generate_automated_task($request_id): void
+    {
+        $automation = $this->automation();
+        if($this->get_automation_count() > 0 && $this->get_automation_task_count() > 0)
+        {
+            $taskTemplate = $this->task_template($automation, $request_id);
+            Task::create([
+                'title' => $taskTemplate->title,
+                'description' => $taskTemplate->description,
+                'assigned_to' => User::whereHas("roles", function($q){ $q->where("name","=","super admin"); })->first()->id, //create a function that will assign to a designated user
+                'creator' => $taskTemplate->creator,
+                'status' => 'pending',
+                'due_date' => now()->format('Y-m-d'),
+                'request_id' => $request_id,
+                'automation_id' => $automation->id,
+                'automation_task_id' => $taskTemplate->id
+            ]);
+        }
 
+    }
 
 
     public function requestIdFormatter($request_type, $request_id): string

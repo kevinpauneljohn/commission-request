@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,9 @@ class AutomationFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'title' => fake()->text,
+            'user_id' => collect(collect(User::whereHas("roles", function($q){ $q->where("name","=","super admin"); })->get())->pluck('id'))->random(),
+            'is_active' => true
         ];
     }
 }

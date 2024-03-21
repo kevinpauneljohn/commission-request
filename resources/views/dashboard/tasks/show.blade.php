@@ -70,14 +70,13 @@
 
             <div class="card">
 
-                    @if($task->status == "on-going" || $task->status == "completed"
-                        && $task->assigned_to == auth()->user()->id && auth()->user()->can('add action taken') || auth()->user()->can('edit action taken'))
+                    @if($task->assigned_to == auth()->user()->id && auth()->user()->can('add action taken') || auth()->user()->can('edit action taken'))
 
-                        @if($task->status != "completed")
                             <div class="card-header">
-                                <button class="btn btn-primary btn-sm" id="action-taken">Action Taken</button>
+                                <button class="btn btn-primary btn-sm mb-1" id="action-taken">Add Action</button>
+                                <button type="button" class="btn btn-warning btn-sm mb-1" id="add-findings">Add Findings</button>
+                                <button type="button" class="btn btn-success btn-sm mb-1">Proceed to next task</button>
                             </div>
-                        @endif
 
                     @endif
 
@@ -93,15 +92,6 @@
                                 <th style="width: 15%;">Action</th>
                             </tr>
                             </thead>
-
-                            <tfoot>
-                            <tr role="row">
-                                <th>Date Created</th>
-                                <th>Action Taken</th>
-                                <th>Assignee</th>
-                                <th>Action</th>
-                            </tr>
-                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -467,6 +457,16 @@
 
                     }
                 });
+            });
+        </script>
+
+        <script>
+            $(document).on('click','#add-findings', function(){
+                actionTakenModal.modal('toggle');
+                actionTakenModal.find('.modal-title').text('Add Findings');
+                actionTakenModal.find('form').attr('id','add-findings-form');
+                actionTakenModal.find('#description').summernote('reset');
+                actionTakenModal.find('.text-danger').remove();
             });
         </script>
     @endif

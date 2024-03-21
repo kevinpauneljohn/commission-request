@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('request_id');
             $table->text('findings');
             $table->foreignUuid('user_id');
+            $table->foreignId('task_id')->nullable();
             $table->timestamps();
         });
     }
