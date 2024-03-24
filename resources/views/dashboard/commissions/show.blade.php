@@ -20,9 +20,9 @@
 @section('content')
     <div class="row">
         <div class="col-lg-3">
-            <div class="card card-primary card-outline">
+            <div class="card card-success card-outline">
                 <div class="card-body">
-                    <strong><i class="fas fa-ticket-alt"></i> <span class="text-primary text-bold">{{$id}}</span></strong>
+                    <strong><i class="fas fa-ticket-alt"></i> <span class="text-primary text-bold">{{$requestDetail->formatted_id}}</span></strong>
                     <hr>
                     <strong><i class="fas fa-user mr-1"></i> Requester</strong>
 
@@ -70,7 +70,7 @@
             </div>
         </div>
         <div class="col-lg-9">
-            <div class="card card-info card-outline request-details">
+            <div class="card card-success card-outline request-details">
                 <form id="update-request-details-form">
                     @csrf
                     <div class="card-body">

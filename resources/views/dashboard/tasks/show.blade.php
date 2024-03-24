@@ -20,7 +20,7 @@
 @section('content')
     <div class="row">
         <div class="col-lg-3">
-            <div class="card card-default">
+            <div class="card card-success card-outline">
                 <div class="card-body">
                     <strong><i class="fas fa-ticket-alt"></i> From Request # <span class="text-primary text-bold"><a href="{{route('request.show',['request' => $task->request_id])}}">{{$task->formatted_request_id}}</a> </span></strong>
                     <hr>
@@ -59,7 +59,7 @@
         </div>
 
         <div class="col-lg-9">
-            <div class="card card-default">
+            <div class="card card-success card-outline ">
                 <div class="card-header">
                     <h3 class="card-title text-bold">{{ucfirst($task->title)}}</h3>
                 </div>
@@ -68,16 +68,18 @@
                 </div>
             </div>
 
-            <div class="card">
+            <div class="card card-success card-outline task-card">
 
                     @if($task->assigned_to == auth()->user()->id && auth()->user()->can('add action taken') || auth()->user()->can('edit action taken'))
-
+                        @if($task->status != 'completed')
                             <div class="card-header">
                                 <button class="btn btn-primary btn-sm mb-1" id="action-taken">Add Action</button>
                                 <button type="button" class="btn btn-warning btn-sm mb-1" id="add-findings">Add Findings</button>
-                                <button type="button" class="btn btn-success btn-sm mb-1">Proceed to next task</button>
+                                @if(!$task->is_end)
+                                    <button type="button" class="btn btn-success btn-sm mb-1" id="proceed-to-next-task">Proceed to next task</button>
+                                @endif
                             </div>
-
+                        @endif
                     @endif
 
                 <div class="card-body">
@@ -88,7 +90,7 @@
                             <tr role="row">
                                 <th style="width: 15%;">Date Created</th>
                                 <th>Action Taken</th>
-                                <th style="width: 15%;">Assignee</th>
+                                <th style="width: 15%;">Created By</th>
                                 <th style="width: 15%;">Action</th>
                             </tr>
                             </thead>
@@ -106,7 +108,7 @@
                 <form id="action-taken-form">
                     @csrf
                     <div class="modal-content">
-                        <div class="modal-header">
+                        <div class="modal-header bg-success">
                             <h5 class="modal-title">Modal title</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
@@ -121,7 +123,7 @@
                         <input type="hidden" name="task_id" value="{{$task->id}}">
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="submit" class="btn btn-success">Save</button>
                         </div>
                     </div>
                 </form>
@@ -468,6 +470,135 @@
                 actionTakenModal.find('#description').summernote('reset');
                 actionTakenModal.find('.text-danger').remove();
             });
+
+            $(document).on('submit','#add-findings-form',function(form){
+                form.preventDefault();
+                let data = $(this).serializeArray();
+
+                $.ajax({
+                    url: '/create-findings',
+                    type: 'post',
+                    data: data,
+                    beforeSend: function(){
+                        actionTakenModal.find('button[type=submit]').attr('disabled',true).text('Saving...');
+                    }
+                }).done(function(response){
+                    console.log(response)
+                    if(response.success === true)
+                    {
+                        actionTakenModal.modal('toggle')
+                        $('#action-taken-list').DataTable().ajax.reload(null, false);
+                        Swal.fire({
+                            title: response.message,
+                            text: 'Do you want to create a child request?',
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Yes",
+                            cancelButtonText: "No",
+                        }).then((result) => {
+                                                       if (result.value) {
+
+                                $.ajax({
+                                    url: '/request-declined/{{$task->request_id}}',
+                                    type: 'put',
+                                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                                    async: false,
+                                }).then(function(data){
+                                    if(data.success === true)
+                                    {
+                                        Swal.fire({
+                                            title: "Confirmed",
+                                            text: "Redirecting now to form page...",
+                                            type: "success",
+                                            showConfirmButton: false,
+                                        });
+
+                                        setTimeout(function(){
+                                            window.location.replace('{{route('request.index')}}?parent_request={{$task->request_id}}')
+                                        },2000)
+                                    }
+                                })
+                            }
+
+                            if(result.dismiss)
+                            {
+                                let url = window.location.href;
+                                $('#status-form').find('select').load(url+' #status-form select option');
+                                $('.task-card').find('.card-header').remove()
+                            }
+                        });
+                    }
+                    else{
+
+                        Swal.fire(
+                            response.message,
+                            '',
+                            'warning'
+                        );
+                    }
+                }).fail(function(xhr, status, error){
+                    console.log(xhr)
+                    $.each(xhr.responseJSON.errors, function(key, value){
+                        let element = $('.'+key);
+
+                        element.find('.error-'+key).remove();
+                        element.append('<p class="text-danger error-'+key+'">'+value+'</p>')
+                    });
+                }).always(function(){
+                    actionTakenModal.find('button[type=submit]').attr('disabled',false).text('Save');
+                });
+                clear_errors('description')
+            });
+
+
+            @if(!$task->is_end)
+            $(document).on('click','#proceed-to-next-task', function(){
+                Swal.fire({
+                    title: 'Are you sure',
+                    text: 'Do you want proceed to the next task?',
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes",
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            url: '{{route('create-next-task',['task' => $task->id])}}',
+                            type: 'post',
+                            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                        }).done(function(response){
+                            console.log(response)
+                            if(response.success === true){
+
+                                Swal.fire(
+                                    response.message,
+                                    '',
+                                    'success'
+                                );
+
+                                setTimeout(function(){
+                                    window.location.replace('{{route('request.show',['request' => $task->request_id])}}')
+                                },2000)
+                            }
+                            else{
+
+                                Swal.fire(
+                                    response.message,
+                                    '',
+                                    'warning'
+                                );
+                            }
+                        }).fail(function(xhr, status, error){
+                            console.log(xhr)
+                        });
+                    }
+                });
+            });
+            @endif
+
         </script>
     @endif
 

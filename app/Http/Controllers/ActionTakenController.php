@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreActionTakenRequest;
 use App\Models\ActionTaken;
+use App\Services\ActionTakenService;
 use Illuminate\Http\Request;
 
 class ActionTakenController extends Controller
@@ -27,13 +28,9 @@ class ActionTakenController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreActionTakenRequest $request)
+    public function store(StoreActionTakenRequest $request, ActionTakenService $actionTakenService)
     {
-        return ActionTaken::create([
-            'action' => $request->description,
-            'task_id' => $request->task_id,
-            'user_id' => auth()->user()->id
-        ])?
+        return $actionTakenService->create($request)?
             response()->json(['success' => true, 'message' => 'Action taken successfully added']) :
             response()->json(['success' => false, 'message' => 'An error occurred']) ;
     }

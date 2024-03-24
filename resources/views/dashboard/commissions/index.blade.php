@@ -17,15 +17,14 @@
 @stop
 
 @section('content')
-    <div class="card">
+    <div class="card card-success card-outline">
         @can('add request')
             <div class="card-header">
-                <button class="btn btn-primary btn-sm" id="add-request-btn">Create Request</button>
+                <button class="btn btn-success btn-sm" id="add-request-btn">Create Request</button>
             </div>
         @endcan
         <div class="card-body">
             <div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
-
                 <table id="request-list" class="table table-bordered table-hover" role="grid" style="width: 100%">
                     <thead>
                     <tr role="row">
@@ -46,6 +45,7 @@
                             <th style="width: 8%;">Cheque Amount</th>
                         @endif
                         <th>Requester</th>
+                        <th>Child #</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
@@ -61,14 +61,27 @@
             <div class="modal-dialog modal-lg" role="document">
                 <form id="add-request-form">
                     @csrf
+                    @if(isset($_GET['parent_request']))
+                        <input type="hidden" name="parent_request_id" value="{{$_GET['parent_request']}}">
+                    @endif
                     <div class="modal-content">
-                        <div class="modal-header">
+                        <div class="overlay-wrapper"></div>
+                        <div class="modal-header bg-success">
                             <h5 class="modal-title">Modal title</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
+                            @if(isset($_GET['parent_request']))
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="alert alert-info">
+                                            <i class="fa fa-exclamation-circle"></i> Parent Request <span class="text-bold text-yellow" id="parent_-request-formatted-id"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                             @if(!auth()->user()->hasRole('sales director'))
                                 <div class="row">
                                     <div class="col-lg-12 sales_director mb-3">
@@ -165,21 +178,6 @@
                                         </select>
                                     </div>
                                 </div>
-
-{{--                                <div class="row cheque_details">--}}
-{{--                                    <div class="col-lg-4 cheque_number mt-3">--}}
-{{--                                        <label for="cheque_number">Cheque Number</label><span class="required">*</span>--}}
-{{--                                        <input type="number" id="cheque_number" name="cheque_number" class="form-control">--}}
-{{--                                    </div>--}}
-{{--                                    <div class="col-lg-4 bank_name mt-3">--}}
-{{--                                        <label for="bank_name">Bank name</label><span class="required">*</span>--}}
-{{--                                        <input type="text" id="bank_name" name="bank_name" class="form-control">--}}
-{{--                                    </div>--}}
-{{--                                    <div class="col-lg-4 cheque_amount mt-3">--}}
-{{--                                        <label for="cheque_amount">Cheque Amount</label><span class="required">*</span>--}}
-{{--                                        <input type="number" step="any" id="cheque_amount" name="cheque_amount" class="form-control">--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
                                 <div class="row mt-3">
                                     <div class="col-lg-12 message">
                                         <label for="message">Custom Message</label> <i>(optional)</i>
@@ -191,7 +189,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Create</button>
+                            <button type="submit" class="btn btn-success">Create</button>
                         </div>
                     </div>
                 </form>
@@ -233,6 +231,7 @@
                         { data: 'cheque_amount', name: 'cheque_amount'},
                            @endif
                         { data: 'user_id', name: 'user_id'},
+                        { data: 'child_requests', name: 'child_requests'},
                         { data: 'status', name: 'status'},
                         { data: 'action', name: 'action', orderable: false, searchable: false}
                     ],
@@ -320,4 +319,49 @@
     <script>
         $('.select2, #sales_director').select2();
     </script>
+
+    @if(isset($_GET['parent_request']))
+        <script>
+            $(function(){
+                $.ajax({
+                    url: '/request/get-parent/{{$_GET['parent_request']}}',
+                    type: 'get',
+                    beforeSend: function(){
+                        requestModal.find('.overlay-wrapper').html('<div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>')
+                    }
+                }).done(function(response, status, xhr){
+                    console.log(xhr)
+                    if(xhr.status === 200)
+                    {
+                        requestModal.find('.modal-title').text('Create Request')
+                        requestModal.find('#sales_director').val(response.user_id).change()
+                        requestModal.find('input[name=firstname]').val(response.buyer.firstname)
+                        requestModal.find('input[name=middlename]').val(response.buyer.middlename)
+                        requestModal.find('input[name=lastname]').val(response.buyer.lastname)
+                        requestModal.find('input[name=project]').val(response.project)
+                        requestModal.find('input[name=model_unit]').val(response.model_unit)
+                        requestModal.find('input[name=phase]').val(response.phase)
+                        requestModal.find('input[name=block]').val(response.block)
+                        requestModal.find('input[name=lot]').val(response.lot)
+                        requestModal.find('input[name=total_contract_price]').val(response.total_contract_price)
+                        requestModal.find('select[name=financing]').val(response.financing).change()
+                        requestModal.find('select[name=request_type]').val(response.request_type).change()
+                        requestModal.find('select[name=sd_rate]').val(response.sd_rate).change()
+                        requestModal.find('textarea[name=message]').html(response.message)
+                        requestModal.find('#parent_-request-formatted-id').text(response.formatted_id)
+                    }
+                }).fail(function(xhr, status, error){
+                    console.log(xhr)
+                    if(xhr.status === 404)
+                    {
+                        requestModal.find('#parent_-request-formatted-id').text('Not Found')
+                        requestModal.find('input[name=parent_request_id]').remove()
+                    }
+                }).always(function(){
+                    requestModal.find('.overlay-wrapper').html('')
+                });
+                requestModal.modal('toggle');
+            })
+        </script>
+    @endif
 @stop

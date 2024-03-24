@@ -21,7 +21,8 @@ class Task extends Model
         'time',
         'request_id',
         'automation_id',
-        'automation_task_id'
+        'automation_task_id',
+        'is_end'
     ];
 
     protected $appends = ['formatted_request_id'];

@@ -8,6 +8,7 @@ use App\Http\Middleware\RequesterAllowedOnly;
 use App\Http\Requests\UpdateCommissionRequest;
 use App\Http\Requests\UserReqRequest;
 use App\Models\User;
+use App\Services\FindingService;
 use App\Services\RequestService;
 use Illuminate\Http\Request;
 
@@ -15,8 +16,9 @@ class RequestController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['permission:view request'])->only(['index','request_list','show']);
+        $this->middleware(['permission:view request'])->only(['index','request_list','show','getParentRequest']);
         $this->middleware(['permission:add request'])->only(['store']);
+        $this->middleware(['permission:edit request'])->only(['update','declineRequest']);
         $this->middleware(RequesterAllowedOnly::class)->only(['show']);
     }
     /**
@@ -54,10 +56,8 @@ class RequestController extends Controller
         $requestDetail = \App\Models\Request::findOrFail($id);
         $assignee = User::whereHas("roles", function($q){ $q->where("name","!=","super admin")->where("name","!=","sales director"); })->get();
 
-//        $id = str_pad($requestDetail->id, 5, '0', STR_PAD_LEFT);
-        $id = $requestService->requestIdFormatter($requestDetail->request_type, $requestDetail->id);
         return view('dashboard.commissions.show',compact(
-            'requestDetail','id','assignee'
+            'requestDetail','assignee'
         ));
     }
 
@@ -113,5 +113,17 @@ class RequestController extends Controller
     public function requestActivities($requestId, RequestService $requestService)
     {
         return $requestService->activities($requestId);
+    }
+
+    public function getParentRequest($request): \App\Models\Request
+    {
+        return \App\Models\Request::findOrFail($request);
+    }
+
+    public function declineRequest($request_id, FindingService $findingService)
+    {
+        return $findingService->set_request_to_declined($request_id) ?
+            response()->json(['success' => true, 'message' => 'Request Declined!']) :
+            response()->json(['success' => false, 'message' => 'An error occurred!']) ;
     }
 }

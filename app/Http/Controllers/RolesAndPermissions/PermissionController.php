@@ -94,7 +94,7 @@ class PermissionController extends Controller
             ->addColumn('roles', function($permission){
                 $role = '';
                 foreach ($permission->getRoleNames() as $roleName){
-                    $role .= '<span class="badge badge-primary mr-1">'.$roleName.'</span>';
+                    $role .= '<span class="badge badge-success mr-1">'.$roleName.'</span>';
                 }
                 return $role;
             })

@@ -5,13 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Finding;
 use App\Http\Requests\StoreFindingRequest;
 use App\Http\Requests\UpdateFindingRequest;
+use App\Services\ActionTakenService;
 use App\Services\FindingService;
+use Illuminate\Http\Request;
 
 class FindingController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['permission:add finding'])->only(['store']);
+        $this->middleware(['permission:add finding'])->only(['store','create_findings']);
         $this->middleware(['permission:view finding'])->only(['findingsList']);
     }
     /**
@@ -76,5 +78,16 @@ class FindingController extends Controller
     {
         $findings = Finding::where('request_id',$requestId)->get();
         return $findingService->findingsList($findings);
+    }
+
+    public function create_findings(Request $request, FindingService $findingService)
+    {
+        $request->validate([
+            'description' => ['required','max:1500']
+        ]);
+
+        return $findingService->create_findings_from_task($request) ?
+            response()->json(['success' => true, 'message' => 'Findings Successfully Added']) :
+            response()->json(['success' => false, 'message' => 'An error occurred']) ;
     }
 }

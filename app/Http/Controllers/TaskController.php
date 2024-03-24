@@ -8,6 +8,7 @@ use App\Models\Request;
 use App\Models\Task;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
+use App\Services\RequestService;
 use App\Services\TaskService;
 
 class TaskController extends Controller
@@ -104,6 +105,13 @@ class TaskController extends Controller
     public function taskActionTakens(Task $task, TaskService $taskService)
     {
         return $taskService->actionTakens($task->actionTakens);
+    }
+
+    public function createNextTaskFromTemplate(Task $task, RequestService $requestService): \Illuminate\Http\JsonResponse
+    {
+        return $requestService->get_next_task($task->request_id, $task->id, $requestService) ?
+            response()->json(['success' => true, 'message' => 'New task successfully added!']) :
+            response()->json(['success' => false, 'message' => 'Add action taken first!']) ;
     }
 
 }

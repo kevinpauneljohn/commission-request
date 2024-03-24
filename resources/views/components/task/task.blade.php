@@ -1,5 +1,5 @@
 @can('view task')
-    <div class="card card-purple card-outline">
+    <div class="card card-success card-outline">
         <div class="card-body">
             <ul class="nav nav-tabs">
                 @if(auth()->user()->can('view task') && !auth()->user()->hasRole('sales director'))

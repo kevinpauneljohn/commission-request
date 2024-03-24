@@ -20,11 +20,11 @@
 @section('content')
     <div class="row">
         <div class="col-lg-12">
-            <div class="card card-purple card-outline">
+            <div class="card card-success card-outline">
                 <div class="card-header ui-sortable-handle" style="cursor: move;">
                     <h3 class="card-title">Task Templates</h3>
                     <div class="card-tools">
-                        <button class="btn bg-purple btn-sm" id="create-task-template-btn">Create</button>
+                        <button class="btn bg-success btn-sm" id="create-task-template-btn">Create</button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -56,7 +56,7 @@
                 <form id="add-automation-form">
                     @csrf
                     <div class="modal-content">
-                        <div class="modal-header">
+                        <div class="modal-header bg-success">
                             <h5 class="modal-title">Modal title</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
@@ -101,7 +101,7 @@
                         <input type="hidden" name="automation_id" value="{{$automation->id}}"/>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="submit" class="btn btn-success">Save</button>
                         </div>
                     </div>
                 </form>

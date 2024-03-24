@@ -29,7 +29,7 @@ class TaskService
         return false;
     }
 
-    public function updateTask(array $taskData, $task)
+    public function updateTask(array $taskData, $task): bool
     {
         $task->title = $taskData['title'];
         $task->description = $taskData['description'];
@@ -60,7 +60,7 @@ class TaskService
         $task->status = $status;
         $task->save();
 
-        $logs = 'Task #'.str_pad($task->id, 5, '0', STR_PAD_LEFT).' updated to '.$this->status($task->status).' status';
+        $logs = 'Task #'.$task->request_id.'-'.str_pad($task->id, 5, '0', STR_PAD_LEFT).' updated to '.$this->status($task->status).' status';
         $properties = ['task_title' => $task->title];
         $this->taskLogsActivities($task, $task->request_id, $logs,$properties, true);
         return true;
@@ -112,12 +112,12 @@ class TaskService
                     $action .= '<a href="'.route('task.show',['task' => $task->id]).'" class="btn btn-xs btn-success view-task-btn mr-1" id="'.$task->id.'">View</a>';
 
                 }
-                if(auth()->user()->can('edit task'))
+                if(auth()->user()->can('edit task') && auth()->user()->id == $task->creator)
                 {
                     $action .= '<button class="btn btn-xs btn-primary edit-task-btn mr-1" id="'.$task->id.'">Edit</button>';
 
                 }
-                if(auth()->user()->can('delete task'))
+                if(auth()->user()->can('delete task') && auth()->user()->id == $task->creator)
                 {
                     $action .= '<button class="btn btn-xs btn-danger delete-task-btn" id="'.$task->id.'">Delete</button>';
 
@@ -128,18 +128,14 @@ class TaskService
             ->make(true);
     }
 
-    private function status($status)
+    private function status($status): string
     {
-        switch ($status){
-            case $status == "pending";
-                return'<span class="badge badge-warning">'.$status.'</span>';
-            case $status == "on-going";
-                return '<span class="badge badge-primary">'.$status.'</span>';
-            case $status == "completed";
-                return '<span class="badge badge-success">'.$status.'</span>';
-            default:
-                return "";
-        }
+        return match ($status) {
+            $status == "pending" => '<span class="badge badge-warning">' . $status . '</span>',
+            $status == "on-going" => '<span class="badge badge-primary">' . $status . '</span>',
+            $status == "completed" => '<span class="badge badge-success">' . $status . '</span>',
+            default => "",
+        };
     }
     public function actionTakens($actionTakens)
     {

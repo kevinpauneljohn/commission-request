@@ -29,6 +29,7 @@ return new class extends Migration
             $table->text('message')->nullable();
             $table->foreignUuid('user_id')->nullable();
             $table->uuid('backend_user')->nullable();
+            $table->unsignedBigInteger('parent_request_id')->nullable();
             $table->string('status');
             $table->timestamps();
 

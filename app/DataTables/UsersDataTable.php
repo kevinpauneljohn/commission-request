@@ -33,7 +33,7 @@ class UsersDataTable extends DataTable
                 $roles = '';
                 foreach($user->getRoleNames() as $role)
                 {
-                    $roles .= '<span class="badge badge-primary mr-1">'.$role.'</span>';
+                    $roles .= '<span class="badge badge-success mr-1">'.$role.'</span>';
                 }
                 return $roles;
             })

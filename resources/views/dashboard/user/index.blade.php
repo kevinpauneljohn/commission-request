@@ -17,7 +17,7 @@
 @stop
 
 @section('content')
-    <div class="card card-primary card-outline card-tabs">
+    <div class="card card-success card-outline card-tabs">
         <div class="card-header p-0 pt-1 border-bottom-0">
             <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
                 <li class="nav-item">
@@ -32,7 +32,7 @@
         <div class="card-body">
             <div class="tab-content" id="custom-tabs-three-tabContent">
                 <div class="tab-pane fade show active" id="back-end-users" role="tabpanel" aria-labelledby="back-end-users">
-                    <button class="btn btn-sm btn-primary mb-4" id="new-backend-user-btn">Add New</button>
+                    <button class="btn btn-sm btn-success mb-4" id="new-backend-user-btn">Add New</button>
                     {{ $dataTable->table(['class' => 'table table-bordered table-hover'], true) }}
                 </div>
                 <div class="tab-pane fade" id="sales-partner" role="tabpanel" aria-labelledby="sales-partner">
@@ -49,7 +49,7 @@
             <form id="add-backend-user-form">
                 @csrf
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <div class="modal-header bg-success">
                         <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -114,7 +114,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="submit" class="btn btn-success">Save</button>
                     </div>
                 </div>
             </form>

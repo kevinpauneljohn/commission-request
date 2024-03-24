@@ -21,6 +21,7 @@ return new class extends Migration
             $table->date('due_date')->nullable();
             $table->time('time')->nullable();
             $table->foreignId('request_id')->nullable();
+            $table->boolean('is_end');
             $table->timestamps();
             $table->softDeletes();
 

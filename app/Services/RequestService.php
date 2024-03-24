@@ -9,11 +9,11 @@ use App\Models\User;
 use Spatie\Activitylog\Models\Activity;
 use Yajra\DataTables\Facades\DataTables;
 
-class RequestService
+class RequestService extends \App\Services\TaskService
 {
     public function createRequest(array $requestData): bool
     {
-        if($request = Request::create([
+        if(Request::create([
             'buyer' => [
                 'firstname' => $requestData['firstname'],
                 'middlename' => $requestData['middlename'],
@@ -30,13 +30,21 @@ class RequestService
             'sd_rate' => $requestData['sd_rate'],
             'message' => $requestData['message'],
             'user_id' => !auth()->user()->hasRole('sales director') ? $requestData['sales_director'] : auth()->user()->id,
-            'status' => 'pending'
+            'parent_request_id' => collect($requestData)->has('parent_request_id')  ?
+                    $this->is_request_id_exists($requestData['parent_request_id']) ? $requestData['parent_request_id']: null
+                : null,
+            'status' => 'pending',
         ]))
         {
-//            $this->generate_automated_task($request->id);
+
             return true;
         }
         return false;
+    }
+
+    private function is_request_id_exists($request_id)
+    {
+        return Request::where('id',$request_id)->count() > 0;
     }
 
     private function task($request_id)
@@ -84,16 +92,13 @@ class RequestService
      */
     private function is_request_task_template_used($request_id, $automation_id): bool
     {
-        return $this->task($request_id)->where('automation_id',$automation_id) > 0;
+        return $this->task($request_id)->where('automation_id',$automation_id)->count() > 0;
     }
 
-//    private function get_task_template_used($request_id, $automation_id)
-//    {
-//        return $this->task($request_id)->where('automation_id', $automation_id)->get();
-//    }
     private function get_task_template_id_used($request_id, $automation_id): \Illuminate\Support\Collection
     {
-        return collect($this->task($request_id)->where('automation_id', $automation_id)->get())->pluck('automation_task_id');
+        return collect($this->task($request_id)->where('automation_id', $automation_id)->get())
+            ->pluck('automation_task_id');
     }
 
     private function excluded_task_template_id($request_id, $automation_id): \Illuminate\Support\Collection
@@ -111,6 +116,12 @@ class RequestService
         return $this->automation()->automationTasks->count();
     }
 
+    private function is_task_template_the_end($task_template_id): bool
+    {
+        $last_automated_task = collect($this->automation()->automationTasks()->orderBy('sequence_id','asc')->get())->last();
+        return  $last_automated_task->id == $task_template_id;
+    }
+
     public function generate_automated_task($request_id): void
     {
         $automation = $this->automation();
@@ -120,30 +131,39 @@ class RequestService
             Task::create([
                 'title' => $taskTemplate->title,
                 'description' => $taskTemplate->description,
-                'assigned_to' => User::whereHas("roles", function($q){ $q->where("name","=","super admin"); })->first()->id, //create a function that will assign to a designated user
+                'assigned_to' => User::whereHas("roles", function($q){ $q->where("name","=","business administrator"); })->first()->id, //create a function that will assign to a designated user
                 'creator' => $taskTemplate->creator,
                 'status' => 'pending',
                 'due_date' => now()->format('Y-m-d'),
                 'request_id' => $request_id,
                 'automation_id' => $automation->id,
-                'automation_task_id' => $taskTemplate->id
+                'automation_task_id' => $taskTemplate->id,
+                'is_end' => $this->is_task_template_the_end($taskTemplate->id)
             ]);
         }
 
     }
 
 
-    public function requestIdFormatter($request_type, $request_id): string
+    public function get_next_task($request_id, $task_id, TaskService $taskService): bool
     {
-        $id = str_pad($request_id, 5, '0', STR_PAD_LEFT);
-        return match ($request_type) {
-            "cheque_pickup" => 'RQ-PUP-' . $id,
-            "commission_request" => 'RQ-COM-' . $id,
-            default => "",
-        };
+//        check if an action taken was created first
+        if($this->is_task_have_action_taken($task_id))
+        {
+            $taskService->updateTaskStatus($task_id, 'completed');
+            $this->generate_automated_task($request_id);
+            return true;
+        }
+        return false;
     }
 
-    public function requestLogsActivities($request_id, $log, $properties, $display)
+    private function is_task_have_action_taken($task_id): bool
+    {
+        return Task::findOrFail($task_id)->actionTakens->count() > 0;
+    }
+
+
+    public function requestLogsActivities($request_id, $log, $properties, $display): ?\Spatie\Activitylog\Contracts\Activity
     {
         return \activity()
             ->causedBy(auth()->user()->id)
@@ -159,7 +179,7 @@ class RequestService
     {
         return DataTables::of($userRequest)
             ->editColumn('id', function($request){
-                return '<a href="'.route('request.show',['request' => $request->id]).'"><span style="color:#007bff">'.$this->requestIdFormatter($request->request_type,$request->id).'</span></a>';
+                return '<a href="'.route('request.show',['request' => $request->id]).'"><span style="color:#007bff">'.$request->formatted_id.'</span></a>';
             })
             ->editColumn('created_at', function($request){
                 return $request->created_at->format('M d, Y g:i:s a');
@@ -203,6 +223,12 @@ class RequestService
 
                 return ucwords($request->user->firstname.' '.$request->user->lastname);
             })
+            ->editColumn('child_requests',function($request){
+                return $request->child_requests;
+            })
+            ->editColumn('status',function($request){
+                return $request->colored_status;
+            })
             ->addColumn('action',function($request){
                 $action = "";
                 $text = 'Manage';
@@ -218,7 +244,7 @@ class RequestService
                 }
                 return $action;
             })
-            ->rawColumns(['action','sd_rate','cheque_number','cheque_amount','id','total_contract_price'])
+            ->rawColumns(['action','sd_rate','cheque_number','cheque_amount','id','total_contract_price','status','child_requests'])
             ->make(true);
     }
 
