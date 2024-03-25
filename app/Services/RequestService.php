@@ -150,7 +150,7 @@ class RequestService extends \App\Services\TaskService
                 'assigned_to' => $this->assign_to($taskTemplate->assigned_to_role),
                 'creator' => $taskTemplate->creator,
                 'status' => 'pending',
-                'due_date' => now()->format('Y-m-d'),
+                'due_date' => now()->addDays(intval($taskTemplate->days_before_due_date))->format('Y-m-d'),
                 'request_id' => $request_id,
                 'automation_id' => $automation->id,
                 'automation_task_id' => $taskTemplate->id,

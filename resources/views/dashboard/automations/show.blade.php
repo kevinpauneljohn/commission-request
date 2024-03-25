@@ -22,10 +22,8 @@
         <div class="col-lg-12">
             <div class="card card-success card-outline">
                 <div class="card-header ui-sortable-handle" style="cursor: move;">
-                    <h3 class="card-title">Task Templates</h3>
-                    <div class="card-tools">
-                        <button class="btn bg-success btn-sm" id="create-task-template-btn">Create</button>
-                    </div>
+                    <button class="btn bg-success btn-sm" id="create-task-template-btn">Create Task Template</button>
+
                 </div>
                 <div class="card-body">
                     <div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
