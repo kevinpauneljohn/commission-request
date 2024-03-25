@@ -22,8 +22,9 @@
         <div class="col-lg-3">
             <div class="card card-success card-outline">
                 <div class="card-body">
-                    <strong><i class="fas fa-ticket-alt"></i> <span class="text-primary text-bold">{{$requestDetail->formatted_id}}</span></strong>
+                    <strong><i class="fas fa-ticket-alt"></i> Request # </strong><p class="text-primary text-bold">{{$requestDetail->formatted_id}}</p>
                     <hr>
+
                     <strong><i class="fas fa-user mr-1"></i> Requester</strong>
 
                     <p class="text-muted">
@@ -50,6 +51,30 @@
                     <p class="text-muted">
                         {{ucwords($requestDetail->status)}}
                     </p>
+                </div>
+            </div>
+
+            <div class="card card-success card-outline">
+                <div class="card-header bg-success">
+                    <h3 class="card-title">Request Hierarchy</h3>
+                </div>
+                <div class="card-body">
+                    @if(!is_null($requestDetail->parent_request_id))
+                        <a href="{{route('request.show',['request' =>$requestDetail->parent_request_id])}}" class="mb-3"><p>
+                                <span class="text-bold text-success">{{$requestDetail->parent_request}}</span> <i class="text-orange">Parent</i></p></a>
+                    @endif
+
+                        <p><span class="text-muted">{{$requestDetail->formatted_id}}</span> <i class="text-orange">Current</i></p>
+
+                    @if(collect($down_lines)->count() == 1)
+                        <h5>Child Request</h5>
+                        @elseif( collect($down_lines)->count()> 1)
+                        <h5>Child Requests</h5>
+                    @endif
+
+                    @foreach($down_lines as $down_line)
+                        <a href="{{route('request.show',['request' => $down_line->id])}}"><p>{{$down_line->formatted_id}}</p></a>
+                    @endforeach
                 </div>
             </div>
 
@@ -99,11 +124,13 @@
                         <div class="row">
                             <div class="col-lg-4 mt-3 total_contract_price">
                                 <label for="total_contract_price">Total Contract Price</label>
-                                <input name="total_contract_price" type="number" step="any" id="total_contract_price" min="0" class="form-control" value="{{$requestDetail->total_contract_price}}">
+                                <input name="total_contract_price" type="number" step="any" id="total_contract_price" min="0" class="form-control" value="{{$requestDetail->total_contract_price}}"
+                                       @if($requestDetail->status == 'declined' || $requestDetail->status == 'completed' || $requestDetail->status == 'delivered')disabled @endif>
+
                             </div>
                             <div class="col-lg-4 mt-3 financing">
                                 <label for="financing">Financing</label><span class="required">*</span>
-                                <select name="financing" class="form-control" id="financing">
+                                <select name="financing" class="form-control" id="financing" @if($requestDetail->status == 'declined' || $requestDetail->status == 'completed' || $requestDetail->status == 'delivered')disabled @endif>
                                     <option value="">-- Select Financing --</option>
                                     <option value="hdmf">HDMF</option>
                                     <option value="bank">Bank</option>
@@ -115,7 +142,7 @@
                             </div>
                             <div class="col-lg-4 mt-3 sd_rate">
                                 <label for="sd_rate">Sales Director Rate</label>
-                                <select name="sd_rate" id="sd_rate" class="form-control">
+                                <select name="sd_rate" id="sd_rate" class="form-control" @if($requestDetail->status == 'declined' || $requestDetail->status == 'completed' || $requestDetail->status == 'delivered')disabled @endif>
                                     <option value="">-- Select SD Rate --</option>
                                     @php $rate = 0.5; $increment = 0.5;@endphp
                                     @for($count = 1; $rate <= 5.5 ;$count++)
@@ -136,9 +163,11 @@
                             </div>
                         </div>
                     </div>
+                    @if($requestDetail->status == 'pending' || $requestDetail->status == 'on-going')
                     <div class="card-footer">
                         <button type="submit" class="btn btn-default">Save</button>
                     </div>
+                    @endif
                 </form>
             </div>
 

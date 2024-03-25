@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Task;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Spatie\Activitylog\Contracts\Activity;
 use Yajra\DataTables\DataTables;
 
@@ -60,10 +61,18 @@ class TaskService
         $task->status = $status;
         $task->save();
 
+        $this->set_request_to_on_going($task->request_id);
+
         $logs = 'Task #'.$task->request_id.'-'.str_pad($task->id, 5, '0', STR_PAD_LEFT).' updated to '.$this->status($task->status).' status';
         $properties = ['task_title' => $task->title];
         $this->taskLogsActivities($task, $task->request_id, $logs,$properties, true);
         return true;
+    }
+
+    private function set_request_to_on_going($request_id): void
+    {
+        DB::table('requests')->where('id', $request_id)
+            ->update(['status' => 'on-going']);
     }
 
     public function taskLogsActivities($task, $request_id, $log, $properties, $display): ?Activity
@@ -130,12 +139,16 @@ class TaskService
 
     private function status($status): string
     {
-        return match ($status) {
-            $status == "pending" => '<span class="badge badge-warning">' . $status . '</span>',
-            $status == "on-going" => '<span class="badge badge-primary">' . $status . '</span>',
-            $status == "completed" => '<span class="badge badge-success">' . $status . '</span>',
-            default => "",
-        };
+        switch ($status){
+            case $status == "pending";
+                return'<span class="badge badge-warning">'.$status.'</span>';
+            case $status == "on-going";
+                return '<span class="badge badge-primary">'.$status.'</span>';
+            case $status == "completed";
+                return '<span class="badge badge-success">'.$status.'</span>';
+            default:
+                return "";
+        }
     }
     public function actionTakens($actionTakens)
     {

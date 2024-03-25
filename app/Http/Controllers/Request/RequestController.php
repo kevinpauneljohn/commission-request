@@ -11,9 +11,11 @@ use App\Models\User;
 use App\Services\FindingService;
 use App\Services\RequestService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RequestController extends Controller
 {
+
     public function __construct()
     {
         $this->middleware(['permission:view request'])->only(['index','request_list','show','getParentRequest']);
@@ -44,7 +46,7 @@ class RequestController extends Controller
     public function store(UserReqRequest $request, RequestService $requestService)
     {
         return $requestService->createRequest($request->all()) ?
-            response()->json(['success' => true, 'message' => 'Request successfully created!']):
+            response()->json(['success' => true, 'message' => 'Request successfully created!', 'request_id' => $requestService->request_id]):
             response()->json(['success' => false, 'message' => 'An error occurred!']);
     }
 
@@ -55,9 +57,9 @@ class RequestController extends Controller
     {
         $requestDetail = \App\Models\Request::findOrFail($id);
         $assignee = User::whereHas("roles", function($q){ $q->where("name","!=","super admin")->where("name","!=","sales director"); })->get();
-
+        $down_lines = $requestService->all_down_lines($id);
         return view('dashboard.commissions.show',compact(
-            'requestDetail','assignee'
+            'requestDetail','assignee', 'down_lines'
         ));
     }
 

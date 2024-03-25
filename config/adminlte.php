@@ -487,7 +487,7 @@ return [
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => 'js/alert.js',
+                    'location' => '/js/alert.js',
                 ],
             ],
         ],
@@ -497,7 +497,7 @@ return [
                 [
                     'type' => 'css',
                     'asset' => false,
-                    'location' => 'css/pace/flash.css',
+                    'location' => '/css/pace/flash.css',
                 ],
                 [
                     'type' => 'js',

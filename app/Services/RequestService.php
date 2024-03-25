@@ -11,9 +11,13 @@ use Yajra\DataTables\Facades\DataTables;
 
 class RequestService extends \App\Services\TaskService
 {
+    public $child_request;
+    public $child_request_id;
+    public $request_id;
+
     public function createRequest(array $requestData): bool
     {
-        if(Request::create([
+        if($request =Request::create([
             'buyer' => [
                 'firstname' => $requestData['firstname'],
                 'middlename' => $requestData['middlename'],
@@ -36,7 +40,7 @@ class RequestService extends \App\Services\TaskService
             'status' => 'pending',
         ]))
         {
-
+            $this->request_id = $request->id;
             return true;
         }
         return false;
@@ -162,6 +166,29 @@ class RequestService extends \App\Services\TaskService
         return Task::findOrFail($task_id)->actionTakens->count() > 0;
     }
 
+    public function all_down_lines($request_id): array
+    {
+        $child = [];
+        for ($ctr = 0; $this->requestDownLines($request_id); $ctr++){
+            $child[$ctr] = $this->child_request;
+            $request_id = $this->child_request_id;
+        }
+        return $child;
+    }
+
+    public function requestDownLines($request_id): bool
+    {
+        $requests = \App\Models\Request::where('parent_request_id',$request_id);
+        if($requests->count() > 0)
+        {
+            $this->child_request = $requests->first();
+            $this->child_request_id = $requests->first()->id;
+            return true;
+        }
+
+        return false;
+    }
+
 
     public function requestLogsActivities($request_id, $log, $properties, $display): ?\Spatie\Activitylog\Contracts\Activity
     {
@@ -223,8 +250,8 @@ class RequestService extends \App\Services\TaskService
 
                 return ucwords($request->user->firstname.' '.$request->user->lastname);
             })
-            ->editColumn('child_requests',function($request){
-                return $request->child_requests;
+            ->editColumn('parent_request',function($request){
+                return '<span class="text-primary">'.$request->parent_request.'</span>';
             })
             ->editColumn('status',function($request){
                 return $request->colored_status;
@@ -244,7 +271,7 @@ class RequestService extends \App\Services\TaskService
                 }
                 return $action;
             })
-            ->rawColumns(['action','sd_rate','cheque_number','cheque_amount','id','total_contract_price','status','child_requests'])
+            ->rawColumns(['action','sd_rate','cheque_number','cheque_amount','id','total_contract_price','status','parent_request'])
             ->make(true);
     }
 

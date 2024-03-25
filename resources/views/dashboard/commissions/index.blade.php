@@ -45,7 +45,7 @@
                             <th style="width: 8%;">Cheque Amount</th>
                         @endif
                         <th>Requester</th>
-                        <th>Child #</th>
+                        <th>Parent #</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
@@ -231,7 +231,7 @@
                         { data: 'cheque_amount', name: 'cheque_amount'},
                            @endif
                         { data: 'user_id', name: 'user_id'},
-                        { data: 'child_requests', name: 'child_requests'},
+                        { data: 'parent_request', name: 'child_requests'},
                         { data: 'status', name: 'status'},
                         { data: 'action', name: 'action', orderable: false, searchable: false}
                     ],
@@ -286,13 +286,22 @@
                     console.log(response)
                     if(response.success === true)
                     {
-                        Toast.fire({
+                        Swal.fire({
+                            title: response.message,
+                            text: 'Redirecting now...',
                             type: "success",
-                            title: response.message
+                            showConfirmButton: false,
                         });
                         requestTable.DataTable().ajax.reload(null, false);
                         $('#add-request-form').trigger('reset')
                         requestModal.modal('toggle')
+
+                        @if(isset($_GET['parent_request']))
+                            setTimeout(function(){
+                                window.location.replace('/request/'+response.request_id)
+                            },2000)
+                        @endif
+
                     }else{
                         Toast.fire({
                             type: "warning",

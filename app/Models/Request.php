@@ -34,7 +34,7 @@ class Request extends Model
     /*Note: a request task automation is fired once a request was created found in
     EventServiceProviders and RequestObserver*/
 
-    protected $appends = ['colored_status','formatted_id','child_requests'];
+    protected $appends = ['colored_status','formatted_id','child_requests','parent_request'];
 
     public function user()
     {
@@ -82,6 +82,22 @@ class Request extends Model
         }
         return $requestIds;
     }
+
+    public function getParentRequestAttribute(): string
+    {
+
+        if(is_null($this->parent_request_id))
+        {
+            return "";
+        }
+        $id = str_pad($this->parent_request_id, 5, '0', STR_PAD_LEFT);
+        return match ($this->request_type) {
+            "cheque_pickup" => 'RQ-PUP-' . $id,
+            "commission_request" => 'RQ-COM-' . $id,
+            default => "",
+        };
+    }
+
 
     public function tasks(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
