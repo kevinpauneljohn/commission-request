@@ -150,6 +150,7 @@
                         title: response.message
                     });
                     permissionModal.find('form').trigger('reset');
+                    permissionModal.find('#role').val('').trigger('change');
                     $('#permission-list').DataTable().ajax.reload(null, false);
                 }
             }).fail( (xhr, status, error) => {
@@ -287,6 +288,9 @@
         });
         @endcan
 
-        $('.select2').select2();
+        $('#role').select2({
+            placeholder: 'Select a role',
+            allowClear: false,
+        });
     </script>
 @stop
