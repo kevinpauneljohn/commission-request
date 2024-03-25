@@ -24,7 +24,7 @@ class AutomationTaskFactory extends Factory
 //            'automation_id' => collect(collect(Automation::all())->first())->pluck('id')->random(),
             'title' => fake()->text,
             'description' => fake()->realText,
-            'assigned_to_role' => collect(collect(Role::all())->pluck('name'))->random(),
+            'assigned_to_role' => 'business administrator',
 //            'creator' => collect(collect(User::whereHas("roles", function($q){ $q->where("name","=","super admin"); })->get())->pluck('id'))->random(),
             'days_before_due_date' => rand(1,90),
 //            'sequence_id' => collect(AutomationTask::all())->count() + 1

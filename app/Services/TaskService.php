@@ -92,7 +92,7 @@ class TaskService
     {
         return DataTables::of($tasks)
             ->editColumn('assigned_to',function($task){
-                return '<span class="text-fuchsia">'.ucwords($task->assignedTo->full_name).'</span>';
+                return is_null($task->assignedTo)? "" : '<span class="text-fuchsia">'.ucwords($task->assignedTo->full_name).'</span>';
             })
             ->editColumn('creator',function($task){
                 return '<span class="text-green">'.ucwords($task->author->full_name).'</span>';

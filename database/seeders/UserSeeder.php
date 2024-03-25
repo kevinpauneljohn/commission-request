@@ -46,6 +46,18 @@ class UserSeeder extends Seeder
         $user3->assignRole('business administrator');
         $user3->save();
 
+
+        $user4 = new User([
+            'firstname' => 'jane',
+            'lastname' => 'doe',
+            'email' => 'jane@gmail.com',
+            'username' => 'jane',
+            'password' => 123
+        ]);
+
+        $user4->assignRole('business administrator');
+        $user4->save();
+
         $admin = new User([
             'firstname' => 'admin',
             'lastname' => 'admin',

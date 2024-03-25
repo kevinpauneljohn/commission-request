@@ -126,6 +126,18 @@ class RequestService extends \App\Services\TaskService
         return  $last_automated_task->id == $task_template_id;
     }
 
+    public function assign_to($role)
+    {
+        $users = User::whereHas("roles", function($q) use ($role){ $q->where("name","=",$role); })->get();
+        $data = array();
+        foreach ($users as $user){
+//            $data['task-'.intval($user->tasks()->where('status','pending')->orWhere('status','on-going')->count())] = $user->id;
+            $data['task-'.intval($user->tasks->count())] = $user->id;
+        }
+        ksort($data);
+        return collect($data)->first();
+    }
+
     public function generate_automated_task($request_id): void
     {
         $automation = $this->automation();
@@ -135,7 +147,7 @@ class RequestService extends \App\Services\TaskService
             Task::create([
                 'title' => $taskTemplate->title,
                 'description' => $taskTemplate->description,
-                'assigned_to' => User::whereHas("roles", function($q){ $q->where("name","=","business administrator"); })->first()->id, //create a function that will assign to a designated user
+                'assigned_to' => $this->assign_to($taskTemplate->assigned_to_role), //create a function that will assign to a designated user
                 'creator' => $taskTemplate->creator,
                 'status' => 'pending',
                 'due_date' => now()->format('Y-m-d'),
