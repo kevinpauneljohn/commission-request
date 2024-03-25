@@ -147,7 +147,7 @@ class RequestService extends \App\Services\TaskService
             Task::create([
                 'title' => $taskTemplate->title,
                 'description' => $taskTemplate->description,
-                'assigned_to' => $this->assign_to($taskTemplate->assigned_to_role), //create a function that will assign to a designated user
+                'assigned_to' => $this->assign_to($taskTemplate->assigned_to_role),
                 'creator' => $taskTemplate->creator,
                 'status' => 'pending',
                 'due_date' => now()->format('Y-m-d'),
@@ -159,7 +159,6 @@ class RequestService extends \App\Services\TaskService
         }
 
     }
-
 
     public function get_next_task($request_id, $task_id, TaskService $taskService): bool
     {
@@ -190,7 +189,7 @@ class RequestService extends \App\Services\TaskService
 
     public function requestDownLines($request_id): bool
     {
-        $requests = \App\Models\Request::where('parent_request_id',$request_id);
+        $requests = Request::where('parent_request_id',$request_id);
         if($requests->count() > 0)
         {
             $this->child_request = $requests->first();

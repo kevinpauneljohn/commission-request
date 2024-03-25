@@ -77,5 +77,6 @@ class PermissionRoleSeeder extends Seeder
         Permission::create(['name' => 'edit automation'])->assignRole(['sales administrator']);
         Permission::create(['name' => 'delete automation'])->assignRole(['sales administrator']);
         //end finding
+
     }
 }

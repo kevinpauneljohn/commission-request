@@ -338,11 +338,18 @@ return [
             'can' => 'view request'
         ],
         [
-            'text' => 'Automation',
+            'text' => 'Automations',
             'route'  => 'automation.index',
             'icon' => 'fa fa-magic',
             'key'  => 'automation',
             'can' => 'view automation'
+        ],
+        [
+            'text' => 'Tasks',
+            'route'  => 'task.index',
+            'icon' => 'fas fa-thumbtack ',
+            'key'  => 'task',
+            'can' => 'view task'
         ],
     ],
 

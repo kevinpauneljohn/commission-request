@@ -17,6 +17,7 @@
 @stop
 
 @section('content')
+    <x-request.info-box />
     <div class="card card-success card-outline">
         @can('add request')
             <div class="card-header">

@@ -25,7 +25,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-        //
+        return view('dashboard.tasks.index');
     }
 
     /**
@@ -102,7 +102,7 @@ class TaskController extends Controller
             response()->json(['success' => false, 'message' => 'Add action taken first!']) ;
     }
 
-    public function taskActionTakens(Task $task, TaskService $taskService)
+    public function taskActionTakens(Task $task, TaskService $taskService): \Illuminate\Http\JsonResponse
     {
         return $taskService->actionTakens($task->actionTakens);
     }
