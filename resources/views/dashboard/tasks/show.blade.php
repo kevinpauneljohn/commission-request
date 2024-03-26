@@ -85,6 +85,10 @@
                                 @if(!$task->is_end)
                                     <button type="button" class="btn btn-success btn-sm mb-1" id="proceed-to-next-task">Proceed to next task</button>
                                 @endif
+
+                                @if($task->assigned_to != auth()->user()->id)
+                                    <h3 class="card-title">This task was not assigned to you</h3>
+                                @endif
                             </div>
                         @endif
                     @endif
