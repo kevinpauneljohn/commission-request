@@ -24,6 +24,14 @@
                 <div class="card-body">
                     <strong><i class="fas fa-ticket-alt"></i> From Request # <span class="text-primary text-bold"><a href="{{route('request.show',['request' => $task->request_id])}}">{{$task->formatted_request_id}}</a> </span></strong>
                     <hr>
+                    <strong><i class="fas fa-user mr-1"></i> Assigned To</strong>
+
+                    <p class="text-muted">
+                        {{ucwords($task->assignedTo->full_name)}}
+                    </p>
+
+                    <hr>
+
                     <strong><i class="fas fa-user mr-1"></i> Creator</strong>
 
                     <p class="text-muted">
@@ -67,8 +75,6 @@
                     {!! $task->description !!}
                 </div>
             </div>
-
-            test
             <div class="card card-success card-outline task-card">
 
                     @if($task->assigned_to == auth()->user()->id && auth()->user()->can('add action taken') || auth()->user()->can('edit action taken'))
@@ -131,7 +137,6 @@
             </div>
         </div>
     @endcan
-    {{$task->assigned_to}}<br>{{auth()->user()->id}}
 @stop
 
 @section('plugins.Sweetalert2',true)
