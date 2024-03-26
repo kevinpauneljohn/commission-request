@@ -152,7 +152,7 @@ return [
     'layout_boxed' => null,
     'layout_fixed_sidebar' => true,
     'layout_fixed_navbar' => true,
-    'layout_fixed_footer' => null,
+    'layout_fixed_footer' => true,
     'layout_dark_mode' => null,
 
     /*
@@ -322,7 +322,7 @@ return [
         [
             'text' => 'Dashboard',
             'route'  => 'home',
-            'icon' => 'fa fa-tachometer-alt ',
+            'icon' => 'fa fa-home',
         ],
         [
             'text' => 'User Management',
@@ -350,6 +350,15 @@ return [
             'icon' => 'fas fa-thumbtack ',
             'key'  => 'task',
             'can' => 'view task'
+        ],
+        [
+            'text' => 'Multi Task',
+            'route'  => 'multi-tasking',
+            'icon' => 'fa fa-window-maximize',
+            'key'  => 'multi_task',
+            'can' => 'use multi task',
+            'id' => 'multi-task-menu',
+            'topnav' => true,
         ],
     ],
 

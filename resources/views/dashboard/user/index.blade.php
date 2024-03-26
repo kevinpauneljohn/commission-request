@@ -32,8 +32,10 @@
         <div class="card-body">
             <div class="tab-content" id="custom-tabs-three-tabContent">
                 <div class="tab-pane fade show active" id="back-end-users" role="tabpanel" aria-labelledby="back-end-users">
-                    <button class="btn btn-sm btn-success mb-4" id="new-backend-user-btn">Add New</button>
-                    {{ $dataTable->table(['class' => 'table table-bordered table-hover'], true) }}
+                    @if(auth()->user()->can('add user'))
+                        <button class="btn btn-sm btn-success mb-4" id="new-backend-user-btn">Add New</button>
+                    @endif
+                    {{ $dataTable->table(['class' => 'table table-bordered table-hover','style' => 'width:100%;'], true) }}
                 </div>
                 <div class="tab-pane fade" id="sales-partner" role="tabpanel" aria-labelledby="sales-partner">
                     Mauris tincidunt mi at erat gravida, eget tristique urna bibendum. Mauris pharetra purus ut ligula tempor, et vulputate metus facilisis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas sollicitudin, nisi a luctus interdum, nisl ligula placerat mi, quis posuere purus ligula eu lectus. Donec nunc tellus, elementum sit amet ultricies at, posuere nec nunc. Nunc euismod pellentesque diam.
@@ -121,6 +123,7 @@
         </div>
     </div>
 @stop
+<x-device-checker />
 @section('plugins.Sweetalert2',true)
 @section('css')
 

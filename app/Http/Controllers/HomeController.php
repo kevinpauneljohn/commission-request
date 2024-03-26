@@ -14,6 +14,7 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware(['permission:use multi task'])->only(['multiTasking']);
     }
 
     /**
@@ -24,5 +25,10 @@ class HomeController extends Controller
     public function index()
     {
         return view('dashboard.dashboard');
+    }
+
+    public function multiTasking()
+    {
+        return view('dashboard.multi-tasking');
     }
 }

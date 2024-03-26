@@ -108,6 +108,7 @@
     @endcan
 
 @stop
+<x-device-checker />
 @section('plugins.Sweetalert2',true)
 @section('plugins.SummerNote',true)
 @section('css')

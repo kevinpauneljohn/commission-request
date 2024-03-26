@@ -262,7 +262,12 @@ class RequestService extends \App\Services\TaskService
                 return ucwords($request->user->firstname.' '.$request->user->lastname);
             })
             ->editColumn('parent_request',function($request){
-                return '<span class="text-primary">'.$request->parent_request.'</span>';
+                if(!is_null($request->parent_request_id))
+                {
+                    return '<a href="'.route('request.show',['request' => $request->parent_request_id]).'"><span style="color:#007bff">'.$request->parent_request.'</span></a>';
+                }
+
+                return '';
             })
             ->editColumn('status',function($request){
                 return $request->colored_status;

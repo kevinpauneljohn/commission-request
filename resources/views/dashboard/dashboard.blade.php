@@ -9,7 +9,7 @@
 @section('content')
     <p>Welcome to this beautiful admin panel.</p>
 @stop
-
+<x-device-checker />
 @section('css')
     <link rel="stylesheet" href="/css/admin_custom.css">
 @stop

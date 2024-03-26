@@ -26,7 +26,7 @@
         <div class="card-body">
             <div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
 
-                <table id="permission-list" class="table table-bordered table-hover" role="grid">
+                <table id="permission-list" class="table table-bordered table-hover" role="grid" style="width: 100%;">
                     <thead>
                     <tr role="row">
                         <th>Date</th>
@@ -91,6 +91,7 @@
         </div>
     @endcan
 @stop
+<x-device-checker />
 @section('plugins.Sweetalert2',true)
 @section('css')
     {{-- Add here extra stylesheets --}}

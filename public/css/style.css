@@ -5,3 +5,14 @@
 .dataTables_wrapper{
     overflow-x:auto;
 }
+
+@media screen and (max-width: 880px) {
+    .small-box h3{
+        font-size: 1.2rem;
+    }
+
+    .small-box .icon>i.fa, .small-box .icon>i.fab, .small-box .icon>i.fad, .small-box .icon>i.fal, .small-box .icon>i.far, .small-box .icon>i.fas, .small-box .icon>i.ion{
+        font-size: 55px;
+    }
+}
+
