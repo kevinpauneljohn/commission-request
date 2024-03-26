@@ -108,6 +108,7 @@ return [
 
     'preloader' => [
         'enabled' => false,
+        'mode' => 'cwrapper',
         'img' => [
             'path' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
             'alt' => 'AdminLTE Preloader Image',
