@@ -80,14 +80,15 @@
                     @if($task->assigned_to == auth()->user()->id && auth()->user()->can('add action taken') || auth()->user()->can('edit action taken'))
                         @if($task->status != 'completed')
                             <div class="card-header">
-                                <button class="btn btn-primary btn-sm mb-1" id="action-taken">Add Action</button>
-                                <button type="button" class="btn btn-warning btn-sm mb-1" id="add-findings">Add Findings</button>
-                                @if(!$task->is_end)
-                                    <button type="button" class="btn btn-success btn-sm mb-1" id="proceed-to-next-task">Proceed to next task</button>
-                                @endif
 
                                 @if($task->assigned_to != auth()->user()->id)
-                                    <h3 class="card-title">This task was not assigned to you</h3>
+                                    <h3 class="card-title text-danger">This task was not assigned to you</h3>
+                                @else
+                                    <button class="btn btn-primary btn-sm mb-1" id="action-taken">Add Action</button>
+                                    <button type="button" class="btn btn-warning btn-sm mb-1" id="add-findings">Add Findings</button>
+                                    @if(!$task->is_end)
+                                        <button type="button" class="btn btn-success btn-sm mb-1" id="proceed-to-next-task">Proceed to next task</button>
+                                    @endif
                                 @endif
                             </div>
                         @endif
