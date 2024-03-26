@@ -504,7 +504,7 @@ return [
                 [
                     'type' => 'css',
                     'asset' => false,
-                    'location' => '/css/pace/flash.css',
+                    'location' => '/css/pace/minimal.css',
                 ],
                 [
                     'type' => 'js',
