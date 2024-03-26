@@ -125,12 +125,12 @@
                             <div class="col-lg-4 mt-3 total_contract_price">
                                 <label for="total_contract_price">Total Contract Price</label>
                                 <input name="total_contract_price" type="number" step="any" id="total_contract_price" min="0" class="form-control" value="{{$requestDetail->total_contract_price}}"
-                                       @if($requestDetail->status == 'declined' || $requestDetail->status == 'completed' || $requestDetail->status == 'delivered')disabled @endif>
+                                       @if($requestDetail->status == 'declined' || $requestDetail->status == 'completed' || $requestDetail->status == 'delivered' && !auth()->user()->hasRole('sales director'))disabled @endif>
 
                             </div>
                             <div class="col-lg-4 mt-3 financing">
                                 <label for="financing">Financing</label><span class="required">*</span>
-                                <select name="financing" class="form-control" id="financing" @if($requestDetail->status == 'declined' || $requestDetail->status == 'completed' || $requestDetail->status == 'delivered')disabled @endif>
+                                <select name="financing" class="form-control" id="financing" @if($requestDetail->status == 'declined' || $requestDetail->status == 'completed' || $requestDetail->status == 'delivered' && !auth()->user()->hasRole('sales director'))disabled @endif>
                                     <option value="">-- Select Financing --</option>
                                     <option value="hdmf">HDMF</option>
                                     <option value="bank">Bank</option>
@@ -142,7 +142,7 @@
                             </div>
                             <div class="col-lg-4 mt-3 sd_rate">
                                 <label for="sd_rate">Sales Director Rate</label>
-                                <select name="sd_rate" id="sd_rate" class="form-control" @if($requestDetail->status == 'declined' || $requestDetail->status == 'completed' || $requestDetail->status == 'delivered')disabled @endif>
+                                <select name="sd_rate" id="sd_rate" class="form-control" @if($requestDetail->status == 'declined' || $requestDetail->status == 'completed' || $requestDetail->status == 'delivered' && !auth()->user()->hasRole('sales director'))disabled @endif>
                                     <option value="">-- Select SD Rate --</option>
                                     @php $rate = 0.5; $increment = 0.5;@endphp
                                     @for($count = 1; $rate <= 5.5 ;$count++)
