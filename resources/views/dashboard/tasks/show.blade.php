@@ -68,6 +68,7 @@
                 </div>
             </div>
 
+            test
             <div class="card card-success card-outline task-card">
 
                     @if($task->assigned_to == auth()->user()->id && auth()->user()->can('add action taken') || auth()->user()->can('edit action taken'))
@@ -130,6 +131,7 @@
             </div>
         </div>
     @endcan
+    {{$task->assigned_to}}<br>{{auth()->user()->id}}
 @stop
 
 @section('plugins.Sweetalert2',true)
@@ -141,7 +143,7 @@
 @push('js')
     <script src="{{asset('js/clear_errors.js')}}"></script>
 
-    @if('update task status')
+    @if(auth()->user()->can('update task status'))
         <script>
             let status;
             let taskId = {{$task->id}};
@@ -208,7 +210,7 @@
         </script>
     @endif
 
-    @if('view task')
+    @can('view task')
         <script>
             $('#action-taken-list').DataTable({
                 processing: true,
@@ -225,7 +227,7 @@
                 pageLength: 50
             });
         </script>
-    @endif
+    @endcan
 
     @if($task->status == "on-going" || $task->status == "completed"
         && auth()->user()->can('add action taken') || auth()->user()->can('edit action taken') && $task->assigned_to == auth()->user()->id
