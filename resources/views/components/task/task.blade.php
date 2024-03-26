@@ -1,3 +1,11 @@
+@php
+    $request_status = "";
+        if(!is_null($requestId))
+        {
+            $request_status = \App\Models\Request::find($requestId)->status;
+        }
+
+@endphp
 @can('view task')
     <div class="card card-success card-outline">
         <div class="card-body">
@@ -12,7 +20,7 @@
                         <a class="nav-link text-success" data-toggle="tab" href="#findings"><i class="fa fa-search"></i> Findings</a>
                     </li>
                 @endif
-                @if(auth()->user()->can('view commission voucher') && !auth()->user()->hasRole('sales director') && !auth()->user()->hasRole('business administrator'))
+                @if(auth()->user()->can('view commission voucher') && !auth()->user()->hasRole('sales director') && !auth()->user()->hasRole('business administrator') && $request_status != "declined")
                     <li class="nav-item">
                         <a class="nav-link text-success" data-toggle="tab" href="#commission-voucher"><i class="fas fa-file-invoice-dollar"></i> Commission Voucher</a>
                     </li>
@@ -43,67 +51,71 @@
                         </table>
                     </div>
                 </div>
-                <div id="commission-voucher" class="tab-pane fade">
-                    <div class="row mt-3">
-                        <div class="col-lg-7">
-                            <form>
-                                @csrf
-                                <div class="card" id="commission-voucher">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <label for="category">Category</label>
-                                                <select name="category" class="form-select form-control" id="category">
-                                                    <option value="">--Select Category--</option>
-                                                    <option value="with WHT & VAT">with WHT & VAT</option>
-                                                    <option value="No Tax Deduction">No Tax Deduction</option>
-                                                    <option value="Split Commission">Split Commission</option>
-                                                </select>
+                @if(auth()->user()->can('view commission voucher') && !auth()->user()->hasRole('sales director') && !auth()->user()->hasRole('business administrator') && $request_status != "declined")
+                    <div id="commission-voucher" class="tab-pane fade">
+                        <div class="row mt-3">
+                            <div class="col-lg-7">
+                                <form>
+                                    @csrf
+                                    <div class="card" id="commission-voucher">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <label for="category">Category</label>
+                                                    <select name="category" class="form-select form-control" id="category">
+                                                        <option value="">--Select Category--</option>
+                                                        <option value="with 10% WHT & 12% VAT">with 10% WHT & 12% VAT</option>
+                                                        <option value="with 15% WHT & 12% VAT">with 15% WHT & 12% VAT</option>
+                                                        <option value="No Tax Deduction">No Tax Deduction</option>
+                                                        <option value="Split Commission">Split Commission</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-6 mt-3">
+                                                    <label for="total_contract_price">TCP</label>
+                                                    <input type="number" step="any" class="form-control" name="total_contract_price" id="total_contract_price">
+                                                </div>
+                                                <div class="col-lg-3 mt-3">
+                                                    <label for="sd_rate">SD Rate</label>
+                                                    <input type="number" step="any" class="form-control" name="sd_rate" id="sd_rate" max="100" min="0">
+                                                </div>
+                                                <div class="col-lg-3 mt-3">
+                                                    <label for="percentage_released">%</label>
+                                                    <input type="number" step="any" class="form-control" name="percentage_released" id="percentage_released" max="100" min="0">
+                                                </div>
+                                            </div>
+                                            <div class="row tax">
+                                                <div class="col-lg-6 mt-3">
+                                                    <label for="wht">WHT Tax</label>
+                                                    <input type="number" step="any" class="form-control" id="wht" disabled>
+                                                </div>
+                                                <div class="col-lg-6 mt-3">
+                                                    <label for="vat">VAT</label>
+                                                    <input type="number" step="any" class="form-control" id="vat" disabled>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-lg-6 mt-3">
-                                                <label for="total_contract_price">TCP</label>
-                                                <input type="number" step="any" class="form-control" name="total_contract_price" id="total_contract_price">
-                                            </div>
-                                            <div class="col-lg-3 mt-3">
-                                                <label for="sd_rate">SD Rate</label>
-                                                <input type="number" step="any" class="form-control" name="sd_rate" id="sd_rate" max="100" min="0">
-                                            </div>
-                                            <div class="col-lg-3 mt-3">
-                                                <label for="percentage_released">%</label>
-                                                <input type="number" step="any" class="form-control" name="percentage_released" id="percentage_released" max="100" min="0">
-                                            </div>
-                                        </div>
-                                        <div class="row tax">
-                                            <div class="col-lg-6 mt-3">
-                                                <label for="wht">15% WHT Tax</label>
-                                                <input type="number" step="any" class="form-control" id="wht" disabled>
-                                            </div>
-                                            <div class="col-lg-6 mt-3">
-                                                <label for="vat">12% VAT</label>
-                                                <input type="number" step="any" class="form-control" id="vat" disabled>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card-footer">
-                                        <button type="submit" class="btn bg-gray">Compute</button>
-                                        <span class="float-right">
+                                        <div class="card-footer">
+                                            <button type="submit" class="btn bg-gray">Compute</button>
+                                            <span class="float-right">
                                             <button type="button" class="btn bg-warning" id="add-deduction-btn">Add Deduction</button>
                                         </span>
+                                        </div>
                                     </div>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="col-lg-5">
-                            <div class="card">
-                                <div class="card-body">
-                                    sdf
+                                </form>
+                            </div>
+                            <div class="col-lg-5">
+                                <div class="card">
+                                    <div class="card-body">
+                                        sdf
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endif
+
             </div>
 
         </div>
@@ -232,18 +244,17 @@
         </script>
     @endcan
 
-    @can('edit commission voucher')
+    @if(auth()->user()->can('edit commission voucher') && $request_status != "declined")
         <script>
             let commissionVoucher = $('#commission-voucher');
             $(document).on('click','#add-deduction-btn, .plus', function(){
                 commissionVoucher.find('.tax').after(`<div class="row deduction">
                 <div class="col-5 mt-3"><label>Label</label><input type="text" class="form-control"></div>
                 <div class="col-4 mt-3"><label>Amount</label><input type="number" step="any" class="form-control"></div>
-                <div class="col-3 mt-3"><label>&nbsp;</label>
-                    <button type=button class="btn plus btn-xs btn-success mt-4" style="margin-top:40px!important;"><i class="fa fa-plus"></i></button>
-                    <button type=button class="btn minus btn-xs btn-danger mt-4" style="margin-top:40px!important;"><i class="fa fa-minus"></i></button>
-                </div>
-<!--                <div class="col-sm-3 mt-3"></div>-->
+                    <div class="col-3 mt-3"><label>&nbsp;</label>
+                        <button type=button class="btn plus btn-xs btn-success mt-4" style="margin-top:40px!important;"><i class="fa fa-plus"></i></button>
+                        <button type=button class="btn minus btn-xs btn-danger mt-4" style="margin-top:40px!important;"><i class="fa fa-minus"></i></button>
+                    </div>
                 </div>`);
             })
 
@@ -251,5 +262,5 @@
                 this.closest('.deduction').remove();
             });
         </script>
-    @endcan
+    @endif
 @endpush

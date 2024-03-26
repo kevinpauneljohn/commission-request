@@ -121,12 +121,12 @@ class TaskService
                     $action .= '<a href="'.route('task.show',['task' => $task->id]).'" class="btn btn-xs btn-success view-task-btn mr-1" id="'.$task->id.'">View</a>';
 
                 }
-                if(auth()->user()->can('edit task') && auth()->user()->id == $task->creator)
+                if(auth()->user()->can('edit task') && auth()->user()->id == $task->creator && $task->request->status != 'declined')
                 {
                     $action .= '<button class="btn btn-xs btn-primary edit-task-btn mr-1" id="'.$task->id.'">Edit</button>';
 
                 }
-                if(auth()->user()->can('delete task') && auth()->user()->id == $task->creator)
+                if(auth()->user()->can('delete task') && auth()->user()->id == $task->creator && $task->request->status != 'declined')
                 {
                     $action .= '<button class="btn btn-xs btn-danger delete-task-btn" id="'.$task->id.'">Delete</button>';
 
@@ -165,12 +165,14 @@ class TaskService
             ->addColumn('action',function($actionTaken){
                 $action = "";
                 $user = auth()->user();
-                if($user->can('edit action taken') && $actionTaken->task->assigned_to == $user->id  && $actionTaken->task->status != "completed" || $user->hasRole('super admin'))
+                if($user->can('edit action taken') && $actionTaken->task->assigned_to == $user->id  && $actionTaken->task->status != "completed"
+                    || $user->hasRole('super admin') && $actionTaken->task->request->status != 'declined')
                 {
                     $action .= '<button class="btn btn-xs btn-primary edit-action-taken-btn mr-1" id="'.$actionTaken->id.'">Edit</button>';
 
                 }
-                if($user->can('delete action taken') && $actionTaken->task->assigned_to == $user->id  && $actionTaken->task->status != "completed" || $user->hasRole('super admin'))
+                if($user->can('delete action taken') && $actionTaken->task->assigned_to == $user->id  && $actionTaken->task->status != "completed"
+                    || $user->hasRole('super admin') && $actionTaken->task->request->status != 'declined')
                 {
                     $action .= '<button class="btn btn-xs btn-danger delete-action-taken-btn" id="'.$actionTaken->id.'">Delete</button>';
 

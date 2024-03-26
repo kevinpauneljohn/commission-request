@@ -27,7 +27,7 @@
     <!-- /.col -->
     <div class="col-md-3 col-sm-6 col-12">
         <div class="info-box">
-            <span class="info-box-icon bg-info"><i class="fa fa-hourglass-half"></i></span>
+            <span class="info-box-icon bg-purple"><i class="fa fa-hourglass-half"></i></span>
 
             <div class="info-box-content">
                 <span class="info-box-text">On-going</span>

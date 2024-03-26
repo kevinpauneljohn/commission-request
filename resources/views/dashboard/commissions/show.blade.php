@@ -163,7 +163,7 @@
                             </div>
                         </div>
                     </div>
-                    @if($requestDetail->status == 'pending' || $requestDetail->status == 'on-going')
+                    @if($requestDetail->status == 'pending' || $requestDetail->status == 'on-going' && !auth()->user()->hasRole('sales director'))
                     <div class="card-footer">
                         <button type="submit" class="btn btn-default">Save</button>
                     </div>
