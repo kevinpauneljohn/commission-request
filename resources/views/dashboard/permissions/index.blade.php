@@ -147,7 +147,7 @@
                 if(response.success === true)
                 {
                     Toast.fire({
-                        type: "success",
+                        icon: "success",
                         title: response.message
                     });
                     permissionModal.find('form').trigger('reset');
@@ -215,7 +215,7 @@
                 if(response.success == true)
                 {
                     Toast.fire({
-                        type: "success",
+                        icon: "success",
                         title: response.message
                     });
                     permissionModal.modal('toggle')
@@ -224,7 +224,7 @@
                 else if(response.success === false)
                 {
                     Toast.fire({
-                        type: "warning",
+                        icon: "warning",
                         title: response.message
                     });
                 }
@@ -255,7 +255,7 @@
             Swal.fire({
                 title: 'Delete '+data[1]+' permission?',
                 text: "You won't be able to revert this!",
-                type: 'warning',
+                icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',

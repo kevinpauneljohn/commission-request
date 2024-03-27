@@ -192,7 +192,7 @@
                             if(response.success === true)
                             {
                                 Toast.fire({
-                                    type: "success",
+                                    icon: "success",
                                     title: response.message
                                 });
                                 setTimeout(function(){
@@ -202,8 +202,8 @@
                                 Swal.fire({
                                     title: "Warning!",
                                     text: response.message,
-                                    type: "warning"
-                                });
+                                    icon: "warning"
+                                })
                                 $('#status-form').trigger('reset');
                             }
                         }).fail(function (xhr, status, error) {
@@ -314,7 +314,7 @@
                     if(response.success === true)
                     {
                         Toast.fire({
-                            type: "success",
+                            icon: "success",
                             title: response.message
                         });
                         $('#action-taken-list').DataTable().ajax.reload(null, false);
@@ -323,7 +323,7 @@
                     }
                     else{
                         Toast.fire({
-                            type: "warning",
+                            icon: "warning",
                             title: response.message
                         });
                     }
@@ -333,7 +333,7 @@
                     if(xhr.status === 403)
                     {
                         Toast.fire({
-                            type: "warning",
+                            icon: "warning",
                             title: xhr.responseJSON.message
                         });
                     }
@@ -400,7 +400,7 @@
                     if(response.success === true)
                     {
                         Toast.fire({
-                            type: "success",
+                            icon: "success",
                             title: response.message
                         });
                         $('#action-taken-list').DataTable().ajax.reload(null, false);
@@ -408,7 +408,7 @@
                     }
                     else{
                         Toast.fire({
-                            type: "warning",
+                            icon: "warning",
                             title: response.message
                         });
                     }
@@ -418,7 +418,7 @@
                     if(xhr.status === 403)
                     {
                         Toast.fire({
-                            type: "warning",
+                            icon: "warning",
                             title: xhr.responseJSON.message
                         });
                     }
@@ -440,7 +440,7 @@
                 Swal.fire({
                     title: 'Are you sure?',
                     text: "You won't be able to revert this!",
-                    type: 'warning',
+                    icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
@@ -523,7 +523,7 @@
                                         Swal.fire({
                                             title: "Confirmed",
                                             text: "Redirecting now to form page...",
-                                            type: "success",
+                                            icon: "success",
                                             showConfirmButton: false,
                                         });
 
@@ -570,7 +570,7 @@
                 Swal.fire({
                     title: 'Are you sure',
                     text: 'Do you want proceed to the next task?',
-                    type: "warning",
+                    icon: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#3085d6",
                     cancelButtonColor: "#d33",

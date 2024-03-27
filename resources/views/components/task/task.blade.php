@@ -214,7 +214,7 @@
                     if(response.success === true)
                     {
                         Toast.fire({
-                            type: "success",
+                            icon: "success",
                             title: response.message
                         });
                         $('#findings-list').DataTable().ajax.reload(null, false);
@@ -224,7 +224,7 @@
                     }else if(response.success === false)
                     {
                         Toast.fire({
-                            type: "warning",
+                            icon: "warning",
                             title: response.message
                         });
                     }

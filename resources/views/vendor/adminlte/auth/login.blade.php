@@ -102,6 +102,7 @@
         </p>
     @endif
 @stop
+@section('plugins.Sweetalert2',true)
 @push('js')
     <script>
         $(document).on('submit','form',function(form){
@@ -120,12 +121,30 @@
             }).done(function (response, status, xhr){
                 if(xhr.status === 200)
                 {
-                    window.location.replace('{{route('home')}}')
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: "top",
+                        showConfirmButton: false,
+                        timer: 2000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.onmouseenter = Swal.stopTimer;
+                            toast.onmouseleave = Swal.resumeTimer;
+                        }
+                    });
+
+                    Toast.fire({
+                        icon: "success",
+                        title: "Signed in successfully"
+                    });
+
+                    setTimeout(function(){
+                        window.location.replace('{{route('home')}}')
+                    },2100)
+
                 }
             }).fail(function(xhr, status, error){
-                console.log(xhr.responseJSON.errors)
                 $.each(xhr.responseJSON.errors, function(key, value){
-                    console.log(key)
                     $('input[name='+key+']').addClass('is-invalid').closest('.input-group').append(`<span class="invalid-feedback" role="alert">
                     <strong>${value}.</strong>
                 </span>`);

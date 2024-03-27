@@ -291,7 +291,7 @@
                         Swal.fire({
                             title: response.message,
                             text: 'Redirecting now...',
-                            type: "success",
+                            icon: "success",
                             showConfirmButton: false,
                         });
                         requestTable.DataTable().ajax.reload(null, false);
@@ -306,7 +306,7 @@
 
                     }else{
                         Toast.fire({
-                            type: "warning",
+                            icon: "warning",
                             title: response.message
                         });
                     }

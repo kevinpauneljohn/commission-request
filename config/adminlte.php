@@ -499,13 +499,19 @@ return [
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@8',
+//                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@8',
+                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@11.10.7/dist/sweetalert2.all.min.js',
                 ],
                 [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => '/js/alert.js',
+                    'type' => 'css',
+                    'asset' => false,
+                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@11.10.7/dist/sweetalert2.min.css',
                 ],
+//                [
+//                    'type' => 'js',
+//                    'asset' => true,
+//                    'location' => '/js/alert.js',
+//                ],
             ],
         ],
         'Pace' => [

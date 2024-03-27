@@ -132,6 +132,18 @@
 @push('js')
     <script src="{{asset('js/clear_errors.js')}}"></script>
     <script>
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-right",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            }
+        });
+
         let backendModal = $('#new-backend-user');
         let backendUserTable = $('#new-backend-users-table')
         $(document).on('click','#new-backend-user-btn',function(){
@@ -164,7 +176,7 @@
                 if(result.success === true)
                 {
                     Toast.fire({
-                        type: "success",
+                        icon: "success",
                         title: result.message
                     });
                     backendUserTable.DataTable().ajax.reload(null, false);
@@ -172,7 +184,7 @@
                     $('#add-backend-user-form').find('#role').val(null).change();
                 }else{
                     Toast.fire({
-                        type: "danger",
+                        icon: "danger",
                         title: result.message
                     });
                 }
@@ -244,7 +256,7 @@
                     if(response.success === true)
                     {
                         Toast.fire({
-                            type: "success",
+                            icon: "success",
                             title: response.message
                         });
                         backendUserTable.DataTable().ajax.reload(null, false);
@@ -252,7 +264,7 @@
                     }else if(response.success === false)
                     {
                         Toast.fire({
-                            type: "warning",
+                            icon: "warning",
                             title: response.message
                         });
                     }
@@ -277,7 +289,7 @@
                 Swal.fire({
                     title: 'Are you sure?',
                     text: "You won't be able to revert this!",
-                    type: 'warning',
+                    icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
