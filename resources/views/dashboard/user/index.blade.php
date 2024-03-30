@@ -255,6 +255,7 @@
                     console.log(response);
                     if(response.success === true)
                     {
+
                         Toast.fire({
                             icon: "success",
                             title: response.message

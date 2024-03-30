@@ -152,6 +152,19 @@
 
 @push('js')
     <script src="{{asset('js/clear_errors.js')}}"></script>
+    <script>
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-right",
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            }
+        });
+    </script>
 
     @if(auth()->user()->can('update task status'))
         <script>

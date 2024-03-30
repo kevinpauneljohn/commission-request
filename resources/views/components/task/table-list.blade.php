@@ -71,6 +71,21 @@
 @endif
 
 @push('js')
+    @once
+        <script>
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-right",
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                }
+            });
+        </script>
+    @endonce
     @if($createButton)
         <script>
             $(document).ready(function(){

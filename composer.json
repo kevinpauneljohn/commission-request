@@ -13,6 +13,7 @@
         "laravel/tinker": "^2.8",
         "laravel/ui": "^4.4",
         "phattarachai/laravel-mobile-detect": "^1.0",
+        "rmunate/spell-number": "^4.2",
         "spatie/laravel-activitylog": "^4.8",
         "spatie/laravel-permission": "^6.3",
         "yajra/laravel-datatables-buttons": "10.0.8",

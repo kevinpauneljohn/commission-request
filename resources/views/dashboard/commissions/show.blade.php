@@ -203,9 +203,8 @@
             ],
             responsive:true,
             order:[0,'desc'],
-            pageLength: 50,
+            pageLength: 5,
             info:false,
-            paging: false,
             searching: false
         });
 
@@ -231,6 +230,13 @@
                             'success'
                         );
                         $('#request-activities').DataTable().ajax.reload(null, false);
+
+                        grossCommission()
+                        sub_total_update()
+
+                        $.each(response.data, function(key, value){
+                            $('#commission-voucher').find('#'+key).val(value)
+                        })
                     }
                     else{
                         Swal.fire(
@@ -250,6 +256,88 @@
                     $('#update-request-details-form').find('button[type=submit]').attr('disabled',false).text('Save')
                 });
             })
+
+            $(document).ready(function(){
+                grossCommission()
+                use_reference_amount()
+            })
+
+            $(document).on('input','input[name=sub_total]',function(){
+                let percentage_released_value = 0
+                if(this.value !== "")
+                {
+                    let gross_commission_field = parseFloat($('input[name=gross_commission]').val())
+                    let sub_total_field = parseFloat(this.value)
+
+                    percentage_released_value = (sub_total_field / gross_commission_field) * 100
+                }
+
+                $('input[name=percentage_released]').val(percentage_released_value.toFixed(2));
+            })
+
+            const subTotal = () => {
+                return grossCommission()
+            }
+
+            const percentageReleased = (percent) => {
+                let released = subTotal() * percent;
+                return released.toFixed(2)
+            }
+            const grossCommission = () => {
+                let tcp = parseFloat($('#total_contract_price').val())
+                let sd_rate = parseFloat($('#sd_rate').val()) / 100
+                let gross_comm = tcp * sd_rate
+
+                $('#commission-voucher').find('input[name=gross_commission]').val(gross_comm.toFixed(2))
+                return gross_comm;
+            }
+
+            const sub_total_update = () => {
+                $('input[name=percentage_released]').change();
+            }
+
+            const sub_total_input_update = (percentage_released_value) => {
+                let percent = 0
+                if(percentage_released_value !== "")
+                {
+                    percent = parseFloat(percentage_released_value) / 100;
+                }
+
+                // console.log(percentageReleased(percent))
+                $('#commission-voucher').find('input[name=sub_total]').val(percentageReleased(percent))
+            }
+
+            $(document).on('input','input[name=percentage_released]',function(){
+                sub_total_input_update(this.value)
+            })
+            $(document).on('change','input[name=percentage_released]',function(){
+                sub_total_input_update(this.value)
+            })
+
+            const use_reference_amount = () => {
+                let reference_amount_field_row = $('.reference_amount_field_row')
+                let tcp_basis = $('.tcp_basis')
+                if($('#reference_amount_for_wht').is(":checked"))
+                {
+                    reference_amount_field_row.show();
+                    reference_amount_field_row.
+                    find('#reference_amount, #percentage_released_reference_amount, #sub_total_reference_amount, #remarks').attr('disabled',false);
+
+                    tcp_basis.hide()
+                    tcp_basis.find('#percentage_released, #sub_total').attr('disabled',true);
+                }else{
+                    reference_amount_field_row.hide();
+                    reference_amount_field_row.find('#reference_amount, #percentage_released_reference_amount, #sub_total_reference_amount, #remarks').attr('disabled',true);
+
+                    tcp_basis.show()
+                    tcp_basis.find('#percentage_released, #sub_total').attr('disabled',false);
+                }
+            }
+
+            $(document).on('change','#reference_amount_for_wht',function (){
+                use_reference_amount()
+            })
+
         @endif
     </script>
 @stop

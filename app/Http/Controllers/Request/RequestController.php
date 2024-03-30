@@ -87,7 +87,8 @@ class RequestController extends Controller
             $commissionRequest->save();
             $log = 'The request details was updated';
             $requestService->requestLogsActivities($commissionRequest->id, $log, $commissionRequest, true);
-            return response()->json(['success' => true,'message' => 'Request successfully updated!']);
+            return response()->json(['success' => true,'message' => 'Request successfully updated!',
+                'data' => collect($commissionRequest)->only(['total_contract_price','sd_rate'])]);
         }
         return response()->json(['success' => false,'message' => 'No changes made!']);
     }

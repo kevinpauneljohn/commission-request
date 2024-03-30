@@ -34,7 +34,7 @@ class Request extends Model
     /*Note: a request task automation is fired once a request was created found in
     EventServiceProviders and RequestObserver*/
 
-    protected $appends = ['colored_status','formatted_id','child_requests','parent_request'];
+    protected $appends = ['colored_status','formatted_id','child_requests','parent_request','buyer_full_name'];
 
     public function user()
     {
@@ -49,6 +49,12 @@ class Request extends Model
     public function getBuyerAttribute($value)
     {
         return json_decode($value);
+    }
+
+    public function getBuyerFullNameAttribute(): string
+    {
+        $middlename = !is_null($this->buyer->middlename) ? ' '.$this->buyer->middlename.' ' :' ';
+        return $this->buyer->firstname.$middlename.$this->buyer->lastname;
     }
 
     public function getColoredStatusAttribute(): string
@@ -107,5 +113,10 @@ class Request extends Model
     public function findings(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Finding::class);
+    }
+
+    public function commissionVoucher()
+    {
+        return $this->hasOne(CommissionVoucher::class);
     }
 }

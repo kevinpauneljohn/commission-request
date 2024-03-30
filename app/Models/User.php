@@ -111,6 +111,11 @@ class User extends Authenticatable
         return $this->hasMany(Task::class,'creator');
     }
 
+    public function commission_vouchers()
+    {
+        return $this->hasMany(CommissionVoucher::class,'approver');
+    }
+
     public function actionTakens()
     {
         return $this->hasMany(ActionTaken::class);
