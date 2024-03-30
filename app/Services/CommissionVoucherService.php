@@ -198,7 +198,7 @@ class CommissionVoucherService
                     $details .= '<tr><td colspan="4"><input type="hidden" name="voucher_id" value="'.$voucher->id.'"><button type="submit" class="btn btn-success voucher-payment-btn w-100" '.$disabled.'>Save</button></td></tr>';
                     if(auth()->user()->can('edit commission voucher') && !is_null($voucher->payment_type) || !is_null($voucher->issuer) || !is_null($voucher->transaction_reference_no) || !is_null($voucher->amount_transferred))
                     {
-                        $details .= '<tr><td colspan="4"><button type="button" class="btn btn-default btn-sm mr-1 edit-voucher-payment-btn">Edit</button><button type="button" class="btn btn-default btn-sm cancel-edit-voucher mr-1">Cancel</button></td></tr>';
+                        $details .= '<tr><td colspan="4"><button type="button" class="btn btn-default btn-sm mr-1 edit-voucher-payment-btn">Edit</button><button type="button" class="btn btn-default btn-sm cancel-edit-voucher mr-1">Cancel</button><a href="'.(is_null($voucher->drive_link) ? '#' : $voucher->drive_link ).'" target="_blank" class="btn btn-info btn-sm mr-1">Access Drive</a></td></tr>';
                     }
                 }
 
