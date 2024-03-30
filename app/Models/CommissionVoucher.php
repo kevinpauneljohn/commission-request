@@ -11,7 +11,7 @@ class CommissionVoucher extends Model
 
     protected $fillable = [
         'category','request_id','voucher','user_id','approver','issuing_type','issuer'
-        ,'transaction_reference_no','amount_transferred'
+        ,'transaction_reference_no','amount_transferred','is_approved','drive_link'
     ];
 
     public function setVoucherAttribute($value): void
@@ -35,7 +35,7 @@ class CommissionVoucher extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function approver()
+    public function approvedBy()
     {
         return $this->belongsTo(User::class,'approver');
     }

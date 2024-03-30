@@ -18,10 +18,12 @@ return new class extends Migration
             $table->json('voucher')->nullable();
             $table->foreignUuid('user_id');//the creator of the voucher
             $table->uuid('approver')->nullable();
-            $table->string('issuing_type')->nullable();
+            $table->string('payment_type')->nullable();
             $table->string('issuer')->nullable();
             $table->string('transaction_reference_no')->nullable();
             $table->decimal('amount_transferred', 15,2)->nullable();
+            $table->boolean('is_approved')->nullable();
+            $table->string('drive_link')->nullable();
             $table->timestamps();
 
             $table->foreign('approver')->references('id')->on('users');

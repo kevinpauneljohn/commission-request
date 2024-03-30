@@ -218,9 +218,11 @@
                                                 <td colspan="1"></td>
                                             </tr>
                                         </table>
-                                        @if(is_null($request->commissionVoucher))
-                                            <button type="button" class="btn btn-success mt-3 w-100" id="save-voucher-btn">Save Voucher</button>
-                                          @endif
+                                        <div id="save-button-section">
+                                            @if(is_null($request->commissionVoucher))
+                                                <button type="button" class="btn btn-success mt-3 w-100" id="save-voucher-btn">Save Voucher</button>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -234,7 +236,9 @@
     </div>
 @endcan
 
-
+@can('view commission voucher')
+    <x-request.vouchers :requestId="$request->id"/>
+@endcan
 
 @can('add finding')
         <!-- Modal -->
@@ -358,8 +362,8 @@
             let commissionVoucher = $('#commission-voucher');
             $(document).on('click','#add-deduction-btn, .plus', function(){
                 commissionVoucher.find('.tax').after(`<div class="row deduction">
-                <div class="col-5 mt-3"><label>Deduction</label><input type="text" name="deduction_title[]" class="form-control"></div>
-                <div class="col-4 mt-3"><label>Amount</label><input type="number" name="deduction_amount[]" step="any" class="form-control"></div>
+                <div class="col-5 mt-3"><label>Deduction</label><input type="text" name="deduction_title[]" class="form-control" required></div>
+                <div class="col-4 mt-3"><label>Amount</label><input type="number" name="deduction_amount[]" step="any" class="form-control" required></div>
                     <div class="col-3 mt-3"><label>&nbsp;</label>
                         <button type=button class="btn plus btn-xs btn-success mt-4" style="margin-top:40px!important;"><i class="fa fa-plus"></i></button>
                         <button type=button class="btn minus btn-xs btn-danger mt-4" style="margin-top:40px!important;"><i class="fa fa-minus"></i></button>
@@ -511,6 +515,7 @@
             })
 
             $(document).on('click','#save-voucher-btn',function(){
+                let commissionComputationForm = $('#commission-computation-form');
                 $.ajax({
                     url: '{{route('commission-voucher.store')}}',
                     type: 'post',
@@ -528,7 +533,11 @@
                             '',
                             'success'
                         );
+                        commissionComputationForm.trigger('reset')
+                        commissionComputationForm.find('#category').val('').change()
+                        commissionComputationForm.find('.deduction').remove()
                         $('#save-voucher-btn').fadeOut()
+                        $('#voucher-list').DataTable().ajax.reload(null, false);
                     }
                     else{
                         Swal.fire(

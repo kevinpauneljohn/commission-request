@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\VoucherPaymentRequest;
 use App\Models\CommissionVoucher;
 use App\Http\Requests\StoreCommissionVoucherRequest;
 use App\Http\Requests\UpdateCommissionVoucherRequest;
@@ -12,7 +13,9 @@ class CommissionVoucherController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth','permission:view commission voucher'])->only(['index','show','preview']);
+        $this->middleware(['auth','permission:view commission voucher'])->only(['index','show','preview','voucherLists','voucherListsByRequestId']);
+        $this->middleware(['auth','permission:approve commission voucher'])->only(['approveVoucher']);
+        $this->middleware(['auth','permission:edit commission voucher'])->only(['savePayment']);
     }
 
     /**
@@ -20,7 +23,7 @@ class CommissionVoucherController extends Controller
      */
     public function index()
     {
-        //
+        return view('dashboard.vouchers.index');
     }
 
     /**
@@ -71,13 +74,41 @@ class CommissionVoucherController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(CommissionVoucher $commissionVoucher)
+    public function destroy(CommissionVoucher $commissionVoucher): \Illuminate\Http\JsonResponse
     {
-        //
+        return $commissionVoucher->delete() ?
+            response()->json(['success' => true, 'message' => 'Voucher successfully deleted']) :
+            response()->json(['success' => false, 'message' => 'An error occurred']) ;
     }
 
-    public function preview(Request $request, CommissionVoucherService $commissionVoucherService)
+    public function preview(Request $request, CommissionVoucherService $commissionVoucherService): string
     {
         return $commissionVoucherService->voucher($request);
+    }
+
+    public function voucherLists(CommissionVoucherService $commissionVoucherService): \Illuminate\Http\JsonResponse
+    {
+        $vouchers = CommissionVoucher::where('is_approved',false)->get();
+        return $commissionVoucherService->commission_voucher_lists($vouchers);
+    }
+
+    public function voucherListsByRequestId($request_id, CommissionVoucherService $commissionVoucherService): \Illuminate\Http\JsonResponse
+    {
+        $vouchers = CommissionVoucher::where('request_id',$request_id)->get();
+        return $commissionVoucherService->commission_voucher_lists($vouchers);
+    }
+
+    public function approveVoucher(CommissionVoucher $commissionVoucher, CommissionVoucherService $commissionVoucherService): \Illuminate\Http\JsonResponse
+    {
+        return $commissionVoucherService->approve($commissionVoucher) ?
+            response()->json(['success' => true, 'message' => 'Voucher has been approved!']) :
+            response()->json(['success' => false, 'message' => 'An error occurred!']);
+    }
+
+    public function savePayment(VoucherPaymentRequest $request, CommissionVoucher $commissionVoucher, CommissionVoucherService $commissionVoucherService): \Illuminate\Http\JsonResponse
+    {
+        return $commissionVoucherService->save_payment($commissionVoucher, $request) ?
+            response()->json(['success' => true, 'message' => 'Payment successfully recorded!']) :
+            response()->json(['success' => false, 'message' => 'An error occurred!']);
     }
 }

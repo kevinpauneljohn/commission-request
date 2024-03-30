@@ -204,6 +204,7 @@
             responsive:true,
             order:[0,'desc'],
             pageLength: 5,
+            lengthChange: false,
             info:false,
             searching: false
         });

@@ -333,10 +333,27 @@ return [
         ],
         [
             'text' => 'Requests',
-            'route'  => 'request.index',
             'icon' => 'fas fa-fw fa-tasks',
             'key'  => 'request',
-            'can' => 'view request'
+            'can' => 'view request',
+            'submenu' => [
+                [
+                    'text' => 'View Requests',
+                    'route'  => 'request.index',
+                    'icon' => 'fa fa-arrow-right',
+                    'can' => 'view request',
+                    'classes' => 'ml-2',
+                    'key'  => 'view_request',
+                ],
+                [
+                    'text' => 'View Vouchers',
+                    'route'  => 'commission-voucher.index',
+                    'icon' => 'fa fa-arrow-right',
+                    'can' => 'view commission voucher',
+                    'classes' => 'ml-2',
+                    'key'  => 'vouchers',
+                ],
+            ]
         ],
         [
             'text' => 'Automations',

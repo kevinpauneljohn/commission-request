@@ -63,7 +63,7 @@
         {{-- Login field --}}
         <div class="row">
             <div class="col-7">
-                <div class="icheck-primary" title="{{ __('adminlte::adminlte.remember_me_hint') }}">
+                <div class="icheck-success" title="{{ __('adminlte::adminlte.remember_me_hint') }}">
                     <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
 
                     <label for="remember">
@@ -116,7 +116,8 @@
                 type: 'post',
                 data: data,
                 beforeSend: function (){
-                    $('form').find('input, button').attr('disabled',true)
+                    // $('form').find('input, button').attr('disabled',true)
+                    $('form').find('button[type=submit]').attr('disabled',true).html(`<span class="spinner-border spinner-border-sm text-light text-center text-sm" role="status"></span>`)
                 }
             }).done(function (response, status, xhr){
                 if(xhr.status === 200)
@@ -150,7 +151,8 @@
                 </span>`);
                 })
             }).always(function (){
-                $('form').find('input, button').attr('disabled',false)
+                // $('form').find('input, button').attr('disabled',false)
+                $('form').find('button[type=submit]').attr('disabled',false).html(`<span class="fas fa-sign-in-alt"></span> Sign In`)
             })
         });
     </script>
