@@ -72,16 +72,19 @@
                         <div class="overlay-wrapper"></div>
                         <div class="modal-header bg-success">
                             <h5 class="modal-title">Modal title</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                            @if(!isset($_GET['parent_request']) || isset($_GET['remaining']))
+                                <button type="button" class="close modal-close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            @endif
+
                         </div>
                         <div class="modal-body">
                             @if(isset($_GET['parent_request']))
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <div class="alert alert-info">
-                                            <i class="fa fa-exclamation-circle"></i> Parent Request <span class="text-bold text-yellow" id="parent_-request-formatted-id"></span>
+                                            <i class="fa fa-exclamation-circle"></i> Parent Request <span class="text-bold text-yellow" id="parent-request-formatted-id"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -192,7 +195,9 @@
 
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            @if(!isset($_GET['parent_request']) || isset($_GET['remaining']))
+                                <button type="button" class="btn btn-secondary modal-close" data-dismiss="modal">Close</button>
+                            @endif
                             <button type="submit" class="btn btn-success">Create</button>
                         </div>
                     </div>
@@ -346,10 +351,12 @@
     @endcan
     <script>
         $('.select2, #sales_director').select2();
+        let requestModel;
     </script>
 
     @if(isset($_GET['parent_request']))
         <script>
+
             $(function(){
                 $.ajax({
                     url: '/request/get-parent/{{$_GET['parent_request']}}',
@@ -359,36 +366,50 @@
                     }
                 }).done(function(response, status, xhr){
                     console.log(xhr)
-                    if(xhr.status === 200)
+                    requestModel = response;
+                    if(xhr.status === 200 && requestModel !== null)
                     {
                         requestModal.find('.modal-title').text('Create Request')
-                        requestModal.find('#sales_director').val(response.user_id).change()
-                        requestModal.find('input[name=firstname]').val(response.buyer.firstname)
-                        requestModal.find('input[name=middlename]').val(response.buyer.middlename)
-                        requestModal.find('input[name=lastname]').val(response.buyer.lastname)
-                        requestModal.find('input[name=project]').val(response.project)
-                        requestModal.find('input[name=model_unit]').val(response.model_unit)
-                        requestModal.find('input[name=phase]').val(response.phase)
-                        requestModal.find('input[name=block]').val(response.block)
-                        requestModal.find('input[name=lot]').val(response.lot)
-                        requestModal.find('input[name=total_contract_price]').val(response.total_contract_price)
-                        requestModal.find('select[name=financing]').val(response.financing).change()
-                        requestModal.find('select[name=request_type]').val(response.request_type).change()
-                        requestModal.find('select[name=sd_rate]').val(response.sd_rate).change()
-                        requestModal.find('textarea[name=message]').html(response.message)
-                        requestModal.find('#parent_-request-formatted-id').text(response.formatted_id)
+                        requestModal.find('#sales_director').val(requestModel.user_id).change()
+                        requestModal.find('input[name=firstname]').val(requestModel.buyer.firstname)
+                        requestModal.find('input[name=middlename]').val(requestModel.buyer.middlename)
+                        requestModal.find('input[name=lastname]').val(requestModel.buyer.lastname)
+                        requestModal.find('input[name=project]').val(requestModel.project)
+                        requestModal.find('input[name=model_unit]').val(requestModel.model_unit)
+                        requestModal.find('input[name=phase]').val(requestModel.phase)
+                        requestModal.find('input[name=block]').val(requestModel.block)
+                        requestModal.find('input[name=lot]').val(requestModel.lot)
+                        requestModal.find('input[name=total_contract_price]').val(requestModel.total_contract_price)
+                        requestModal.find('select[name=financing]').val(requestModel.financing).change()
+                        requestModal.find('select[name=request_type]').val(requestModel.request_type).change()
+                        requestModal.find('select[name=sd_rate]').val(requestModel.sd_rate).change()
+                        requestModal.find('textarea[name=message]').html(requestModel.message)
+                        requestModal.find('#parent-request-formatted-id').text(requestModel.formatted_id)
                     }
                 }).fail(function(xhr, status, error){
                     console.log(xhr)
                     if(xhr.status === 404)
                     {
-                        requestModal.find('#parent_-request-formatted-id').text('Not Found')
+                        requestModal.find('#parent-request-formatted-id').text('Not Found')
                         requestModal.find('input[name=parent_request_id]').remove()
                     }
                 }).always(function(){
                     requestModal.find('.overlay-wrapper').html('')
                 });
+                // requestModal.modal('toggle');
+                requestModal.modal({
+                    backdrop: 'static',
+                    keyboard: false  // to prevent closing with Esc button (if you want this too)
+                });
                 requestModal.modal('toggle');
+            })
+
+            $(document).on('click','.modal-close',function(){
+                window.history.pushState({page: "another"}, "another page", "{{route('request.index')}}");
+                requestModel = null;
+                requestModal.find('form').trigger('reset')
+                requestModal.find('textarea').val('')
+                requestModal.find('input[name=parent_request_id], .alert-info').remove()
             })
         </script>
     @endif

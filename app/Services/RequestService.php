@@ -301,7 +301,7 @@ class RequestService extends \App\Services\TaskService
                     $percentage_released = floatval(preg_replace("/[^-0-9\.]/","",$request->commissionVoucher->voucher->percentage_released));
                         if($percentage_released < 100)
                         {
-                            $action .= '<button class="btn btn-xs bg-purple request-btn mt-1" id="'.$request->id.'">Request Remaining</button>';
+                            $action .= '<a href="'.route('request.index').'?parent_request='.$request->id.'&remaining=true" class="btn btn-xs bg-purple request-btn mt-1" id="'.$request->id.'">Request Remaining</a>';
                         }
 
                 }
