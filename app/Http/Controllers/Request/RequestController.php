@@ -8,6 +8,7 @@ use App\Http\Middleware\RequesterAllowedOnly;
 use App\Http\Requests\UpdateCommissionRequest;
 use App\Http\Requests\UserReqRequest;
 use App\Models\User;
+use App\Services\CommissionVoucherService;
 use App\Services\FindingService;
 use App\Services\RequestService;
 use Illuminate\Http\Request;
@@ -23,6 +24,7 @@ class RequestController extends Controller
         $this->middleware(['permission:add request'])->only(['store']);
         $this->middleware(['permission:edit request'])->only(['update','declineRequest']);
         $this->middleware(RequesterAllowedOnly::class)->only(['show']);
+        $this->middleware(['permission:update request status'])->only(['approveRequest']);
     }
     /**
      * Display a listing of the resource.
@@ -114,7 +116,7 @@ class RequestController extends Controller
         return $requestService->requestList($request);
     }
 
-    public function requestActivities($requestId, RequestService $requestService)
+    public function requestActivities($requestId, RequestService $requestService): \Illuminate\Http\JsonResponse
     {
         return $requestService->activities($requestId);
     }
@@ -124,10 +126,24 @@ class RequestController extends Controller
         return \App\Models\Request::findOrFail($request);
     }
 
-    public function declineRequest($request_id, FindingService $findingService)
+    public function declineRequest($request_id, FindingService $findingService): \Illuminate\Http\JsonResponse
     {
         return $findingService->set_request_to_declined($request_id) ?
             response()->json(['success' => true, 'message' => 'Request Declined!']) :
             response()->json(['success' => false, 'message' => 'An error occurred!']) ;
+    }
+
+    public function approveRequest(\App\Models\Request $request, CommissionVoucherService $commissionVoucherService): \Illuminate\Http\JsonResponse
+    {
+        return $commissionVoucherService->request_status_delivered($request) ?
+            response()->json(['success' => true, 'message' => 'Status set to delivered']):
+            response()->json(['success' => false, 'message' => 'An error occurred']);
+    }
+
+    public function completeRequest(\App\Models\Request $request, CommissionVoucherService $commissionVoucherService): \Illuminate\Http\JsonResponse
+    {
+        return $commissionVoucherService->request_status_completed($request) ?
+            response()->json(['success' => true, 'message' => 'Request completed']):
+            response()->json(['success' => false, 'message' => 'An error occurred']);
     }
 }

@@ -7,4 +7,6 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/request-activities/{requestId}',[\App\Http\Controllers\Request\RequestController::class,'requestActivities'])->name('request-activities');
     Route::get('/request/get-parent/{requestId}',[\App\Http\Controllers\Request\RequestController::class,'getParentRequest'])->name('get-parent-request');
     Route::put('/request-declined/{requestId}',[\App\Http\Controllers\Request\RequestController::class,'declineRequest'])->name('request-declined');
+    Route::put('/request-delivered/{request}',[\App\Http\Controllers\Request\RequestController::class,'approveRequest'])->name('request-delivered');
+    Route::put('/request-completed/{request}',[\App\Http\Controllers\Request\RequestController::class,'completeRequest'])->name('request-completed');
 });

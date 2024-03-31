@@ -45,12 +45,34 @@
                         {{ucwords($requestDetail->request_type)}}
                     </p>
 
-                    <hr>
-                    <strong><i class="fa fa-tags mr-1"></i> Status</strong>
+                    <div id="request-status">
+                        <hr>
+                        <strong><i class="fa fa-tags mr-1"></i> Status</strong>
 
-                    <p class="text-muted">
-                        {{ucwords($requestDetail->status)}}
-                    </p>
+                        <p class="text-muted">
+                            {{ucwords($requestDetail->status)}}
+                        </p>
+                    </div>
+                        @if(collect($requestDetail->commissionVoucher)->count() > 0)
+                                @if(!is_null($requestDetail->commissionVoucher->payment_type) && !is_null($requestDetail->commissionVoucher->issuer)
+                            && !is_null($requestDetail->commissionVoucher->transaction_reference_no) && !is_null($requestDetail->commissionVoucher->amount_transferred)
+                            && $requestDetail->commissionVoucher->is_approved && auth()->user()->can('update request status') && $requestDetail->status !== "delivered" )
+                                    <div id="update-status-section">
+                                        <hr>
+                                        <p class="text-muted">
+                                            <button type="button" class="btn btn-success w-100 update-request-status-btn">Update Status</button>
+                                        </p>
+                                    </div>
+                                @endif
+                        @endif
+                    @if(auth()->user()->hasRole('sales director') && $requestDetail->status == "delivered")
+                        <div id="complete-status-section">
+                            <hr>
+                            <p class="text-muted">
+                                <button type="button" class="btn btn-success w-100 complete-request-status-btn">Complete Status</button>
+                            </p>
+                        </div>
+                    @endif
                 </div>
             </div>
 
@@ -339,6 +361,102 @@
                 use_reference_amount()
             })
 
+        @endif
+
+        @if(auth()->user()->can('update request status') && !auth()->user()->hasRole('sales director'))
+            $(document).on('click','.update-request-status-btn', function(){
+            Swal.fire({
+                title: 'Update Request Status?',
+                text: "Mark status as DELIVERED.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.value) {
+
+                    $.ajax({
+                        url : '{{route('request-delivered',['request' => $requestDetail->id])}}',
+                        type : 'put',
+                        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                        beforeSend: function(){
+
+                        },success: function(response){
+                            console.log(response)
+                            if(response.success === true){
+                                let url = window.location.href
+                                $('#update-status-section').load(url+' #update-status-section')
+                                $('#request-status').load(url+' #request-status')
+
+
+                                Swal.fire(
+                                    response.message,'','success'
+                                );
+
+                            }else{
+                                Swal.fire(
+                                    response.message,'','warning'
+                                );
+                            }
+                        },error: function(xhr, status, error){
+                            console.log(xhr);
+                        }
+                    }).always(function(){
+
+                    });
+
+                }
+            });
+            })
+        @endif
+
+        @if(auth()->user()->hasRole('sales director') && $requestDetail->status == "delivered")
+        $(document).on('click','.complete-request-status-btn', function(){
+            Swal.fire({
+                title: 'Request Completed?',
+                text: "Mark status as COMPLETED.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.value) {
+
+                    $.ajax({
+                        url : '{{route('request-completed',['request' => $requestDetail->id])}}',
+                        type : 'put',
+                        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                        beforeSend: function(){
+
+                        },success: function(response){
+                            console.log(response)
+                            if(response.success === true){
+                                let url = window.location.href
+                                $('#complete-status-section').load(url+' #complete-status-section')
+                                $('#request-status').load(url+' #request-status')
+
+
+                                Swal.fire(
+                                    response.message,'','success'
+                                );
+
+                            }else{
+                                Swal.fire(
+                                    response.message,'','warning'
+                                );
+                            }
+                        },error: function(xhr, status, error){
+                            console.log(xhr);
+                        }
+                    }).always(function(){
+
+                    });
+
+                }
+            });
+        })
         @endif
     </script>
 @stop

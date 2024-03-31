@@ -78,7 +78,7 @@
             <div class="card card-success card-outline task-card">
 
                     @if($task->assigned_to == auth()->user()->id && auth()->user()->can('add action taken') || auth()->user()->can('edit action taken'))
-                        @if($task->status != 'completed')
+                        @if($task->status != 'completed' && $task->request->status != 'completed' && $task->request->status != 'delivered')
                             <div class="card-header">
 
                                 @if($task->assigned_to != auth()->user()->id)
@@ -96,7 +96,6 @@
 
                 <div class="card-body">
                     <div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
-
                         <table id="action-taken-list" class="table table-bordered table-hover" role="grid" style="width: 100%">
                             <thead>
                             <tr role="row">

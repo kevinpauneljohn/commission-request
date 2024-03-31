@@ -88,5 +88,6 @@ class PermissionRoleSeeder extends Seeder
 
         Permission::create(['name' => 'use multi task'])->assignRole(['sales administrator','business administrator','finance administrator']);
         Permission::create(['name' => 'approve commission voucher'])->assignRole(['sales administrator']);
+        Permission::create(['name' => 'update request status'])->assignRole(['sales administrator','business administrator','finance administrator']);
     }
 }

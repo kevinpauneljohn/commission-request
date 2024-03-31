@@ -37,16 +37,19 @@
                             <th>Model Unit</th>
                             <th>Phase/Block/Lot</th>
                         @endif
-                        <th style="width: 8%;">Total Contract Price</th>
+                        <th style="width: 8%;">TCP</th>
                         @if(auth()->user()->hasRole('sales director'))
                             <th>Financing</th>
                             <th>SD Rate</th>
-                            <th>Cheque No.</th>
-                            <th>Issuing Bank</th>
+                            <th>Payment Type</th>
+                            <th>Financial Service</th>
                             <th style="width: 8%;">Cheque Amount</th>
                         @endif
-                        <th>Requester</th>
+                        @if(!auth()->user()->hasRole('sales director'))
+                            <th>Requester</th>
+                        @endif
                         <th>Parent #</th>
+                        <th>% Released</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
@@ -239,12 +242,15 @@
                             @if(auth()->user()->hasRole('sales director'))
                         { data: 'financing', name: 'financing'},
                         { data: 'sd_rate', name: 'sd_rate'},
-                        { data: 'cheque_number', name: 'cheque_number'},
-                        { data: 'bank_name', name: 'bank_name'},
+                        { data: 'payment_type', name: 'payment_type'},
+                        { data: 'financial_service', name: 'financial_service'},
                         { data: 'cheque_amount', name: 'cheque_amount'},
                            @endif
-                        { data: 'user_id', name: 'user_id'},
-                        { data: 'parent_request', name: 'child_requests'},
+                            @if(!auth()->user()->hasRole('sales director'))
+                            { data: 'user_id', name: 'user_id'},
+                            @endif
+                        { data: 'parent_request', name: 'parent_request'},
+                        { data: 'percent_released', name: 'percent_released'},
                         { data: 'status', name: 'status'},
                         { data: 'action', name: 'action', orderable: false, searchable: false}
                     ],

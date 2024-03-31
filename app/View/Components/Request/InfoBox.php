@@ -13,6 +13,7 @@ class InfoBox extends Component
     public $pending;
     public $on_going;
     public $completed;
+    public $delivered;
     /**
      * Create a new component instance.
      */
@@ -22,6 +23,7 @@ class InfoBox extends Component
         $this->pending = Request::where('status','pending')->count();
         $this->on_going = Request::where('status','on-going')->count();
         $this->completed = Request::where('status','completed')->count();
+        $this->delivered = Request::where('status','delivered')->count();
     }
 
     /**

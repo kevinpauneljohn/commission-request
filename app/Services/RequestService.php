@@ -243,19 +243,26 @@ class RequestService extends \App\Services\TaskService
             })
             ->editColumn('total_contract_price', function($request){
 
-                return '<span class="text-pink">&#8369; '.number_format($request->total_contract_price,2).'</span>';
+                return '<span class="text-pink">'.number_format($request->total_contract_price,2).'</span>';
             })
             ->editColumn('sd_rate', function($request){
 
                 return '<span class="text-primary text-bold">'.$request->sd_rate.'%</span>';
             })
-            ->editColumn('cheque_number', function($request){
+            ->editColumn('payment_type', function($request){
 
-                return '<span class="text-purple">'.$request->cheque_number.'</span>';
+                return collect($request->commissionVoucher)->count() > 0 ?
+                    '<span class="text-purple">'.$request->commissionVoucher->payment_type.'</span>' : '';
+            })
+            ->editColumn('financial_service', function($request){
+
+                return collect($request->commissionVoucher)->count() > 0 ?
+                    '<span>'.$request->commissionVoucher->issuer.'</span>' : '';
             })
             ->editColumn('cheque_amount', function($request){
 
-                return '<span class="text-success">&#8369; '.number_format($request->cheque_amount,2).'</span>';
+                return collect($request->commissionVoucher)->count() > 0 ?
+                    '<span class="text-success text-bold">'.number_format($request->commissionVoucher->amount_transferred,2).'</span>' : '';
             })
             ->editColumn('user_id', function($request){
 
@@ -268,6 +275,10 @@ class RequestService extends \App\Services\TaskService
                 }
 
                 return '';
+            })
+            ->addColumn('percent_released', function($request){
+                return collect($request->commissionVoucher)->count() > 0 ?
+                    '<span class="text-primary text-bold">'.$request->commissionVoucher->voucher->percentage_released.'%</span>' : 0 .'%';
             })
             ->editColumn('status',function($request){
                 return $request->colored_status;
@@ -285,9 +296,29 @@ class RequestService extends \App\Services\TaskService
                     $action .= '<a href="'.route('request.show',['request' => $request->id]).'" class="btn btn-xs btn-success request-btn" id="'.$request->id.'">'.$text.'</a>';
 
                 }
+                if(auth()->user()->can('add request') && collect($request->commissionVoucher)->count() > 0 && $request->status == 'completed')
+                {
+                    $percentage_released = floatval(preg_replace("/[^-0-9\.]/","",$request->commissionVoucher->voucher->percentage_released));
+                        if($percentage_released < 100)
+                        {
+                            $action .= '<button class="btn btn-xs bg-purple request-btn mt-1" id="'.$request->id.'">Request Remaining</button>';
+                        }
+
+                }
                 return $action;
             })
-            ->rawColumns(['action','sd_rate','cheque_number','cheque_amount','id','total_contract_price','status','parent_request'])
+            ->setRowClass(function ($request) {
+                if(auth()->user()->can('add request') && collect($request->commissionVoucher)->count() > 0 && $request->status == 'completed')
+                {
+                    $percentage_released = floatval(preg_replace("/[^-0-9\.]/","",$request->commissionVoucher->voucher->percentage_released));
+                    if($percentage_released < 100)
+                    {
+                        return 'with-remaining';
+                    }
+                }
+                return '';
+            })
+            ->rawColumns(['action','sd_rate','payment_type','financial_service','cheque_amount','id','total_contract_price','status','parent_request','percent_released'])
             ->make(true);
     }
 

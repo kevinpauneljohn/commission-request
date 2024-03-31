@@ -16,7 +16,6 @@ class CommissionVoucherService
 
     public function voucher($request)
     {
-//        return collect($request->deduction_amount)->sum();
         $voucher = $this->requestModel($request->request_id);
         $gross_commission_value = $this->is_reference_amount_box_checked($request)? $request->reference_amount : $voucher->total_contract_price;
         $gross_commission = $this->gross_commission($gross_commission_value, $voucher->sd_rate);
@@ -140,7 +139,7 @@ class CommissionVoucherService
         ]);
     }
 
-    public function commission_voucher_lists($query)
+    public function commission_voucher_lists($query): \Illuminate\Http\JsonResponse
     {
         return DataTables::of($query)
             ->editColumn('voucher',function($voucher){
@@ -176,29 +175,43 @@ class CommissionVoucherService
                 $details .= '<tr><td colspan="2">Prepared By</td><td colspan="2">'.$voucher->voucher->prepared_by.'</td></tr>';
                 if($voucher->is_approved)
                 {
-                    $max_amount = floatval(preg_replace("/[^-0-9\.]/","",$voucher->voucher->commission_receivable));
-                    $payment_type  = '<select class="form-control" name="payment_type" id="payment_type">';
-                    $payment_type .= '<option value="">--select payment type--</option>';
-                    $payment_type .= '<option value="Bank Transfer"'.($voucher->payment_type == 'Bank Transfer'?'selected':'').'>Bank Transfer</option>';
-                    $payment_type .= '<option value="GCash" '.($voucher->payment_type == 'GCash'?'selected':'').'>GCash</option>';
-                    $payment_type .= '<option value="PayMaya" '.($voucher->payment_type == 'PayMaya'?'selected':'').'>PayMaya</option>';
-                    $payment_type .= '<option value="Cheque Payment" '.($voucher->payment_type == 'Cheque Payment'?'selected':'').'>Cheque Payment</option>';
-                    $payment_type .= '</select>';
-                    $details .= '<tr id="payment-fields">
+                    if(auth()->user()->hasRole('sales director'))
+                    {
+                        $details .= '<tr>
+                                <td><label>Payment Type</label><br/><span class="text-bold text-primary">'.$voucher->payment_type.'</span></td>
+                                <td><label>Issuer</label><br/><span class="text-bold text-primary">'.$voucher->issuer.'</span></td>
+                                <td><label>Reference/Cheque #</label><br/><span class="text-bold text-primary">'.$voucher->transaction_reference_no.'</span></td>
+                                <td><label>Amount Transferred</label><br/><span class="text-bold text-primary">₱ '.number_format($voucher->amount_transferred,2).'</span></td>
+                                </tr>';
+                    }else{
+                        $max_amount = floatval(preg_replace("/[^-0-9\.]/","",$voucher->voucher->commission_receivable));
+                        $payment_type  = '<select class="form-control" name="payment_type" id="payment_type">';
+                        $payment_type .= '<option value="">--select payment type--</option>';
+                        $payment_type .= '<option value="Bank Transfer"'.($voucher->payment_type == 'Bank Transfer'?'selected':'').'>Bank Transfer</option>';
+                        $payment_type .= '<option value="GCash" '.($voucher->payment_type == 'GCash'?'selected':'').'>GCash</option>';
+                        $payment_type .= '<option value="PayMaya" '.($voucher->payment_type == 'PayMaya'?'selected':'').'>PayMaya</option>';
+                        $payment_type .= '<option value="Cheque Payment" '.($voucher->payment_type == 'Cheque Payment'?'selected':'').'>Cheque Payment</option>';
+                        $payment_type .= '</select>';
+                        $details .= '<tr id="payment-fields">
                             <td><div class="form-group payment_type"><label>Payment Type</label>'.$payment_type.'</div></td>
                             <td><div class="form-group issuer"><label>Issuer</label><input type="text" class="form-control" name="issuer" id="issuer" value="'.$voucher->issuer.'" required></div></td>
                             <td><div class="form-group transaction_reference_no"><label>Reference/Cheque #</label><input type="text" class="form-control" name="transaction_reference_no" id="transaction_reference_no" value="'.$voucher->transaction_reference_no.'" required></div></td>
                             <td><div class="form-group amount_transferred"><label>Amount Transferred</label><input type="number" class="form-control" step="any" min="0" max="'.$max_amount.'" name="amount_transferred" id="amount_transferred" value="'.(is_null($voucher->amount_transferred) ? $max_amount : $voucher->amount_transferred).'" required></div></td></tr>';
-                    $details .= '<tr><td colspan="4"><div class="form-group drive_link"><label>Drive link</label><input type="url" name="drive_link" id="drive_link" class="form-control" value="'.$voucher->drive_link.'"></td></tr>';
-                    $disabled = 'disabled';
-                    if(is_null($voucher->payment_type) || is_null($voucher->issuer) || is_null($voucher->transaction_reference_no) || is_null($voucher->amount_transferred))
-                    {
-                        $disabled = '';
                     }
-                    $details .= '<tr><td colspan="4"><input type="hidden" name="voucher_id" value="'.$voucher->id.'"><button type="submit" class="btn btn-success voucher-payment-btn w-100" '.$disabled.'>Save</button></td></tr>';
-                    if(auth()->user()->can('edit commission voucher') && !is_null($voucher->payment_type) || !is_null($voucher->issuer) || !is_null($voucher->transaction_reference_no) || !is_null($voucher->amount_transferred))
+
+                    if(!auth()->user()->hasRole('sales director'))
                     {
-                        $details .= '<tr><td colspan="4"><button type="button" class="btn btn-default btn-sm mr-1 edit-voucher-payment-btn">Edit</button><button type="button" class="btn btn-default btn-sm cancel-edit-voucher mr-1">Cancel</button><a href="'.(is_null($voucher->drive_link) ? '#' : $voucher->drive_link ).'" target="_blank" class="btn btn-info btn-sm mr-1">Access Drive</a></td></tr>';
+                        $details .= '<tr><td colspan="4"><div class="form-group drive_link"><label>Drive link</label><input type="url" name="drive_link" id="drive_link" class="form-control" value="'.$voucher->drive_link.'"></td></tr>';
+                        $disabled = 'disabled';
+                        if(is_null($voucher->payment_type) || is_null($voucher->issuer) || is_null($voucher->transaction_reference_no) || is_null($voucher->amount_transferred))
+                        {
+                            $disabled = '';
+                        }
+                        $details .= '<tr><td colspan="4"><input type="hidden" name="voucher_id" value="'.$voucher->id.'"><button type="submit" class="btn btn-success voucher-payment-btn w-100" '.$disabled.'>Save</button></td></tr>';
+                        if(auth()->user()->can('edit commission voucher') && !is_null($voucher->payment_type) || !is_null($voucher->issuer) || !is_null($voucher->transaction_reference_no) || !is_null($voucher->amount_transferred))
+                        {
+                            $details .= '<tr><td colspan="4"><button type="button" class="btn btn-default btn-sm mr-1 edit-voucher-payment-btn">Edit</button><button type="button" class="btn btn-default btn-sm cancel-edit-voucher mr-1">Cancel</button><a href="'.(is_null($voucher->drive_link) ? '#' : $voucher->drive_link ).'" target="_blank" class="btn btn-info btn-sm mr-1">Access Drive</a></td></tr>';
+                        }
                     }
                 }
 
@@ -208,6 +221,10 @@ class CommissionVoucherService
             ->addColumn('action',function($voucher){
                 $action = "";
 
+                if(auth()->user()->can('view commission voucher') && $voucher->request->status == "delivered" && auth()->user()->hasRole('sales director'))
+                {
+                    $action .= '<a href="'.$voucher->drive_link.'" target="_blank" class="btn btn-sm btn-success m-1" id="'.$voucher->id.'" title="Access Drive"><i class="fa fa-folder-open"></i></a>';
+                }
                 if(auth()->user()->can('approve commission voucher') && !$voucher->is_approved)
                 {
                     $action .= '<button class="btn btn-sm btn-success approve-voucher-btn m-1" id="'.$voucher->id.'" title="Approve"><i class="fa fa-check"></i></button>';
@@ -239,6 +256,18 @@ class CommissionVoucherService
         $voucher->amount_transferred = $request->amount_transferred;
         $voucher->drive_link = $request->drive_link;
         return (bool)$voucher->save();
+    }
+
+    public function request_status_delivered($requestModel): bool
+    {
+        $requestModel->status = 'delivered';
+        return (bool)$requestModel->save();
+    }
+
+    public function request_status_completed($requestModel): bool
+    {
+        $requestModel->status = 'completed';
+        return (bool)$requestModel->save();
     }
 
 }

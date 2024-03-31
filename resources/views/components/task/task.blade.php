@@ -179,7 +179,7 @@
                                                 <td colspan="1" id="tcp"></td>
                                             </tr>
                                             <tr>
-                                                <td colspan="3">SD Rate (4%)</td>
+                                                <td colspan="3">SD Rate</td>
                                                 <td colspan="1" id="sd-rate"></td>
                                             </tr>
                                             <tr>
