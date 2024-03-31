@@ -157,6 +157,7 @@
                                         response.message,'','success'
                                     );
                                     $('#voucher-list').DataTable().ajax.reload(null, false);
+                                    let url = window.location.href
                                 }else{
                                     Swal.fire(
                                         response.message,'','warning'

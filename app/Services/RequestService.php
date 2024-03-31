@@ -280,6 +280,13 @@ class RequestService extends \App\Services\TaskService
                 return collect($request->commissionVoucher)->count() > 0 ?
                     '<span class="text-primary text-bold">'.$request->commissionVoucher->voucher->percentage_released.'%</span>' : 0 .'%';
             })
+            ->addColumn('total_released', function($request){
+                if(collect($this->get_related_request($request->id))->count() > 0)
+                {
+                    return $this->get_related_request($request->id)[0] == $request->id ? $this->total_percentage_released($request->id) : '';
+                }
+                return '';
+            })
             ->editColumn('status',function($request){
                 return $request->colored_status;
             })
@@ -293,32 +300,29 @@ class RequestService extends \App\Services\TaskService
 
                 if(auth()->user()->can('view request'))
                 {
-                    $action .= '<a href="'.route('request.show',['request' => $request->id]).'" class="btn btn-xs btn-success request-btn" id="'.$request->id.'">'.$text.'</a>';
+                    $action .= '<a href="'.route('request.show',['request' => $request->id]).'" class="btn btn-xs btn-success request-btn mr-1 mb-1" id="'.$request->id.'">'.$text.'</a>';
 
                 }
                 if(auth()->user()->can('add request') && collect($request->commissionVoucher)->count() > 0 && $request->status == 'completed')
                 {
-                    $percentage_released = floatval(preg_replace("/[^-0-9\.]/","",$request->commissionVoucher->voucher->percentage_released));
-                        if($percentage_released < 100)
-                        {
-                            $action .= '<a href="'.route('request.index').'?parent_request='.$request->id.'&remaining=true" class="btn btn-xs bg-purple request-btn mt-1" id="'.$request->id.'">Request Remaining</a>';
-                        }
-
+                    if($this->total_percentage_released($request->id) < 100 && $this->display_request_remaining_button($request->id))
+                    {
+                        $action .= '<a href="'.route('request.index').'?parent_request='.$request->id.'&remaining=true" class="btn btn-xs bg-purple request-btn mr-1 mb-1" id="'.$request->id.'">Request Remaining</a>';
+                    }
                 }
                 return $action;
             })
             ->setRowClass(function ($request) {
                 if(auth()->user()->can('add request') && collect($request->commissionVoucher)->count() > 0 && $request->status == 'completed')
                 {
-                    $percentage_released = floatval(preg_replace("/[^-0-9\.]/","",$request->commissionVoucher->voucher->percentage_released));
-                    if($percentage_released < 100)
+                    if($this->total_percentage_released($request->id) < 100 && $this->display_request_remaining_button($request->id))
                     {
                         return 'with-remaining';
                     }
                 }
                 return '';
             })
-            ->rawColumns(['action','sd_rate','payment_type','financial_service','cheque_amount','id','total_contract_price','status','parent_request','percent_released'])
+            ->rawColumns(['total_released','action','sd_rate','payment_type','financial_service','cheque_amount','id','total_contract_price','status','parent_request','percent_released'])
             ->make(true);
     }
 
@@ -344,4 +348,57 @@ class RequestService extends \App\Services\TaskService
             ->rawColumns(['description'])
             ->make(true);
     }
+
+    private function display_request_remaining_button($request_id): bool
+    {
+        return $this->get_related_request($request_id)[0] == $request_id;
+    }
+
+    public function total_percentage_released($request_id)
+    {
+        $requests = Request::whereIn('id',$this->get_related_request($request_id))->get();
+        $sum = 0;
+        foreach ($requests as $request)
+        {
+            if(collect($request->commissionVoucher)->count() > 0)
+            {
+                $sum = $sum + $request->commissionVoucher->voucher->percentage_released;
+            }
+        }
+        return $sum;
+    }
+
+    public function get_related_request($request_id): ?array
+    {
+        if(!$this->is_request_declined($request_id))
+        {
+            $request = Request::where('id',$request_id)->where('status','!=','declined');
+
+            $child = collect($request->orWhere('parent_request_id',$request_id)->where('status','completed')->get())->pluck('id')->toArray();
+            $parent_id = $request->first()->parent_request_id;
+            $related_request = $child;
+            if($this->is_parent_completed($parent_id))
+            {
+                $related_request = collect($child)->merge((array)$parent_id)->toArray();
+                sort($related_request);
+            }
+            return $related_request;
+        }
+        return null;
+    }
+
+    private function is_request_declined($request_id): bool
+    {
+        return Request::find($request_id)->status == 'declined';
+    }
+
+    private function is_parent_completed($parent_request_id): bool
+    {
+        if(!is_null($parent_request_id))
+        {
+            return Request::find($parent_request_id)->status == 'completed';
+        }
+        return false;
+    }
+
 }

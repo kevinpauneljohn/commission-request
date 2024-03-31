@@ -50,6 +50,7 @@
                         @endif
                         <th>Parent #</th>
                         <th>% Released</th>
+                        <th>total %</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
@@ -256,6 +257,7 @@
                             @endif
                         { data: 'parent_request', name: 'parent_request'},
                         { data: 'percent_released', name: 'percent_released'},
+                        { data: 'total_released', name: 'total_released'},
                         { data: 'status', name: 'status'},
                         { data: 'action', name: 'action', orderable: false, searchable: false}
                     ],
@@ -369,22 +371,26 @@
                     requestModel = response;
                     if(xhr.status === 200 && requestModel !== null)
                     {
-                        requestModal.find('.modal-title').text('Create Request')
-                        requestModal.find('#sales_director').val(requestModel.user_id).change()
-                        requestModal.find('input[name=firstname]').val(requestModel.buyer.firstname)
-                        requestModal.find('input[name=middlename]').val(requestModel.buyer.middlename)
-                        requestModal.find('input[name=lastname]').val(requestModel.buyer.lastname)
-                        requestModal.find('input[name=project]').val(requestModel.project)
-                        requestModal.find('input[name=model_unit]').val(requestModel.model_unit)
-                        requestModal.find('input[name=phase]').val(requestModel.phase)
-                        requestModal.find('input[name=block]').val(requestModel.block)
-                        requestModal.find('input[name=lot]').val(requestModel.lot)
-                        requestModal.find('input[name=total_contract_price]').val(requestModel.total_contract_price)
-                        requestModal.find('select[name=financing]').val(requestModel.financing).change()
-                        requestModal.find('select[name=request_type]').val(requestModel.request_type).change()
-                        requestModal.find('select[name=sd_rate]').val(requestModel.sd_rate).change()
-                        requestModal.find('textarea[name=message]').html(requestModel.message)
-                        requestModal.find('#parent-request-formatted-id').text(requestModel.formatted_id)
+                        if(requestModel.status === 'completed' || requestModel.status === 'declined') {
+                            requestModal.find('.modal-title').text('Create Request')
+                            requestModal.find('#sales_director').val(requestModel.user_id).change()
+                            requestModal.find('input[name=firstname]').val(requestModel.buyer.firstname)
+                            requestModal.find('input[name=middlename]').val(requestModel.buyer.middlename)
+                            requestModal.find('input[name=lastname]').val(requestModel.buyer.lastname)
+                            requestModal.find('input[name=project]').val(requestModel.project)
+                            requestModal.find('input[name=model_unit]').val(requestModel.model_unit)
+                            requestModal.find('input[name=phase]').val(requestModel.phase)
+                            requestModal.find('input[name=block]').val(requestModel.block)
+                            requestModal.find('input[name=lot]').val(requestModel.lot)
+                            requestModal.find('input[name=total_contract_price]').val(requestModel.total_contract_price)
+                            requestModal.find('select[name=financing]').val(requestModel.financing).change()
+                            requestModal.find('select[name=request_type]').val(requestModel.request_type).change()
+                            requestModal.find('select[name=sd_rate]').val(requestModel.sd_rate).change()
+                            requestModal.find('textarea[name=message]').html(requestModel.message)
+                            requestModal.find('#parent-request-formatted-id').text(requestModel.formatted_id)
+                        }else{
+                            requestModal.find('input[name=parent_request_id], .alert-info').remove()
+                        }
                     }
                 }).fail(function(xhr, status, error){
                     console.log(xhr)
