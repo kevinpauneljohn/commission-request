@@ -359,15 +359,15 @@ return [
             'key'  => 'task',
             'can' => 'view task'
         ],
-        [
-            'text' => 'Multi Task',
-            'route'  => 'multi-tasking',
-            'icon' => 'fa fa-window-maximize',
-            'key'  => 'multi_task',
-            'can' => 'use multi task',
-            'id' => 'multi-task-menu',
-            'topnav' => true,
-        ],
+//        [
+//            'text' => 'Multi Task',
+//            'route'  => 'multi-tasking',
+//            'icon' => 'fa fa-window-maximize',
+//            'key'  => 'multi_task',
+//            'can' => 'use multi task',
+//            'id' => 'multi-task-menu',
+//            'topnav' => true,
+//        ],
     ],
 
     /*
