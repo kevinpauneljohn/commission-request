@@ -283,7 +283,7 @@ class RequestService extends \App\Services\TaskService
             ->addColumn('total_released', function($request){
                 if(collect($this->get_related_request($request->id))->count() > 0)
                 {
-                    return $this->get_related_request($request->id)[0] == $request->id ? $this->total_percentage_released($request->id) : '';
+                    return $this->get_related_request($request->id)[0] == $request->id ? '<span class="text-purple text-bold">'.$this->total_percentage_released($request->id).'%</span>' : '';
                 }
                 return '';
             })
@@ -347,6 +347,11 @@ class RequestService extends \App\Services\TaskService
             })
             ->rawColumns(['description'])
             ->make(true);
+    }
+
+    public function remaining_percentage($request_id)
+    {
+        return $this->total_percentage_released($request_id);
     }
 
     private function display_request_remaining_button($request_id): bool

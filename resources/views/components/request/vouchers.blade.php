@@ -157,7 +157,12 @@
                                         response.message,'','success'
                                     );
                                     $('#voucher-list').DataTable().ajax.reload(null, false);
-                                    let url = window.location.href
+                                    // let url = window.location.href
+                                    // $('#update-status-section').load(url+' #update-status-section')
+                                    // $('#request-status').load(url+' #request-status')
+                                    setTimeout(function(){
+                                        window.location.reload()
+                                    },1500)
                                 }else{
                                     Swal.fire(
                                         response.message,'','warning'
