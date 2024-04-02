@@ -107,7 +107,7 @@
                                             <div class="row reference_amount_field_row" style="display: none;">
                                                 <div class="col-lg-5 mt-3 percentage_released_reference_amount">
                                                     <label for="percentage_released_reference_amount">% Released ref</label>
-                                                    <input type="number" step="any" class="form-control" name="percentage_released_reference_amount" id="percentage_released_reference_amount" max="100" min="0" value="0">
+                                                    <input type="number" step="any" class="form-control" name="percentage_released_reference_amount" id="percentage_released_reference_amount" placeholder="{{$remaining_balance}}% remaining" max="{{$remaining_balance}}" min="0" required>
                                                 </div>
                                                 <div class="col-lg-7 mt-3 sub_total_reference_amount">
                                                     <label for="sub_total_reference_amount">Sub Total ref</label>
@@ -117,7 +117,7 @@
                                             <div class="row tcp_basis">
                                                 <div class="col-lg-5 mt-3 percentage_released">
                                                     <label for="percentage_released">% Released</label>
-                                                    <input type="number" step="any" class="form-control" name="percentage_released" id="percentage_released" max="100" min="0" value="0">
+                                                    <input type="number" step="any" class="form-control" name="percentage_released" id="percentage_released" placeholder="{{$remaining_balance}}% remaining" max="{{$remaining_balance}}" min="0" required>
                                                 </div>
                                                 <div class="col-lg-7 mt-3 sub_total">
                                                     <label for="sub_total">Sub Total</label>
@@ -297,6 +297,7 @@
                     order:[0,'desc'],
                     pageLength: 20
                 });
+
             });
         </script>
     @endcan

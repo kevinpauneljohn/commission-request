@@ -349,10 +349,6 @@ class RequestService extends \App\Services\TaskService
             ->make(true);
     }
 
-    public function remaining_percentage($request_id)
-    {
-        return $this->total_percentage_released($request_id);
-    }
 
     private function display_request_remaining_button($request_id): bool
     {
@@ -373,6 +369,16 @@ class RequestService extends \App\Services\TaskService
         return $sum;
     }
 
+    public function remaining_percentage($request_id)
+    {
+        if(Request::find($request_id)->status != 'declined')
+        {
+            $parent = $this->parent_id($request_id);
+            return 100 - $this->total_percentage_released($parent);
+        }
+        return 0;
+    }
+
     public function get_related_request($request_id): ?array
     {
         if(!$this->is_request_declined($request_id))
@@ -391,6 +397,27 @@ class RequestService extends \App\Services\TaskService
         }
         return null;
     }
+
+    public function parent_id($request_id)
+    {
+        $current = Request::find($request_id);
+        if(!$this->is_request_declined($current->id))
+        {
+            if(!is_null($current->parent_request_id))
+            {
+                if(!$this->is_request_declined($current->parent_request_id))
+                {
+                    return $current->parent_request_id;
+                }else{
+                    return $current->id;
+                }
+            }else{
+                return $current->id;
+            }
+        }
+        return $current->id;
+    }
+
 
     private function is_request_declined($request_id): bool
     {

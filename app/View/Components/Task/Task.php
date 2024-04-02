@@ -2,6 +2,7 @@
 
 namespace App\View\Components\Task;
 
+use App\Services\RequestService;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
@@ -10,14 +11,16 @@ class Task extends Component
 {
     public $assignee;
     public $createButton;
+    public $remaining_balance;
 
     /**
      * Create a new component instance.
      */
-    public function __construct($assignee, public $requestId = null, $createButton = false)
+    public function __construct(RequestService $requestService, $assignee, public $requestId = null, $createButton = false)
     {
         $this->assignee = $assignee;
         $this->createButton = $createButton;
+        $this->remaining_balance = $requestService->remaining_percentage($this->requestId);
     }
 
     /**
