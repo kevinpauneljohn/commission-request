@@ -18,29 +18,11 @@
 
 @section('content')
     <div class="card card-success card-outline card-tabs">
-        <div class="card-header p-0 pt-1 border-bottom-0">
-            <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" id="custom-tabs-three-home-tab" data-toggle="pill" href="#back-end-users" role="tab" aria-controls="back-end-user" aria-selected="true">Backend Users</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="custom-tabs-three-profile-tab" data-toggle="pill" href="#sales-partner" role="tab" aria-controls="sales-partner" aria-selected="false">Sales Partner</a>
-                </li>
-
-            </ul>
-        </div>
         <div class="card-body">
-            <div class="tab-content" id="custom-tabs-three-tabContent">
-                <div class="tab-pane fade show active" id="back-end-users" role="tabpanel" aria-labelledby="back-end-users">
-                    @if(auth()->user()->can('add user'))
-                        <button class="btn btn-sm btn-success mb-4" id="new-backend-user-btn">Add New</button>
-                    @endif
-                    {{ $dataTable->table(['class' => 'table table-bordered table-hover','style' => 'width:100%;'], true) }}
-                </div>
-                <div class="tab-pane fade" id="sales-partner" role="tabpanel" aria-labelledby="sales-partner">
-                    Mauris tincidunt mi at erat gravida, eget tristique urna bibendum. Mauris pharetra purus ut ligula tempor, et vulputate metus facilisis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas sollicitudin, nisi a luctus interdum, nisl ligula placerat mi, quis posuere purus ligula eu lectus. Donec nunc tellus, elementum sit amet ultricies at, posuere nec nunc. Nunc euismod pellentesque diam.
-                </div>
-            </div>
+            @if(auth()->user()->can('add user'))
+                <button class="btn btn-sm btn-success mb-4" id="new-backend-user-btn">Add New</button>
+            @endif
+            {{ $dataTable->table(['class' => 'table table-bordered table-hover','style' => 'width:100%;'], true) }}
         </div>
         <!-- /.card -->
     </div>
