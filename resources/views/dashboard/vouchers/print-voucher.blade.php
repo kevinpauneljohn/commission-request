@@ -88,7 +88,7 @@
     <tr><td colspan="2">Approved By</td><td colspan="2">{{ucwords($commissionVoucher->approvedBy->full_name)}}</td></tr>
     <tr>
         <td><label>Payment Type</label><br><span class="text-bold text-primary">{{$commissionVoucher->payment_type}}</span></td>
-        <td><label>Issuer</label><br><span class="text-bold text-primary">{{$commissionVoucher->issuer}}</span></td>
+        <td><label>Issued thru</label><br><span class="text-bold text-primary">{{$commissionVoucher->issuer}}</span></td>
         <td><label>Reference/Cheque #</label><br><span class="text-bold text-primary">{{$commissionVoucher->transaction_reference_no}}</span></td>
         <td><label>Amount Transferred</label><br><span class="text-bold text-primary">₱ {{number_format($commissionVoucher->amount_transferred,2)}}</span></td>
     </tr>

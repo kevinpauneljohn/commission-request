@@ -194,7 +194,7 @@ class CommissionVoucherService
                         $payment_type .= '</select>';
                         $details .= '<tr id="payment-fields">
                             <td><div class="form-group payment_type"><label>Payment Type</label>'.$payment_type.'</div></td>
-                            <td><div class="form-group issuer"><label>Issuer</label><input type="text" class="form-control" name="issuer" id="issuer" value="'.$voucher->issuer.'" required></div></td>
+                            <td><div class="form-group issuer"><label>Issued thru</label><input type="text" class="form-control" name="issuer" id="issuer" value="'.$voucher->issuer.'" required></div></td>
                             <td><div class="form-group transaction_reference_no"><label>Reference/Cheque #</label><input type="text" class="form-control" name="transaction_reference_no" id="transaction_reference_no" value="'.$voucher->transaction_reference_no.'" required></div></td>
                             <td><div class="form-group amount_transferred"><label>Amount Transferred</label><input type="number" class="form-control" step="any" min="0" max="'.$max_amount.'" name="amount_transferred" id="amount_transferred" value="'.(is_null($voucher->amount_transferred) ? $max_amount : $voucher->amount_transferred).'" required></div></td></tr>';
                     }
