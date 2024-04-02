@@ -20,3 +20,13 @@
     background-color: #e8fbe1!important;
 }
 
+.near-due-date{
+    background-color: #effdfb!important;
+}
+.tomorrow{
+    background-color: #fbf2cf;
+}
+.today,.past-due{
+    background-color: #fde5e1!important;
+}
+

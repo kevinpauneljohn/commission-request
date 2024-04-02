@@ -101,7 +101,9 @@ class TaskService
                 return '<span class="text-green">'.ucwords($task->author->full_name).'</span>';
             })
             ->editColumn('status',function($task){
-                return $this->status($task->status);
+//                return $this->status($task->status);
+                $now = Carbon::parse(now()->format('m/d/Y'));
+                return $now->diffInDays(Carbon::parse($task->due_date),false);
             })
             ->editColumn('created_at',function($task){
                 return $task->created_at->format('M d, Y g:i:s a');
@@ -145,6 +147,28 @@ class TaskService
 
                 }
                 return $action;
+            })
+            ->setRowClass(function($task){
+                $days_of_due_date = now()->diffInDays(Carbon::parse($task->due_date),false);
+                if($days_of_due_date <=3 && $days_of_due_date >= 2 && $task->status != 'completed')
+                {
+                    return 'near-due-date';
+                }
+                elseif ($days_of_due_date == 1 && $task->status != 'completed')
+                {
+                    return 'tomorrow';
+                }
+                elseif ($days_of_due_date == 0 && $task->status != 'completed')
+                {
+                    return 'today';
+                }
+                elseif ($days_of_due_date <  0 && $task->status != 'completed')
+                {
+                    return 'past-due';
+                }
+                else{
+                    return '';
+                }
             })
             ->rawColumns(['action','task_action','id','assigned_to','creator','status','request_id'])
             ->make(true);

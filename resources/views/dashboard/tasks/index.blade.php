@@ -28,7 +28,7 @@
                     <tr role="row">
                         <th>Task #</th>
                         <th>Request #</th>
-                        <th>Title</th>
+                        <th style="width: 30%">Title</th>
                         <th>Assigned to</th>
                         <th>Created By</th>
                         <th>Date Created</th>
