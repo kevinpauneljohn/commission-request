@@ -341,7 +341,7 @@ return [
         [
             'text' => 'Vouchers',
             'route'  => 'commission-voucher.index',
-            'icon' => 'fa fa-magic',
+            'icon' => 'fa fa-file',
             'key'  => 'voucher',
             'can' => 'view commission voucher'
         ],

@@ -21,10 +21,18 @@
     <div class="card card-success card-outline">
         <div class="card-body">
             <div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
-                <table id="request-list" class="table table-bordered table-hover" role="grid" style="width: 100%">
+                <table id="task-list" class="table table-bordered table-hover" role="grid" style="width: 100%">
                     <thead>
                     <tr role="row">
-                        <th style="width: 10%;">Request #</th>
+                        <th>Task #</th>
+                        <th>Request #</th>
+                        <th>Title</th>
+                        <th>Assigned to</th>
+                        <th>Created By</th>
+                        <th>Date Created</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                        <th>Action Taken</th>
                         <th>Action</th>
                     </tr>
                     </thead>
@@ -58,7 +66,32 @@
             });
         </script>
     @endonce
-
+    @can('view task')
+        <script>
+            $(function (){
+                $('#task-list').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    ajax: '{!! route('task-list') !!}' ,
+                    columns: [
+                        { data: 'id', name: 'id'},
+                        { data: 'request_id', name: 'request_id'},
+                        { data: 'title', name: 'title'},
+                        { data: 'assigned_to', name: 'assigned_to'},
+                        { data: 'creator', name: 'creator'},
+                        { data: 'created_at', name: 'created_at'},
+                        { data: 'due_date', name: 'due_date'},
+                        { data: 'status', name: 'status'},
+                        { data: 'action_taken', name: 'action_taken'},
+                        { data: 'task_action', name: 'task_action', orderable: false, searchable: false}
+                    ],
+                    responsive:true,
+                    order:[0,'desc'],
+                    pageLength: 50
+                });
+            });
+        </script>
+    @endcan
 
     <script>
         $('.select2, #sales_director').select2();

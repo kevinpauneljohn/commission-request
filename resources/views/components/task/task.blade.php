@@ -63,7 +63,7 @@
                                             <div class="row">
                                                 <div class="col-lg-12">
                                                     <label for="category">Category</label>
-                                                    <select name="category" class="form-select form-control" id="category">
+                                                    <select name="category" class="form-select form-control" id="category" required>
                                                         <option value="">--Select Category--</option>
                                                         <option value="Corporate Broker's Tax Deduction">Corporate Broker's Tax Deduction</option>
                                                         <option value="Individual Broker's Tax Deduction">Individual Broker's Tax Deduction</option>
@@ -97,11 +97,11 @@
                                             <div class="row reference_amount_field_row" style="display: none;">
                                                 <div class="col-lg-6 mt-3 reference_amount">
                                                     <label for="reference_amount">Ref. Amt WHT</label>
-                                                    <input type="number" step="any" class="form-control" name="reference_amount" id="reference_amount" max="5000000" min="0" value="0" disabled>
+                                                    <input type="number" step="any" class="form-control" name="reference_amount" id="reference_amount" max="5000000" min="0" value="0" disabled required>
                                                 </div>
                                                 <div class="col-lg-6 mt-3 remarks">
                                                     <label for="remarks">Remarks</label>
-                                                    <input type="text" step="any" class="form-control" name="remarks" id="remarks" disabled>
+                                                    <input type="text" step="any" class="form-control" name="remarks" id="remarks" disabled required>
                                                 </div>
                                             </div>
                                             <div class="row reference_amount_field_row" style="display: none;">
@@ -111,7 +111,7 @@
                                                 </div>
                                                 <div class="col-lg-7 mt-3 sub_total_reference_amount">
                                                     <label for="sub_total_reference_amount">Sub Total ref</label>
-                                                    <input type="number" step="any" class="form-control" name="sub_total_reference_amount" id="sub_total_reference_amount" max="5000000" min="0" value="0">
+                                                    <input type="number" step="any" class="form-control" name="sub_total_reference_amount" id="sub_total_reference_amount" max="5000000" min="0" value="0" required>
                                                 </div>
                                             </div>
                                             <div class="row tcp_basis">
@@ -187,7 +187,7 @@
                                                 <td colspan="1" id="gross-commission"></td>
                                             </tr>
                                             <tr id="tax-basis-row" style="display: none;">
-                                                <td colspan="3">Basis Tax/Lot Price</td>
+                                                <td colspan="3" id="tax_basis_reference_remarks"></td>
                                                 <td colspan="1" id="tax-basis"></td>
                                             </tr>
                                             <tr>
@@ -481,6 +481,7 @@
                     }else{
                         $('#tax-basis-row').hide();
                     }
+                    voucherPreview.find('#tax_basis_reference_remarks').text(response.tax_basis_reference_remarks)
                     voucherPreview.find('#request_number').text(response.request_number)
                     voucherPreview.find('#amount').text(response.commission_receivable)
                     voucherPreview.find('#amount-in-words').text(response.commission_in_words)

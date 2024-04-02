@@ -56,7 +56,7 @@
                         @if(collect($requestDetail->commissionVoucher)->count() > 0)
                                 @if(!is_null($requestDetail->commissionVoucher->payment_type) && !is_null($requestDetail->commissionVoucher->issuer)
                             && !is_null($requestDetail->commissionVoucher->transaction_reference_no) && !is_null($requestDetail->commissionVoucher->amount_transferred)
-                            && $requestDetail->commissionVoucher->is_approved && auth()->user()->can('update request status') && $requestDetail->status !== "delivered" )
+                            && $requestDetail->commissionVoucher->is_approved && auth()->user()->can('update request status') && $requestDetail->status !== "delivered" && $requestDetail->status !== "completed" )
                                     <div id="update-status-section">
                                         <hr>
                                         <p class="text-muted">
@@ -388,7 +388,7 @@
                                 let url = window.location.href
                                 $('#update-status-section').load(url+' #update-status-section')
                                 $('#request-status').load(url+' #request-status')
-
+                                $('#task-list').DataTable().ajax.reload(null, false);
 
                                 Swal.fire(
                                     response.message,'','success'

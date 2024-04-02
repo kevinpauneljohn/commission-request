@@ -91,6 +91,9 @@ class TaskService
     public function taskList($tasks): \Illuminate\Http\JsonResponse
     {
         return DataTables::of($tasks)
+            ->editColumn('request_id',function($task){
+                return '<a href="'.route('request.show',['request' => $task->request_id]).'"><span style="color:#007bff">'.$task->request->formatted_id.'</span></a>';
+            })
             ->editColumn('assigned_to',function($task){
                 return is_null($task->assignedTo)? "" : '<span class="text-fuchsia">'.ucwords($task->assignedTo->full_name).'</span>';
             })
@@ -113,6 +116,16 @@ class TaskService
             ->addColumn('action_taken',function($task){
                 return $task->actionTakens->count();
             })
+            ->addColumn('task_action',function($task){
+                $action = "";
+
+                if(auth()->user()->can('view task'))
+                {
+                    $action .= '<a href="'.route('task.show',['task' => $task->id]).'" class="btn btn-xs btn-success view-task-btn mr-1" id="'.$task->id.'">View</a>';
+
+                }
+                return $action;
+            })
             ->addColumn('action',function($task){
                 $action = "";
 
@@ -121,19 +134,19 @@ class TaskService
                     $action .= '<a href="'.route('task.show',['task' => $task->id]).'" class="btn btn-xs btn-success view-task-btn mr-1" id="'.$task->id.'">View</a>';
 
                 }
-                if(auth()->user()->can('edit task') && auth()->user()->id == $task->creator && $task->request->status != 'declined')
+                if(auth()->user()->can('edit task') && auth()->user()->id == $task->creator && $task->request->status != 'declined' && $task->request->status != 'completed' && $task->request->status != 'delivered')
                 {
                     $action .= '<button class="btn btn-xs btn-primary edit-task-btn mr-1" id="'.$task->id.'">Edit</button>';
 
                 }
-                if(auth()->user()->can('delete task') && auth()->user()->id == $task->creator && $task->request->status != 'declined')
+                if(auth()->user()->can('delete task') && auth()->user()->id == $task->creator && $task->request->status != 'declined' && $task->request->status != 'completed' && $task->request->status != 'delivered')
                 {
                     $action .= '<button class="btn btn-xs btn-danger delete-task-btn" id="'.$task->id.'">Delete</button>';
 
                 }
                 return $action;
             })
-            ->rawColumns(['action','id','assigned_to','creator','status'])
+            ->rawColumns(['action','task_action','id','assigned_to','creator','status','request_id'])
             ->make(true);
     }
 

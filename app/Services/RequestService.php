@@ -313,12 +313,9 @@ class RequestService extends \App\Services\TaskService
                 return $action;
             })
             ->setRowClass(function ($request) {
-                if(auth()->user()->can('add request') && collect($request->commissionVoucher)->count() > 0 && $request->status == 'completed')
+                if(collect($this->get_related_request($request->id))->count() > 0)
                 {
-                    if($this->total_percentage_released($request->id) < 100 && $this->display_request_remaining_button($request->id))
-                    {
-                        return 'with-remaining';
-                    }
+                    return $this->get_related_request($request->id)[0] == $request->id ? 'with-remaining' : '';
                 }
                 return '';
             })
