@@ -16,6 +16,7 @@ class CommissionVoucherController extends Controller
         $this->middleware(['auth','permission:view commission voucher'])->only(['index','show','preview','voucherLists','voucherListsByRequestId']);
         $this->middleware(['auth','permission:approve commission voucher'])->only(['approveVoucher']);
         $this->middleware(['auth','permission:edit commission voucher'])->only(['savePayment']);
+        $this->middleware(['auth','permission:print commission voucher'])->only(['printVoucher']);
     }
 
     /**
@@ -110,5 +111,11 @@ class CommissionVoucherController extends Controller
         return $commissionVoucherService->save_payment($commissionVoucher, $request) ?
             response()->json(['success' => true, 'message' => 'Payment successfully recorded!']) :
             response()->json(['success' => false, 'message' => 'An error occurred!']);
+    }
+
+    public function printVoucher(CommissionVoucher $commissionVoucher)
+    {
+        return view('dashboard.vouchers.print-voucher',compact('commissionVoucher'));
+//        return $commissionVoucher;
     }
 }

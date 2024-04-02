@@ -233,7 +233,14 @@ class CommissionVoucherService
                 {
                     $action .= '<button class="btn btn-sm btn-danger delete-voucher-btn m-1" id="'.$voucher->id.'" title="Delete"><i class="fa fa-trash"></i></button>';
                 }
-                $action .= '<button class="btn btn-sm btn-primary voucher-btn m-1" id="'.$voucher->id.'" title="Print"><i class="fa fa-print"></i></button>';
+                if(auth()->user()->can('view commission voucher') && $voucher->request->status == 'delivered' || $voucher->request->status == 'completed')
+                {
+                    $action .= '<a href="'.$voucher->drive_link.'" target="_blank" class="btn btn-sm btn-success drive-btn m-1" id="'.$voucher->id.'" title="'.(is_null($voucher->drive_link)? 'No folder url saved' : 'Access Folder').'"><i class="fa fa-folder-open"></i></a>';
+                }
+                if(auth()->user()->can('print commission voucher'))
+                {
+                    $action .= '<a href="'.route('print-commission-voucher',['commission_voucher' => $voucher->id]).'" target="_blank" class="btn btn-sm btn-primary voucher-btn m-1" id="'.$voucher->id.'" title="Print"><i class="fa fa-print"></i></a>';
+                }
 
                 return $action;
             })

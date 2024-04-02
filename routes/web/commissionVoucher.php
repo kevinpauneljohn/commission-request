@@ -8,4 +8,5 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/commission-voucher-lists/{request_id}',[\App\Http\Controllers\CommissionVoucherController::class,'voucherListsByRequestId'])->name('commission-voucher-lists-by-request');
     Route::post('/commission-voucher/approve/{commission_voucher}',[\App\Http\Controllers\CommissionVoucherController::class,'approveVoucher'])->name('approve-commission-voucher');
     Route::put('/commission-voucher/payment/{commission_voucher}',[\App\Http\Controllers\CommissionVoucherController::class,'savePayment'])->name('commission-voucher-payment');
+    Route::get('/commission-voucher/print/{commission_voucher}',[\App\Http\Controllers\CommissionVoucherController::class,'printVoucher'])->name('print-commission-voucher');
 });
