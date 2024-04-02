@@ -15,7 +15,7 @@ class TaskController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['permission:view task'])->only(['tasks','getTaskByRequestId','taskActionTakens']);
+        $this->middleware(['permission:view task'])->only(['tasks','getTaskByRequestId','taskActionTakens','setTaskToDisplay']);
         $this->middleware(['permission:update task status'])->only(['updateStatus']);
         $this->middleware([TaskAssignedToOnly::class])->only(['updateStatus']);
     }
@@ -23,9 +23,10 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        return view('dashboard.tasks.index');
+        $display_task = $request->session()->get('task');
+        return view('dashboard.tasks.index',compact('display_task'));
     }
 
     /**
@@ -85,9 +86,15 @@ class TaskController extends Controller
         return response()->json(['success' => false, 'message' => 'A task cannot be deleted because there has already been action taken!']);
     }
 
-    public function tasks(TaskService $taskService)
+    public function tasks(TaskService $taskService, \Illuminate\Http\Request $request)
     {
-        return $taskService->taskList(Task::all());
+        if(!is_null($request->session()->get('task')))
+        {
+         $task = Task::where('assigned_to',auth()->user()->id)->get();
+        }else{
+            $task = Task::all();
+        }
+        return $taskService->taskList($task);
     }
 
     public function getTaskByRequestId(TaskService $taskService, $requestId): \Illuminate\Http\JsonResponse
@@ -112,6 +119,17 @@ class TaskController extends Controller
         return $requestService->get_next_task($task->request_id, $task->id, $requestService) ?
             response()->json(['success' => true, 'message' => 'New task successfully added!']) :
             response()->json(['success' => false, 'message' => 'Add action taken first!']) ;
+    }
+
+    public function setTaskToDisplay(\Illuminate\Http\Request $request)
+    {
+//        $request->session()->put('task',$request->display);
+        if(is_null($request->task))
+        {
+            $request->session()->forget('task');
+        }else{
+            $request->session()->put('task',$request->task);
+        }
     }
 
 }

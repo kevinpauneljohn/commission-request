@@ -17,8 +17,10 @@
 @stop
 
 @section('content')
-    <x-request.info-box />
     <div class="card card-success card-outline">
+        <div class="card-header">
+            <x-task.display />
+        </div>
         <div class="card-body">
             <div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
                 <table id="task-list" class="table table-bordered table-hover" role="grid" style="width: 100%">
@@ -87,7 +89,7 @@
                     ],
                     responsive:true,
                     order:[0,'desc'],
-                    pageLength: 50
+                    pageLength: 50,
                 });
             });
         </script>
