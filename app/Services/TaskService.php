@@ -101,9 +101,9 @@ class TaskService
                 return '<span class="text-green">'.ucwords($task->author->full_name).'</span>';
             })
             ->editColumn('status',function($task){
-//                return $this->status($task->status);
-                $now = Carbon::parse(now()->format('m/d/Y'));
-                return $now->diffInDays(Carbon::parse($task->due_date),false);
+                return $this->status($task->status);
+//                $now = Carbon::parse(now()->format('m/d/Y'));
+//                return $now->diffInDays(Carbon::parse($task->due_date),false);
             })
             ->editColumn('created_at',function($task){
                 return $task->created_at->format('M d, Y g:i:s a');
