@@ -1,5 +1,5 @@
-<label for="task">Display</label>
-<select class="form-control w-25" name="task" id="task">
+<label for="task" class="mr-2">Display</label>
+<select class="form-select w-25" name="task" id="task">
     <option value="" @if(is_null($display_task)) selected @endif>All Task</option>
     <option value="My Task" @if(!is_null($display_task)) selected @endif>My Task</option>
 </select>

@@ -19,7 +19,14 @@
 @section('content')
     <div class="card card-success card-outline">
         <div class="card-header">
-            <x-task.display />
+            <div class="float-left mt-3" style="width: 50%;">
+                <x-task.display />
+            </div>
+            <div class="float-right" >
+                <button type="button" class="btn btn-flat mt-2" style="background-color: #effdfb;">Near Due Date</button>
+                <button type="button" class="btn btn-flat mt-2" style="background-color: #fbf2cf;">Tomorrow</button>
+                <button type="button" class="btn btn-flat mt-2" style="background-color: #fde5e1;">Today & Past Due</button>
+            </div>
         </div>
         <div class="card-body">
             <div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
