@@ -314,9 +314,9 @@
                     {
                         Swal.fire({
                             title: response.message,
-                            text: 'Redirecting now...',
+                            text: '@if(isset($_GET['parent_request'])) Redirecting now... @else  @endif ',
                             icon: "success",
-                            showConfirmButton: false,
+                            showConfirmButton: @if(isset($_GET['parent_request'])) false @else true @endif,
                         });
                         requestTable.DataTable().ajax.reload(null, false);
                         $('#add-request-form').trigger('reset')
