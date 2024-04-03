@@ -124,11 +124,11 @@
                         <div class="row">
                             <div class="col-lg-4 mt-3">
                                 <label for="buyer">Buyer</label>
-                                <input type="text" id="buyer" class="form-control" value="{{ucwords($requestDetail->buyer->firstname.' '.$requestDetail->buyer->lastname)}}" readonly>
+                                <input type="text" id="buyer" class="form-control" value="{{ucwords(strtolower($requestDetail->buyer->firstname).' '.strtolower($requestDetail->buyer->lastname))}}" readonly>
                             </div>
                             <div class="col-lg-4 mt-3">
                                 <label for="project">Project</label>
-                                <input type="text" id="project" class="form-control" value="{{ucwords($requestDetail->project)}}" readonly>
+                                <input type="text" id="project" class="form-control" value="{{ucwords(strtolower($requestDetail->project))}}" readonly>
                             </div>
                             <div class="col-lg-4 mt-3">
                                 <label for="model_unit">Phase/Block/Lot</label>

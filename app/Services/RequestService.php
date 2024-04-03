@@ -223,16 +223,16 @@ class RequestService extends \App\Services\TaskService
                 return $request->created_at->format('M d, Y g:i:s a');
             })
             ->editColumn('project', function($request){
-                return ucwords($request->project);
+                return ucwords(strtolower($request->project));
             })
             ->editColumn('buyer', function($request){
                 $fullName ='';
-                $fullName .= ucwords($request->buyer->firstname);
+                $fullName .= ucwords(strtolower($request->buyer->firstname));
                 if($request->buyer->middlename != "")
                 {
-                    $fullName .=' '.ucwords($request->buyer->middlename);
+                    $fullName .=' '.ucwords(strtolower($request->buyer->middlename));
                 }
-                $fullName .= ' '.ucwords($request->buyer->lastname);
+                $fullName .= ' '.ucwords(strtolower($request->buyer->lastname));
                 return $fullName;
             })
             ->addColumn('phase_block_lot', function($request){
