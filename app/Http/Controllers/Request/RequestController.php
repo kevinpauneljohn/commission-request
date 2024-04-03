@@ -107,15 +107,28 @@ class RequestController extends Controller
         //
     }
 
-    public function request_list(RequestService $requestService)
+    public function request_list(RequestService $requestService, Request $request)
     {
+        $display_request = $request->session()->get('request_display');
         if(auth()->user()->hasRole('sales director'))
         {
-            $request = User::findOrFail(auth()->user()->id)->requests;
+            if(is_null($display_request))
+            {
+                $request = User::findOrFail(auth()->user()->id)->requests;
+            }else{
+                $request = User::findOrFail(auth()->user()->id)->requests()->where('status',$display_request)->get();
+            }
+
         }
         elseif (!auth()->user()->hasAnyRole('sales director'))
         {
-            $request = \App\Models\Request::all();
+            if(is_null($display_request))
+            {
+                $request = \App\Models\Request::all();
+            }else{
+                $request = \App\Models\Request::where('status',$display_request);
+            }
+
         }
         return $requestService->requestList($request);
     }
@@ -149,5 +162,15 @@ class RequestController extends Controller
         return $commissionVoucherService->request_status_completed($request) ?
             response()->json(['success' => true, 'message' => 'Request completed']):
             response()->json(['success' => false, 'message' => 'An error occurred']);
+    }
+
+    public function setRequestToDisplay(Request $request): void
+    {
+        if(is_null($request->display))
+        {
+            $request->session()->forget('request_display');
+        }else{
+            $request->session()->put('request_display',$request->display);
+        }
     }
 }

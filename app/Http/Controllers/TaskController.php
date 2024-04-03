@@ -121,7 +121,7 @@ class TaskController extends Controller
             response()->json(['success' => false, 'message' => 'Add action taken first!']) ;
     }
 
-    public function setTaskToDisplay(\Illuminate\Http\Request $request)
+    public function setTaskToDisplay(\Illuminate\Http\Request $request): void
     {
 //        $request->session()->put('task',$request->display);
         if(is_null($request->task))

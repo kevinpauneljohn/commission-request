@@ -19,11 +19,15 @@
 @section('content')
     <x-request.info-box />
     <div class="card card-success card-outline">
-        @can('add request')
+
             <div class="card-header">
-                <button class="btn btn-success btn-sm" id="add-request-btn">Create Request</button>
+                @can('add request')
+                    <button class="btn btn-success btn-sm mr-3" id="add-request-btn">Create Request</button>
+                @endcan
+
+                <x-request.display />
             </div>
-        @endcan
+
         <div class="card-body">
             <div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
                 <table id="request-list" class="table table-bordered table-hover" role="grid" style="width: 100%">
