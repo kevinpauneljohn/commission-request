@@ -25,6 +25,7 @@ class RequestObserver
         $cc_users = collect(User::whereHas("roles", function($q){
             $q->where("name","=","sales administrator")
                 ->orWhere("name","=","business_admin_01")
+                ->orWhere("name","=","business administrator")
                 ->orWhere("name","=","super admin");
         })->get())->pluck('email');
 
