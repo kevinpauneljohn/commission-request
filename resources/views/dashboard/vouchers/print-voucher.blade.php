@@ -33,7 +33,7 @@
     </style>
 </head>
 <body>
-<table style="max-width: 58%!important; font-size: 6pt">
+<table style="width: 100%!important; font-size: 12pt">
     <tbody>
     <tr><td colspan="4">{{$commissionVoucher->voucher->request_number}}</td></tr>
     <tr><td colspan="4" class="text-bold text-center">RNH Realty &amp; Management Inc. Comm Voucher</td></tr>
