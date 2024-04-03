@@ -2,10 +2,12 @@
 
 namespace App\Services;
 
+use App\Mail\RequestCreated;
 use App\Models\Automation;
 use App\Models\Request;
 use App\Models\Task;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 use Spatie\Activitylog\Models\Activity;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -159,6 +161,13 @@ class RequestService extends \App\Services\TaskService
         }
 
     }
+
+//    private function send_email($request)
+//    {
+//        Mail::to('jhamaicspaunel@gmail.com')->send(new RequestCreated($request));
+//
+//        $salesAdministrators = User::whereHas("roles", function($q){ $q->where("name","=","sales administrator"); })->get();
+//    }
 
     public function get_next_task($request_id, $task_id, TaskService $taskService): bool
     {

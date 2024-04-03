@@ -2,8 +2,11 @@
 
 namespace App\Observers;
 
+use App\Mail\RequestCreated;
 use App\Models\Request;
+use App\Models\User;
 use App\Services\RequestService;
+use Illuminate\Support\Facades\Mail;
 
 class RequestObserver
 {
@@ -18,6 +21,16 @@ class RequestObserver
     public function created(Request $request): void
     {
         $this->requestService->generate_automated_task($request->id);
+
+        $cc_users = collect(User::whereHas("roles", function($q){
+            $q->where("name","=","sales administrator")
+                ->orWhere("name","=","business_admin_01")
+                ->orWhere("name","=","super admin");
+        })->get())->pluck('email');
+
+        Mail::to($request->user->email)
+            ->cc($cc_users)->send(new RequestCreated($request));
+
     }
 
     /**

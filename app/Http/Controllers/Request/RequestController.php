@@ -12,8 +12,6 @@ use App\Services\CommissionVoucherService;
 use App\Services\FindingService;
 use App\Services\RequestService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Spatie\Permission\Models\Role;
 
 class RequestController extends Controller
 {
