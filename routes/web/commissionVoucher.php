@@ -9,4 +9,5 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/commission-voucher/approve/{commission_voucher}',[\App\Http\Controllers\CommissionVoucherController::class,'approveVoucher'])->name('approve-commission-voucher');
     Route::put('/commission-voucher/payment/{commission_voucher}',[\App\Http\Controllers\CommissionVoucherController::class,'savePayment'])->name('commission-voucher-payment');
     Route::get('/commission-voucher/print/{commission_voucher}',[\App\Http\Controllers\CommissionVoucherController::class,'printVoucher'])->name('print-commission-voucher');
+    Route::get('/commission-voucher/download/{commission_voucher}',[\App\Http\Controllers\CommissionVoucherController::class,'downLoadVoucher'])->name('download-commission-voucher');
 });

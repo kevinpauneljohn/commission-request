@@ -8,6 +8,7 @@ use App\Http\Requests\StoreCommissionVoucherRequest;
 use App\Http\Requests\UpdateCommissionVoucherRequest;
 use App\Services\CommissionVoucherService;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class CommissionVoucherController extends Controller
 {
@@ -16,7 +17,7 @@ class CommissionVoucherController extends Controller
         $this->middleware(['auth','permission:view commission voucher'])->only(['index','show','preview','voucherLists','voucherListsByRequestId']);
         $this->middleware(['auth','permission:approve commission voucher'])->only(['approveVoucher']);
         $this->middleware(['auth','permission:edit commission voucher'])->only(['savePayment']);
-        $this->middleware(['auth','permission:print commission voucher'])->only(['printVoucher']);
+        $this->middleware(['auth','permission:print commission voucher'])->only(['printVoucher','downLoadVoucher']);
     }
 
     /**
@@ -113,9 +114,14 @@ class CommissionVoucherController extends Controller
             response()->json(['success' => false, 'message' => 'An error occurred!']);
     }
 
-    public function printVoucher(CommissionVoucher $commissionVoucher)
+    public function printVoucher(CommissionVoucher $commissionVoucher): \Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\Foundation\Application
     {
         return view('dashboard.vouchers.print-voucher',compact('commissionVoucher'));
-//        return $commissionVoucher;
+    }
+
+    public function downLoadVoucher(CommissionVoucher $commissionVoucher): \Illuminate\Http\Response
+    {
+        $pdf = Pdf::loadView('pdf.invoice', collect($commissionVoucher)->toArray());
+        return $pdf->download('commission_voucher_'.$commissionVoucher->request->formatted_id.'.pdf');
     }
 }

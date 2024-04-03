@@ -194,5 +194,23 @@
             });
 
         @endcan
+
+        @can('print commission voucher')
+
+            $(document).on('click','.pdf-voucher-btn',function(){
+                let id = this.id;
+                $.ajax({
+                    url: '/commission-voucher/download/'+id,
+                    type: 'get',
+                    beforeSend: function(){
+                        $('.pdf-voucher-btn').attr('disabled',true).text('Generating PDF...')
+                    }
+                }).done(function(response){
+                    console.log(response)
+                }).always(function(){
+                    $('.pdf-voucher-btn').attr('disabled',false).html('<i class="fa fa-file-pdf"></i>')
+                })
+            })
+        @endcan
     </script>
 @endpush

@@ -203,7 +203,6 @@
 @stop
 <x-device-checker />
 @section('plugins.Sweetalert2',true)
-
 @section('css')
     {{-- Add here extra stylesheets --}}
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}

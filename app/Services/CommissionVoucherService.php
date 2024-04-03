@@ -240,6 +240,8 @@ class CommissionVoucherService
                 if(auth()->user()->can('print commission voucher'))
                 {
                     $action .= '<a href="'.route('print-commission-voucher',['commission_voucher' => $voucher->id]).'" target="_blank" class="btn btn-sm btn-primary voucher-btn m-1" id="'.$voucher->id.'" title="Print"><i class="fa fa-print"></i></a>';
+//                    $action .= '<a href="'.route('download-commission-voucher',['commission_voucher' => $voucher->id]).'" target="_self" class="btn btn-sm bg-purple pdf-voucher-btn m-1" id="'.$voucher->id.'" title="Download PDF"><i class="fa fa-file-pdf"></i></a>';
+                    $action .= '<button class="btn btn-sm bg-purple pdf-voucher-btn m-1" id="'.$voucher->id.'" title="Download PDF"><i class="fa fa-file-pdf"></i></button>';
                 }
 
                 return $action;
