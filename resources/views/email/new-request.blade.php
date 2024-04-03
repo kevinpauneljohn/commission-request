@@ -28,10 +28,11 @@
         <tr><td>Model Unit</td><td>{{ucwords(strtolower($request->model_unit))}}</td></tr>
         <tr><td>Total Contract Price</td><td>₱ {{number_format($request->total_contract_price,2)}}</td></tr>
         <tr><td>Phase</td><td>{{$request->phase}}</td></tr>
-        <tr><td>Block/Lot</td><td>Blk{{$request->block}} Lot {{$request->lot}}</td></tr>
+        <tr><td>Block/Lot</td><td>Blk {{$request->block}} Lot {{$request->lot}}</td></tr>
         <tr><td>Financing</td><td>{{$request->financing}}</td></tr>
         <tr><td>SD Rate</td><td>{{number_format($request->sd_rate,2)}}%</td></tr>
         <tr><td>Parent Request</td><td>{{$request->parent_request}}</td></tr>
+        <tr><td colspan="2"><h4>Message</h4><p>{{$request->message}}</p></td></tr>
     </table>
 </div>
 </body>
