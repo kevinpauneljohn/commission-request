@@ -25,12 +25,11 @@ class RequestObserver
         $cc_users = collect(User::whereHas("roles", function($q){
             $q->where("name","=","sales administrator")
                 ->orWhere("name","=","business_admin_01")
-                ->orWhere("name","=","business administrator")
-                ->orWhere("name","=","super admin");
+                ->orWhere("name","=","business administrator");
         })->get())->pluck('email');
 
         Mail::to($request->user->email)
-            ->cc($cc_users)->send(new RequestCreated($request));
+            ->cc($cc_users)->bcc(["johnkevinpaunel@gmail.com"])->send(new RequestCreated($request));
 
     }
 
