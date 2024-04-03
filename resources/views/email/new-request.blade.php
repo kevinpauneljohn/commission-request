@@ -2,7 +2,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
-    <title>Sample Email Template</title>
+    <title>New Request Created</title>
     <style>
         body{
             padding: 20px;
@@ -10,6 +10,7 @@
         table, th, td {
             border: 1px solid darkgrey;
             border-collapse: collapse;
+
         }
         th, td {
             padding: 15px;
@@ -17,7 +18,7 @@
     </style>
 </head>
 <body>
-<div style="background-color: ghostwhite">
+<div style="background-color: ghostwhite; margin: 100px;">
     <p>
         A request <span style="color:#0c84ff; font-weight: bold">{{$request->formatted_id}}</span> has been created!. Click the link <a href="{{route('request.show',['request' => $request->id])}}">here</a> to access the Request
     </p>
