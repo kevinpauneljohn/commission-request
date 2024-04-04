@@ -67,6 +67,7 @@
                                                         <option value="">--Select Category--</option>
                                                         <option value="Corporate Broker's Tax Deduction">Corporate Broker's Tax Deduction</option>
                                                         <option value="Individual Broker's Tax Deduction">Individual Broker's Tax Deduction</option>
+                                                        <option value="Apec Homes Tax Deduction">Apec Homes Tax Deduction</option>
                                                         <option value="No Tax Deduction">No Tax Deduction</option>
                                                         <option value="Split Commission">Split Commission</option>
                                                     </select>
@@ -131,7 +132,7 @@
                                                 </div>
                                                 <div class="col-lg-6 mt-3 vat">
                                                     <label for="vat">VAT</label>
-                                                    <input type="number" name="vat" step="any" class="form-control" id="vat" disabled min="12" max="12" value="0">
+                                                    <input type="number" name="vat" step="any" class="form-control" id="vat" disabled min="0" max="12" value="0">
                                                 </div>
                                             </div>
                                         </div>
@@ -392,6 +393,10 @@
                     case "Individual Broker's Tax Deduction":
                         wht.val(10).attr('disabled',false)
                         vat.val(12).attr('disabled',false)
+                        break;
+                    case "Apec Homes Tax Deduction":
+                        wht.val(15).attr('disabled',false)
+                        vat.val(0).attr('disabled',false)
                         break;
                     default: $('input[name=wht], input[name=vat]').val(0).attr('disabled',true)
                 }
