@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use App\Mail\RequestDelivered;
+use App\Services\TaskService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class Request extends Model
@@ -124,10 +126,16 @@ class Request extends Model
 
     protected static function booted(): void
     {
-        static::saved(function (Request $request) {
+        static::saved(function (Request $request){
             if($request->status == "delivered")
             {
                 Mail::to($request->user->email)->send(new RequestDelivered($request));
+            }
+            elseif($request->status == "completed")
+            {
+                DB::table('tasks')->where('request_id',$request->id)
+                    ->where('status','!=','completed')
+                    ->update(['status' => 'completed']);
             }
         });
     }

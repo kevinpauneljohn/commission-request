@@ -90,9 +90,9 @@ class TaskController extends Controller
     {
         if(!is_null($request->session()->get('task')))
         {
-         $task = Task::where('assigned_to',auth()->user()->id)->get();
+         $task = Task::where('assigned_to',auth()->user()->id)->where('status','pending')->get();
         }else{
-            $task = Task::all();
+            $task = Task::where('status','pending')->get();
         }
         return $taskService->taskList($task);
     }
@@ -123,7 +123,6 @@ class TaskController extends Controller
 
     public function setTaskToDisplay(\Illuminate\Http\Request $request): void
     {
-//        $request->session()->put('task',$request->display);
         if(is_null($request->task))
         {
             $request->session()->forget('task');

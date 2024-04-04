@@ -221,10 +221,10 @@ class CommissionVoucherService
             ->addColumn('action',function($voucher){
                 $action = "";
 
-                if(auth()->user()->can('view commission voucher') && $voucher->request->status == "delivered" && auth()->user()->hasRole('sales director'))
-                {
-                    $action .= '<a href="'.$voucher->drive_link.'" target="_blank" class="btn btn-sm btn-success m-1" id="'.$voucher->id.'" title="Access Drive"><i class="fa fa-folder-open"></i></a>';
-                }
+//                if(auth()->user()->can('view commission voucher') && $voucher->request->status == "delivered" && auth()->user()->hasRole('sales director'))
+//                {
+//                    $action .= '<a href="'.$voucher->drive_link.'" target="_blank" class="btn btn-sm btn-success m-1" id="'.$voucher->id.'" title="Access Drive"><i class="fa fa-folder-open"></i></a>';
+//                }
                 if(auth()->user()->can('approve commission voucher') && !$voucher->is_approved)
                 {
                     $action .= '<button class="btn btn-sm btn-success approve-voucher-btn m-1" id="'.$voucher->id.'" title="Approve"><i class="fa fa-check"></i></button>';
