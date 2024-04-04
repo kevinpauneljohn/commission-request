@@ -117,7 +117,7 @@ class Request extends Model
         return $this->hasMany(Finding::class);
     }
 
-    public function commissionVoucher()
+    public function commissionVoucher(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(CommissionVoucher::class);
     }
@@ -127,7 +127,7 @@ class Request extends Model
         static::saved(function (Request $request) {
             if($request->status == "delivered")
             {
-                Mail::to($request->user->email)->cc(['johnkevinpaunel@gmail.com'])->send(new RequestDelivered($request));
+                Mail::to($request->user->email)->send(new RequestDelivered($request));
             }
         });
     }
