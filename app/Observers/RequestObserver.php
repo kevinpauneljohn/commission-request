@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Mail\RequestCreated;
+use App\Mail\RequestDelivered;
 use App\Models\Request;
 use App\Models\User;
 use App\Services\RequestService;
@@ -25,7 +26,8 @@ class RequestObserver
         $cc_users = collect(User::whereHas("roles", function($q){
             $q->where("name","=","sales administrator")
                 ->orWhere("name","=","business_admin_01")
-                ->orWhere("name","=","business administrator");
+                ->orWhere("name","=","business administrator")
+                ->orWhere("name","=","super admin");
         })->get())->pluck('email');
 
         Mail::to($request->user->email)

@@ -29,7 +29,7 @@ class TaskObserver
      */
     public function updated(Task $task): void
     {
-        //
+
     }
 
     /**

@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Mail\RequestDelivered;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Mail;
 
 class Request extends Model
 {
@@ -118,5 +120,15 @@ class Request extends Model
     public function commissionVoucher()
     {
         return $this->hasOne(CommissionVoucher::class);
+    }
+
+    protected static function booted(): void
+    {
+        static::saved(function (Request $request) {
+            if($request->status == "delivered")
+            {
+                Mail::to($request->user->email)->cc(['johnkevinpaunel@gmail.com'])->send(new RequestDelivered($request));
+            }
+        });
     }
 }

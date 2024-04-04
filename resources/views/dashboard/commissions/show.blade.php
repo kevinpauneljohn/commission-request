@@ -382,7 +382,7 @@
                         type : 'put',
                         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                         beforeSend: function(){
-
+                            $('.update-request-status-btn').attr('disabled',true).text('Updating...')
                         },success: function(response){
                             console.log(response)
                             if(response.success === true){
@@ -404,7 +404,7 @@
                             console.log(xhr);
                         }
                     }).always(function(){
-
+                        $('.update-request-status-btn').attr('disabled',false).text('Update Status')
                     });
 
                 }

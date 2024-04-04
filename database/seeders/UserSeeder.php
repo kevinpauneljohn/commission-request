@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
         $user2 = new User([
             'firstname' => 'john',
             'lastname' => 'doe',
-            'email' => 'john@gmail.com',
+            'email' => 'jhamaicspaunel@gmail.com',
             'username' => 'john',
             'password' => 123
         ]);
@@ -57,17 +57,6 @@ class UserSeeder extends Seeder
 
         $user4->assignRole('business administrator');
         $user4->save();
-
-        $admin = new User([
-            'firstname' => 'admin',
-            'lastname' => 'admin',
-            'email' => 'admin@gmail.com',
-            'username' => 'admin',
-            'password' => 123
-        ]);
-
-        $admin->assignRole('super admin');
-        $admin->save();
 
     }
 }
