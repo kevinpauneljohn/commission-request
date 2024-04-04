@@ -154,7 +154,7 @@
                                                 <th class="text-center" colspan="4">RNH Realty & Management Inc. Comm Voucher</th>
                                             </tr>
                                             <tr>
-                                                <th id="project-name" colspan="4" class="text-center">Madonna Residences</th>
+                                                <th id="project-name" colspan="4" class="text-center"></th>
                                             </tr>
                                             <tr>
                                                 <td>Req. #</td>
@@ -501,6 +501,7 @@
                     voucherPreview.find('#vat-amount').text(response.vat_amount)
                     voucherPreview.find('#net-commission').text(response.total_commission)
                     voucherPreview.find('#prepared_by').text(response.prepared_by)
+                    voucherPreview.find('#project-name').text(response.project)
 
                     if(response.deductions > 0)
                     {
