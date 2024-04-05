@@ -129,7 +129,7 @@ class Request extends Model
         static::saved(function (Request $request){
             if($request->status == "delivered")
             {
-                Mail::to($request->user->email)->send(new RequestDelivered($request));
+//                Mail::to($request->user->email)->send(new RequestDelivered($request));
             }
             elseif($request->status == "completed")
             {

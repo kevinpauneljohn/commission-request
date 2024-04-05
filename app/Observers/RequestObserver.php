@@ -30,8 +30,8 @@ class RequestObserver
                 ->orWhere("name","=","super admin");
         })->get())->pluck('email');
 
-        Mail::to($request->user->email)
-            ->cc($cc_users)->bcc(["johnkevinpaunel@gmail.com"])->send(new RequestCreated($request));
+//        Mail::to($request->user->email)
+//            ->cc($cc_users)->bcc(["johnkevinpaunel@gmail.com"])->send(new RequestCreated($request));
 
     }
 

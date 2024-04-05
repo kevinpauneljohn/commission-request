@@ -42,13 +42,6 @@
                             <th>Phase/Block/Lot</th>
                         @endif
                         <th style="width: 8%;">TCP</th>
-                        @if(auth()->user()->hasRole('sales director'))
-                            <th>Financing</th>
-                            <th>SD Rate</th>
-                            <th>Payment Type</th>
-                            <th>Financial Service</th>
-                            <th style="width: 8%;">Cheque Amount</th>
-                        @endif
                         @if(!auth()->user()->hasRole('sales director'))
                             <th>Requester</th>
                         @endif
@@ -249,13 +242,6 @@
                         { data: 'phase_block_lot', name: 'phase_block_lot'},
                             @endif
                         { data: 'total_contract_price', name: 'total_contract_price'},
-                            @if(auth()->user()->hasRole('sales director'))
-                        { data: 'financing', name: 'financing'},
-                        { data: 'sd_rate', name: 'sd_rate'},
-                        { data: 'payment_type', name: 'payment_type'},
-                        { data: 'financial_service', name: 'financial_service'},
-                        { data: 'cheque_amount', name: 'cheque_amount'},
-                           @endif
                             @if(!auth()->user()->hasRole('sales director'))
                             { data: 'user_id', name: 'user_id'},
                             @endif
