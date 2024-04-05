@@ -269,6 +269,10 @@
             });
 
             $(document).on('click','#add-request-btn', function(){
+                requestModal.modal({
+                    backdrop: 'static',
+                    keyboard: false  // to prevent closing with Esc button (if you want this too)
+                });
                 requestModal.modal('toggle');
                 requestModal.find('.modal-title').text('Create Request');
             });

@@ -6,7 +6,7 @@
         }
 
 @endphp
-@can('view task')
+
     <div class="card card-success card-outline">
         <div class="card-body">
             <ul class="nav nav-tabs">
@@ -15,9 +15,9 @@
                         <a class="nav-link active text-success" data-toggle="tab" href="#task"><i class="fa fa-thumbtack"></i> Task</a>
                     </li>
                 @endif
-                @if(auth()->user()->can('view finding') && !auth()->user()->hasRole('sales director'))
+                @if(auth()->user()->can('view finding'))
                     <li class="nav-item">
-                        <a class="nav-link text-success" data-toggle="tab" href="#findings"><i class="fa fa-search"></i> Findings</a>
+                        <a class="nav-link text-success @if(auth()->user()->hasRole('sales director')) active @endif" data-toggle="tab" href="#findings"><i class="fa fa-search"></i> Findings</a>
                     </li>
                 @endif
                 @if(auth()->user()->can('view commission voucher') && !auth()->user()->hasRole('sales director') && !auth()->user()->hasRole('business administrator') && $request->status != "declined")
@@ -28,29 +28,36 @@
             </ul>
 
             <div class="tab-content">
-                <div id="task" class="tab-pane active">
-                    <x-task.table-list :assignee="$assignee" :requestId="$requestId" :createButton="true"/>
-                </div>
-                <div id="findings" class="tab-pane fade">
-                    <div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
-                        @can('add finding')
-                            <div class="card-tools mb-5 mt-4">
-                                <button class="btn btn-success btn-sm" id="add-finding-btn">Add Findings</button>
-                            </div>
-                        @endcan
-                        <table id="findings-list" class="table table-bordered table-hover" role="grid" style="width: 100%">
-                            <thead>
-                            <tr role="row">
-                                <th style="width: 1%;"></th>
-                                <th>Date Created</th>
-                                <th style="width: 40%;">Findings</th>
-                                <th>Author</th>
-                                <th style="width: 5%"></th>
-                            </tr>
-                            </thead>
-                        </table>
+                @can('view task')
+                    <div id="task" class="tab-pane active">
+                        <x-task.table-list :assignee="$assignee" :requestId="$requestId" :createButton="true"/>
                     </div>
-                </div>
+                @endcan
+                @can('view finding')
+                        <div id="findings" class="tab-pane @if(auth()->user()->hasRole('sales director')) active @else fade @endif">
+                            @if(auth()->user()->hasRole('sales director')) <br> @endif
+                            <div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
+
+                                @can('add finding')
+                                    <div class="card-tools mb-5 mt-4">
+                                        <button class="btn btn-success btn-sm" id="add-finding-btn">Add Findings</button>
+                                    </div>
+                                @endcan
+                                <table id="findings-list" class="table table-bordered table-hover" role="grid" style="width: 100%">
+                                    <thead>
+                                    <tr role="row">
+                                        <th style="width: 1%;"></th>
+                                        <th>Date Created</th>
+                                        <th style="width: 40%;">Findings</th>
+                                        <th>Created By</th>
+                                        @if(!auth()->user()->hasRole('sales director')) <th style="width: 5%"></th> @endif
+
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                @endcan
                 @if(auth()->user()->can('view commission voucher') && !auth()->user()->hasRole('sales director') && !auth()->user()->hasRole('business administrator') && $request->status != "declined")
                     <div id="commission-voucher" class="tab-pane fade">
                         <div class="row mt-3">
@@ -235,7 +242,7 @@
 
         </div>
     </div>
-@endcan
+
 
 @can('view commission voucher')
     <x-request.vouchers :requestId="$request->id"/>
@@ -280,28 +287,26 @@
 
 @push('js')
 
-    @can('view task')
-        <script>
-            $(function() {
-                $('#findings-list').DataTable({
-                    processing: true,
-                    serverSide: true,
-                    ajax: '{!! route('finding-list',['requestId' => $requestId]) !!}',
-                    columns: [
-                        { data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                        { data: 'created_at', name: 'created_at'},
-                        { data: 'findings', name: 'findings'},
-                        { data: 'user_id', name: 'user_id'},
-                        { data: 'action', name: 'action', orderable: false, searchable: false}
-                    ],
-                    responsive:true,
-                    order:[0,'desc'],
-                    pageLength: 20
-                });
-
+    <script>
+        $(function() {
+            $('#findings-list').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: '{!! route('finding-list',['requestId' => $requestId]) !!}',
+                columns: [
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                    { data: 'created_at', name: 'created_at'},
+                    { data: 'findings', name: 'findings'},
+                    { data: 'user_id', name: 'user_id'},
+                    @if(!auth()->user()->hasRole('sales director')) { data: 'action', name: 'action', orderable: false, searchable: false} @endif
+                ],
+                responsive:true,
+                order:[0,'desc'],
+                pageLength: 20
             });
-        </script>
-    @endcan
+
+        });
+    </script>
 
     @can('add finding')
         <script>

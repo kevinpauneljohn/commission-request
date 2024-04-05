@@ -24,7 +24,7 @@ class FindingService
             'user_id' => auth()->user()->id
         ]))
         {
-            $log = 'There is a finding in your request. See the details here <a href="'.route('finding.show',['finding' => $findings->id]).'" class="text-info">Click to view details</a>';
+            $log = 'There is a finding in your request. Check the Findings tab to view the details';
             $this->findingsLogsActivities($findings->request_id, $log, $findings, true);
             return true;
         }
@@ -44,7 +44,7 @@ class FindingService
             $this->set_task_status_to_completed($request);
 
             $log = "You're request has been declined. ";
-            $log .= 'See the findings here <a href="'.route('finding.show',['finding' => $findings->id]).'" class="text-info">Click to view details</a>';
+            $log .= 'See the findings in the Findings tab to view details</a>';
             $this->findingsLogsActivities($findings->request_id, $log, $findings, true);
             return true;
         }
