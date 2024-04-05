@@ -42,6 +42,6 @@ class UpdateRequestDeliveredToCompleted extends Command
                 }
             }
         }
-        Log::info('update request cron working');
+        Log::info('update request cron working once a day working, date: '.now());
     }
 }
