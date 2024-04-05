@@ -37,8 +37,6 @@ class UpdateRequestDeliveredToCompleted extends Command
                 {
                     $this->info(now()->diffInDays(Carbon::parse($request->updated_at),false));
                     DB::table('requests')->where('status','=','delivered')->update(['status' => 'completed']);
-                }else{
-                    $this->info('pwede pa'.now()->diffInDays(Carbon::parse($request->updated_at),false));
                 }
             }
         }
