@@ -196,10 +196,10 @@ class CommissionVoucherService
                             <td><div class="form-group payment_type"><label>Payment Type</label>'.$payment_type.'</div></td>
                             <td><div class="form-group issuer"><label>Issued thru</label><input type="text" class="form-control" name="issuer" id="issuer" value="'.$voucher->issuer.'" required></div></td>
                             <td><div class="form-group transaction_reference_no"><label>Reference/Cheque #</label><input type="text" class="form-control" name="transaction_reference_no" id="transaction_reference_no" value="'.$voucher->transaction_reference_no.'" required></div></td>
-                            <td><div class="form-group amount_transferred"><label>Amount Transferred</label><input type="number" class="form-control" step="any" min="0" max="'.$max_amount.'" name="amount_transferred" id="amount_transferred" value="'.(is_null($voucher->amount_transferred) ? $max_amount : $voucher->amount_transferred).'" required></div></td></tr>';
+                            <td><div class="form-group amount_transferred"><label>Amount Transferred</label><input type="number" class="form-control" step="any" max="'.$max_amount.'" name="amount_transferred" id="amount_transferred" value="'.(is_null($voucher->amount_transferred) ? $max_amount : $voucher->amount_transferred).'" required></div></td></tr>';
                     }
 
-                    if(!auth()->user()->hasRole('sales director'))
+                    if(!auth()->user()->hasRole('sales director') && $voucher->request->status != 'completed')
                     {
                         $details .= '<tr><td colspan="4"><div class="form-group drive_link"><label>Drive link</label><input type="url" name="drive_link" id="drive_link" class="form-control" value="'.$voucher->drive_link.'"></td></tr>';
                         $disabled = 'disabled';
@@ -221,10 +221,6 @@ class CommissionVoucherService
             ->addColumn('action',function($voucher){
                 $action = "";
 
-//                if(auth()->user()->can('view commission voucher') && $voucher->request->status == "delivered" && auth()->user()->hasRole('sales director'))
-//                {
-//                    $action .= '<a href="'.$voucher->drive_link.'" target="_blank" class="btn btn-sm btn-success m-1" id="'.$voucher->id.'" title="Access Drive"><i class="fa fa-folder-open"></i></a>';
-//                }
                 if(auth()->user()->can('approve commission voucher') && !$voucher->is_approved)
                 {
                     $action .= '<button class="btn btn-sm btn-success approve-voucher-btn m-1" id="'.$voucher->id.'" title="Approve"><i class="fa fa-check"></i></button>';
@@ -240,7 +236,6 @@ class CommissionVoucherService
                 if(auth()->user()->can('print commission voucher'))
                 {
                     $action .= '<a href="'.route('print-commission-voucher',['commission_voucher' => $voucher->id]).'" target="_blank" class="btn btn-sm btn-primary voucher-btn m-1" id="'.$voucher->id.'" title="Print"><i class="fa fa-print"></i></a>';
-//                    $action .= '<a href="'.route('download-commission-voucher',['commission_voucher' => $voucher->id]).'" target="_self" class="btn btn-sm bg-purple pdf-voucher-btn m-1" id="'.$voucher->id.'" title="Download PDF"><i class="fa fa-file-pdf"></i></a>';
                     $action .= '<button class="btn btn-sm bg-purple pdf-voucher-btn m-1" id="'.$voucher->id.'" title="Download PDF"><i class="fa fa-file-pdf"></i></button>';
                 }
 
