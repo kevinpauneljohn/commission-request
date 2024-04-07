@@ -118,6 +118,19 @@ class TaskService
             ->addColumn('action_taken',function($task){
                 return $task->actionTakens->count();
             })
+            ->addColumn('past_due',function ($task){
+                $due_date = now()->diffInDays(Carbon::parse($task->due_date),false);
+                if($due_date < 0)
+                {
+                    if($due_date == -1)
+                    {
+                        return str_replace("-","",$due_date).' day';
+                    }else{
+                        return str_replace("-","",$due_date).' days';
+                    }
+                }
+                return '';
+            })
             ->addColumn('task_action',function($task){
                 $action = "";
 

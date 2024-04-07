@@ -40,6 +40,7 @@
                         <th>Created By</th>
                         <th>Date Created</th>
                         <th>Due Date</th>
+                        <th>Past Due</th>
                         <th>Status</th>
                         <th>Action Taken</th>
                         <th>Action</th>
@@ -90,6 +91,7 @@
                         { data: 'creator', name: 'creator'},
                         { data: 'created_at', name: 'created_at'},
                         { data: 'due_date', name: 'due_date'},
+                        { data: 'past_due', name: 'past_due'},
                         { data: 'status', name: 'status'},
                         { data: 'action_taken', name: 'action_taken'},
                         { data: 'task_action', name: 'task_action', orderable: false, searchable: false}
