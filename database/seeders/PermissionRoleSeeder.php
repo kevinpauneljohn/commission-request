@@ -65,7 +65,7 @@ class PermissionRoleSeeder extends Seeder
         //end action taken
 
         //finding
-        Permission::create(['name' => 'view finding'])->assignRole(['business administrator','finance administrator','sales administrator']);
+        Permission::create(['name' => 'view finding'])->assignRole(['business administrator','finance administrator','sales administrator','sales director']);
         Permission::create(['name' => 'add finding'])->assignRole(['business administrator','finance administrator','sales administrator']);
         Permission::create(['name' => 'edit finding'])->assignRole(['business administrator','finance administrator','sales administrator']);
         Permission::create(['name' => 'delete finding'])->assignRole(['business administrator','finance administrator','sales administrator']);

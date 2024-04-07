@@ -15,7 +15,7 @@ class TaskController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['permission:view task'])->only(['tasks','getTaskByRequestId','taskActionTakens','setTaskToDisplay']);
+        $this->middleware(['permission:view task'])->only(['tasks','getTaskByRequestId','taskActionTakens','setTaskToDisplay','show']);
         $this->middleware(['permission:update task status'])->only(['updateStatus']);
         $this->middleware([TaskAssignedToOnly::class])->only(['updateStatus']);
     }
