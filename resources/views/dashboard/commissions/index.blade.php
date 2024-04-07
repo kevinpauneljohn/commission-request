@@ -37,10 +37,8 @@
                         <th>Date Requested</th>
                         <th style="width: 15%;">Buyer</th>
                         <th>Project</th>
-                        @if(auth()->user()->hasRole('sales director'))
-                            <th>Model Unit</th>
-                            <th>Phase/Block/Lot</th>
-                        @endif
+                        <th>Model Unit</th>
+                        <th>Phase/Block/Lot</th>
                         <th style="width: 8%;">TCP</th>
                         @if(!auth()->user()->hasRole('sales director'))
                             <th>Requester</th>
@@ -238,10 +236,8 @@
                         { data: 'created_at', name: 'created_at'},
                         { data: 'buyer', name: 'buyer'},
                         { data: 'project', name: 'project'},
-                            @if(auth()->user()->hasRole('sales director'))
                         { data: 'model_unit', name: 'model_unit'},
                         { data: 'phase_block_lot', name: 'phase_block_lot'},
-                            @endif
                         { data: 'total_contract_price', name: 'total_contract_price'},
                             @if(!auth()->user()->hasRole('sales director'))
                             { data: 'user_id', name: 'user_id'},
