@@ -295,7 +295,7 @@ class RequestService extends \App\Services\TaskService
                 }
 
                 return '<div class="progress progress-md">
-                          <div class="progress-bar progress-bar-striped '.$backgroundColor.'" style="width: '.$progress.'%">'.$progress.'%</div>
+                          <div class="progress-bar progress-bar-striped progress-bar-animated '.$backgroundColor.'" style="width: '.$progress.'%">'.$progress.'%</div>
                         </div>';
             })
             ->editColumn('parent_request',function($request){
