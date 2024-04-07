@@ -217,6 +217,7 @@ class RequestService extends \App\Services\TaskService
 
     public function requestList($userRequest)
     {
+        $total_task_template = $this->total_template_tasks();
         return DataTables::of($userRequest)
             ->editColumn('id', function($request){
                 return '<a href="'.route('request.show',['request' => $request->id]).'"><span style="color:#007bff">'.$request->formatted_id.'</span></a>';
@@ -273,6 +274,13 @@ class RequestService extends \App\Services\TaskService
 
                 return ucwords($request->user->firstname.' '.$request->user->lastname);
             })
+            ->addColumn('progress',function($request) use ($total_task_template){
+                $request_completed_task = $request->tasks()->where('status','completed')->count();
+                $progress = ($request_completed_task / $total_task_template) * 100;
+                return '<div class="progress progress-xs">
+                          <div class="progress-bar progress-bar-danger" style="width: '.$progress.'%"></div>
+                        </div>';
+            })
             ->editColumn('parent_request',function($request){
                 if(!is_null($request->parent_request_id))
                 {
@@ -324,7 +332,7 @@ class RequestService extends \App\Services\TaskService
                 }
                 return '';
             })
-            ->rawColumns(['total_released','action','sd_rate','payment_type','financial_service','cheque_amount','id','total_contract_price','status','parent_request','percent_released'])
+            ->rawColumns(['total_released','action','sd_rate','payment_type','financial_service','cheque_amount','id','total_contract_price','status','parent_request','progress','percent_released'])
             ->make(true);
     }
 
@@ -434,5 +442,11 @@ class RequestService extends \App\Services\TaskService
         }
         return false;
     }
+
+    private function total_template_tasks()
+    {
+        return $this->automation()->automationTasks->count();
+    }
+
 
 }

@@ -46,6 +46,7 @@
                             <th>Requester</th>
                         @endif
                         <th>Parent #</th>
+                        <th style="width: 20%;">Progress</th>
                         <th>% Released</th>
                         <th>total %</th>
                         <th>Status</th>
@@ -246,6 +247,7 @@
                             { data: 'user_id', name: 'user_id'},
                             @endif
                         { data: 'parent_request', name: 'parent_request'},
+                        { data: 'progress', name: 'progress'},
                         { data: 'percent_released', name: 'percent_released'},
                         { data: 'total_released', name: 'total_released'},
                         { data: 'status', name: 'status'},
