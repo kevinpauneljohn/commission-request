@@ -277,8 +277,27 @@ class RequestService extends \App\Services\TaskService
             ->addColumn('progress',function($request) use ($total_task_template){
                 $request_completed_task = $request->tasks()->where('status','completed')->count();
                 $progress = ($request_completed_task / $total_task_template) * 100;
-                return '<div class="progress progress-xs">
-                          <div class="progress-bar progress-bar-danger" style="width: '.$progress.'%"></div>
+
+
+
+                if ($progress >= 26 && $progress <= 50)
+                {
+                    $backgroundColor = 'bg-warning';
+                }
+                elseif ($progress >= 51 && $progress <= 99)
+                {
+                    $backgroundColor = 'bg-primary';
+                }
+                elseif ($progress == 100)
+                {
+                    $backgroundColor = 'bg-success';
+                }
+                else{
+                    $backgroundColor = 'bg-danger';
+                }
+
+                return '<div class="progress progress-md">
+                          <div class="progress-bar '.$backgroundColor.'" style="width: '.$progress.'%">'.$progress.'%</div>
                         </div>';
             })
             ->editColumn('parent_request',function($request){
