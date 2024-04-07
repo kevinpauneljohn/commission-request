@@ -22,7 +22,7 @@
         <div class="col-lg-3">
             <div class="card card-success card-outline">
                 <div class="card-body">
-                    <strong><i class="fas fa-ticket-alt"></i> From Request # <span class="text-primary text-bold"><a href="{{route('request.show',['request' => $task->request_id])}}">{{$task->formatted_request_id}}</a> </span></strong>
+                    <strong><i class="fas fa-ticket-alt"></i> From Request # <span class="text-primary text-bold"><a href="{{route('request.show',['request' => $task->request_id])}}">{{$task->request->formatted_id}}</a> </span></strong>
                     <hr>
                     <strong><i class="fas fa-user mr-1"></i> Assigned To</strong>
 
