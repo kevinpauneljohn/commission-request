@@ -338,13 +338,13 @@ return [
             'can' => 'view request',
             'route'  => 'request.index',
         ],
-        [
-            'text' => 'Vouchers',
-            'route'  => 'commission-voucher.index',
-            'icon' => 'fa fa-file',
-            'key'  => 'voucher',
-            'can' => 'view commission voucher'
-        ],
+//        [
+//            'text' => 'Vouchers',
+//            'route'  => 'commission-voucher.index',
+//            'icon' => 'fa fa-file',
+//            'key'  => 'voucher',
+//            'can' => 'view commission voucher'
+//        ],
         [
             'text' => 'Automations',
             'route'  => 'automation.index',
