@@ -46,7 +46,7 @@
                             <th>Requester</th>
                         @endif
                         <th>Parent #</th>
-                        <th style="width: 25%;">Progress</th>
+                        <th style="width: 20%;">Progress</th>
                         <th>% Released</th>
                         <th>total %</th>
                         <th>Status</th>
