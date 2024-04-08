@@ -348,10 +348,17 @@ class RequestService extends \App\Services\TaskService
                 return $action;
             })
             ->setRowClass(function ($request) {
-                if(collect($this->get_related_request($request->id))->count() > 0)
+                if(auth()->user()->can('add request') && collect($request->commissionVoucher)->count() > 0 && $request->status == 'completed')
                 {
-                    return $this->get_related_request($request->id)[0] == $request->id ? 'with-remaining' : '';
+                    if($this->total_percentage_released($request->id) < 100 && $this->display_request_remaining_button($request->id))
+                    {
+                        return $this->get_related_request($request->id)[0] == $request->id ? 'with-remaining' : '';
+                    }
                 }
+//                if(collect($this->get_related_request($request->id))->count() > 0)
+//                {
+//                    return $this->get_related_request($request->id)[0] == $request->id ? 'with-remaining' : '';
+//                }
                 return '';
             })
             ->rawColumns(['total_released','action','sd_rate','payment_type','financial_service','cheque_amount','id','total_contract_price','status','parent_request','progress','percent_released'])
