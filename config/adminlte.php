@@ -536,6 +536,16 @@ return [
                 ],
             ],
         ],
+        'Pusher' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => '//js.pusher.com/8.2.0/pusher.min.js',
+                ],
+            ],
+        ],
     ],
 
     /*

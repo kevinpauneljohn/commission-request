@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Events\RequestEvent;
 use App\Mail\RequestCreated;
 use App\Mail\RequestDelivered;
 use App\Models\Request;
@@ -28,6 +29,8 @@ class RequestObserver
                 ->orWhere("name","=","business_admin_01")
                 ->orWhere("name","=","business administrator");
         })->get())->pluck('email');
+
+        event(new RequestEvent($request));
 
         Mail::to($request->user->email)
             ->cc($cc_users)->bcc(["johnkevinpaunel@gmail.com"])->send(new RequestCreated($request));

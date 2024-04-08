@@ -411,4 +411,32 @@
             })
         </script>
     @endif
+    <script>
+
+        let pusher = new Pusher('{{env('PUSHER_APP_KEY')}}', {
+            cluster: 'ap1'
+        });
+
+        let channel = pusher.subscribe('my-channel');
+        channel.bind('my-event', function(data) {
+            console.log(JSON.stringify(data));
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-right",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                }
+            });
+
+            Toast.fire({
+                icon: "success",
+                title: "A new request has been created!"
+            });
+            requestTable.DataTable().ajax.reload(null, false);
+        });
+    </script>
 @stop
