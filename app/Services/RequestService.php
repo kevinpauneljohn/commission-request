@@ -278,6 +278,11 @@ class RequestService extends \App\Services\TaskService
                 $request_completed_task = $request->tasks()->where('status','completed')->count();
                 $progress = ($request_completed_task / $total_task_template) * 100;
 
+                if($request->status == "completed")
+                {
+                    $progress = 100;
+                }
+
                 if ($progress >= 26 && $progress <= 50)
                 {
                     $backgroundColor = 'bg-warning';

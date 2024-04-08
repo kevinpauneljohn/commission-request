@@ -419,7 +419,7 @@
 
         let channel = pusher.subscribe('my-channel');
         channel.bind('my-event', function(data) {
-            console.log(JSON.stringify(data));
+            // console.log(JSON.stringify(data));
             const Toast = Swal.mixin({
                 toast: true,
                 position: "top-right",
@@ -432,10 +432,20 @@
                 }
             });
 
-            Toast.fire({
-                icon: "success",
-                title: "A new request has been created!"
-            });
+            console.log(data.message.status)
+            if(data.message.status === "pending")
+            {
+                Toast.fire({
+                    icon: "success",
+                    title: "A new request as been created!"
+                });
+            }else{
+                Toast.fire({
+                    icon: "success",
+                    title: "Request status has been updated!"
+                });
+            }
+
             requestTable.DataTable().ajax.reload(null, false);
         });
     </script>

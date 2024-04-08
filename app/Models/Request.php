@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\RequestEvent;
 use App\Mail\RequestDelivered;
 use App\Services\TaskService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -130,12 +131,14 @@ class Request extends Model
             if($request->status == "delivered")
             {
                 Mail::to($request->user->email)->send(new RequestDelivered($request));
+                event(new RequestEvent("Request Status Updated"));
             }
             elseif($request->status == "completed")
             {
                 DB::table('tasks')->where('request_id',$request->id)
                     ->where('status','!=','completed')
                     ->update(['status' => 'completed']);
+                event(new RequestEvent("Request Status Updated"));
             }
         });
     }
