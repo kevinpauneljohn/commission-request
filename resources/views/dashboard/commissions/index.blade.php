@@ -33,6 +33,7 @@
                 <table id="request-list" class="table table-bordered table-hover" role="grid" style="width: 100%">
                     <thead>
                     <tr role="row">
+                        <th></th>
                         <th style="width: 10%;">Request #</th>
                         <th>Date Requested</th>
                         <th style="width: 15%;">Buyer</th>
@@ -232,6 +233,7 @@
                     serverSide: true,
                     ajax: '{!! route('request-list') !!}',
                     columns: [
+                        { data: 'DT_RowIndex', name: 'DT_RowIndex'},
                         { data: 'id', name: 'id'},
                         { data: 'created_at', name: 'created_at'},
                         { data: 'buyer', name: 'buyer'},
@@ -251,7 +253,7 @@
                     ],
                     responsive:true,
                     order:[0,'desc'],
-                    pageLength: 25
+                    pageLength: 10
                 });
             });
         </script>

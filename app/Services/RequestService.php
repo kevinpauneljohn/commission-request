@@ -361,6 +361,7 @@ class RequestService extends \App\Services\TaskService
 //                }
                 return '';
             })
+            ->addIndexColumn()
             ->rawColumns(['total_released','action','sd_rate','payment_type','financial_service','cheque_amount','id','total_contract_price','status','parent_request','progress','percent_released'])
             ->make(true);
     }
