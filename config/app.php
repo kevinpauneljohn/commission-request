@@ -156,6 +156,7 @@ return [
     */
 
     'providers' => ServiceProvider::defaultProviders()->merge([
+        Hedii\ArtisanLogCleaner\ArtisanLogCleanerServiceProvider::class,
         /*
          * Package Service Providers...
          */
