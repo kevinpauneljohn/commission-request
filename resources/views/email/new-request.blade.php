@@ -24,6 +24,7 @@
     </p>
     <table style="width: 100%; background-color: white;">
         <tr><td>Requester</td><td>{{ucwords(strtolower($request->user->full_name))}}</td></tr>
+        <tr><td>Buyer</td><td>{{ucwords(strtolower($request->buyer->firstname))}} {{ucwords(strtolower($request->buyer->lastname))}}</td></tr>
         <tr><td>Request Type</td><td>{{$request->request_type}}</td></tr>
         <tr><td>Project</td><td>{{ucwords(strtolower($request->project))}}</td></tr>
         <tr><td>Model Unit</td><td>{{ucwords(strtolower($request->model_unit))}}</td></tr>

@@ -84,7 +84,7 @@ class Request extends Model
         };
     }
 
-    public function getChildRequestsAttribute()
+    public function getChildRequestsAttribute(): string
     {
         $requests = collect(Request::where('parent_request_id',$this->id)->get())->pluck('formatted_id');
         $requestIds = '';
