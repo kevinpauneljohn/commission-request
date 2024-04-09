@@ -74,11 +74,11 @@
                         <div class="row">
                             <div class="col-lg-4 mt-3">
                                 <label for="buyer">Buyer</label>
-                                <input type="text" id="buyer" class="form-control" value="{{ucwords(strtolower($task->request->buyer->firstname).' '.strtolower($task->request->buyer->lastname))}}" readonly>
+                                <input type="text" id="buyer" class="form-control" value="{{ucwords(strtolower($task->request->buyer->firstname).' '.strtolower($task->request->buyer->lastname))}}" disabled>
                             </div>
                             <div class="col-lg-4 mt-3">
                                 <label for="project">Project</label>
-                                <input type="text" id="project" class="form-control" value="{{ucwords(strtolower($task->request->project))}}" readonly>
+                                <input type="text" id="project" class="form-control" value="{{ucwords(strtolower($task->request->project))}}" disabled>
                             </div>
                             <div class="col-lg-4 mt-3">
                                 <label for="model_unit">Phase/Block/Lot</label>
@@ -90,7 +90,7 @@
                                         }
                                     $unitLocation .= 'Block '.$task->request->block.'  Lot '.$task->request->lot;
                                 @endphp
-                                <input type="text" id="model_unit" class="form-control" value="{{ucwords($unitLocation)}}" readonly>
+                                <input type="text" id="model_unit" class="form-control" value="{{ucwords($unitLocation)}}" disabled>
                             </div>
                         </div>
                         <div class="row">
