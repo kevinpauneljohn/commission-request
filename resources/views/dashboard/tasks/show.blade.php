@@ -67,6 +67,60 @@
         </div>
 
         <div class="col-lg-9">
+            <div class="card card-success card-outline request-details">
+                <form id="update-request-details-form">
+                    @csrf
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-4 mt-3">
+                                <label for="buyer">Buyer</label>
+                                <input type="text" id="buyer" class="form-control" value="{{ucwords(strtolower($task->request->buyer->firstname).' '.strtolower($task->request->buyer->lastname))}}" readonly>
+                            </div>
+                            <div class="col-lg-4 mt-3">
+                                <label for="project">Project</label>
+                                <input type="text" id="project" class="form-control" value="{{ucwords(strtolower($task->request->project))}}" readonly>
+                            </div>
+                            <div class="col-lg-4 mt-3">
+                                <label for="model_unit">Phase/Block/Lot</label>
+                                @php
+                                    $unitLocation ="";
+                                    if(!is_null($task->request->phase))
+                                        {
+                                            $unitLocation .= 'Phase '.$task->request->phase.'  ';
+                                        }
+                                    $unitLocation .= 'Block '.$task->request->block.'  Lot '.$task->request->lot;
+                                @endphp
+                                <input type="text" id="model_unit" class="form-control" value="{{ucwords($unitLocation)}}" readonly>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4 mt-3 total_contract_price">
+                                <label for="total_contract_price">Total Contract Price</label>
+                                <input name="total_contract_price" type="text" id="total_contract_price" class="form-control" value="{{number_format($task->request->total_contract_price,2)}}" disabled>
+
+                            </div>
+                            <div class="col-lg-4 mt-3 financing">
+                                <label for="financing">Financing</label><span class="required">*</span>
+                                <input name="total_contract_price" type="text" step="any" id="financing" min="0" class="form-control" value="{{$task->request->financing}}" disabled>
+                            </div>
+                            <div class="col-lg-4 mt-3 sd_rate">
+                                <label for="sd_rate">Sales Director Rate</label>
+                                <input name="total_contract_price" type="text" id="sd_rate" class="form-control" value="{{number_format($task->request->sd_rate,2)}}%" disabled>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 mt-3 message">
+                                <div class="info-box bg-light">
+                                    <div class="info-box-content">
+                                        <span class="info-box-text text-left text-muted">Message</span>
+                                        <span class="info-box-number text-muted">{{$task->request->message}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
             <div class="card card-success card-outline ">
                 <div class="card-header">
                     <h3 class="card-title text-bold">{{ucfirst($task->title)}}</h3>

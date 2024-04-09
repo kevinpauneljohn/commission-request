@@ -56,10 +56,6 @@ class RequestController extends Controller
      */
     public function show(string $id, RequestService $requestService)
     {
-//        $parent = $requestService->parent_id($id);
-////        return $requestService->get_related_request($parent);
-//        return 'total released = '.$requestService->total_percentage_released($parent)
-//            .' remaining balance = '.$requestService->remaining_percentage($id);
         $requestDetail = \App\Models\Request::findOrFail($id);
         $assignee = User::whereHas("roles", function($q){ $q->where("name","!=","super admin")->where("name","!=","sales director"); })->get();
         $down_lines = $requestService->all_down_lines($id);
