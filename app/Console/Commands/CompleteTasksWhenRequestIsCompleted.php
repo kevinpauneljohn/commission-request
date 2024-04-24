@@ -28,7 +28,7 @@ class CompleteTasksWhenRequestIsCompleted extends Command
      */
     public function handle()
     {
-        $requests = collect(Request::where('status','completed')->where('status','declined')->get())->pluck('id')->toArray();
+        $requests = collect(Request::where('status','completed')->get())->pluck('id')->toArray();
         if(DB::table('tasks')->whereIn('request_id',$requests)->where('status','pending')->update(['status' => 'completed']))
             Log::info('all tasks completed');
     }

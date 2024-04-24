@@ -282,6 +282,10 @@ class RequestService extends \App\Services\TaskService
                 {
                     $progress = 100;
                 }
+                if($request->status == "declined")
+                {
+                    $progress = 100;
+                }
 
                 if ($progress >= 26 && $progress <= 50)
                 {
