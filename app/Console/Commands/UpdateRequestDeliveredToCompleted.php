@@ -31,22 +31,22 @@ class UpdateRequestDeliveredToCompleted extends Command
     {
         foreach (DB::table('requests')->get() as $request)
         {
-//            if($request->status == "delivered")
-//            {
-//                if(now()->diffInDays(Carbon::parse($request->updated_at),false) <= -5)
-//                {
-//                    $this->info(now()->diffInDays(Carbon::parse($request->updated_at),false).' -'.$request->id);
-//                    DB::table('requests')->where('status','=','delivered')->update(['status' => 'completed']);
-//                }
-//            }
-//            if($request->status == "declined")
-//            {
-//                if(now()->diffInDays(Carbon::parse($request->updated_at),false) <= 0)
-//                {
-//                    $this->info(now()->diffInDays(Carbon::parse($request->updated_at),false).' -'.$request->id);
-//                    DB::table('tasks')->whereIn('request_id',$request->id)->where('status','pending')->update(['status' => 'completed']);
-//                }
-//            }
+            if($request->status == "delivered")
+            {
+                if(now()->diffInDays(Carbon::parse($request->updated_at),false) <= -5)
+                {
+                    $this->info(now()->diffInDays(Carbon::parse($request->updated_at),false).' -'.$request->id);
+                    DB::table('requests')->where('status','=','delivered')->update(['status' => 'completed']);
+                }
+            }
+            if($request->status == "declined")
+            {
+                if(now()->diffInDays(Carbon::parse($request->updated_at),false) <= 0)
+                {
+                    $this->info(now()->diffInDays(Carbon::parse($request->updated_at),false).' -'.$request->id);
+                    DB::table('tasks')->whereIn('request_id',collect($request->id)->toArray())->where('status','pending')->update(['status' => 'completed']);
+                }
+            }
         }
         Log::info('update request cron working once a day working, date: '.now());
     }
