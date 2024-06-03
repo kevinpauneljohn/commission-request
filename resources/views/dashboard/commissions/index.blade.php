@@ -251,7 +251,7 @@
                     ],
                     responsive:true,
                     order:[0,'desc'],
-                    pageLength: 25
+                    pageLength: 100
                 });
             });
         </script>
