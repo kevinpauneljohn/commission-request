@@ -51,6 +51,9 @@
                         <th>Action</th>
                     </tr>
                     </thead>
+                    <tbody>
+
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -251,7 +254,13 @@
                     ],
                     responsive:true,
                     order:[0,'desc'],
-                    pageLength: 100
+                    pageLength: 10,
+                    drawCallback: function(row){
+                        let request = row.json;
+
+                        $('#request-list').find('tbody')
+                            .append('<tr style="background-color:#e3fdfa;"><td colspan="13" style="font-size:20px;"><span class="text-bold">Total Amount @if(auth()->user()->hasRole('sales director'))Received @else Transferred @endif: </span> <span class="text-success text-bold">&#8369;'+parseFloat(request.total_completed_released).toLocaleString(2)+'</span></td></tr>')
+                    }
                 });
             });
         </script>

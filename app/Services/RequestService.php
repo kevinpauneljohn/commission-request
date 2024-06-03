@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Mail\RequestCreated;
 use App\Models\Automation;
+use App\Models\CommissionVoucher;
 use App\Models\Request;
 use App\Models\Task;
 use App\Models\User;
@@ -366,7 +367,20 @@ class RequestService extends \App\Services\TaskService
                 return '';
             })
             ->rawColumns(['total_released','action','sd_rate','payment_type','financial_service','cheque_amount','id','total_contract_price','status','parent_request','progress','percent_released'])
+            ->with([
+                'total_completed_released' => $this->total_commission_released()
+            ])
             ->make(true);
+    }
+
+    public function total_commission_released()
+    {
+        return CommissionVoucher::whereIn('request_id',$this->completed_request_ids())->sum('amount_transferred');
+    }
+
+    private function completed_request_ids()
+    {
+        return collect(Request::where('status','completed')->orWhere('status','delivered')->get())->pluck('id');
     }
 
     public function activities($request_id)
