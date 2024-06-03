@@ -31,14 +31,14 @@ class UpdateRequestDeliveredToCompleted extends Command
     {
         foreach (DB::table('requests')->get() as $request)
         {
-            if($request->status == "delivered")
-            {
-                if(now()->diffInDays(Carbon::parse($request->updated_at),false) <= -5)
-                {
-                    $this->info(now()->diffInDays(Carbon::parse($request->updated_at),false).' -'.$request->id);
-                    DB::table('requests')->where('status','=','delivered')->update(['status' => 'completed']);
-                }
-            }
+//            if($request->status == "delivered")
+//            {
+//                if(now()->diffInDays(Carbon::parse($request->updated_at),false) <= -5)
+//                {
+//                    $this->info(now()->diffInDays(Carbon::parse($request->updated_at),false).' -'.$request->id);
+//                    DB::table('requests')->where('status','=','delivered')->update(['status' => 'completed']);
+//                }
+//            }
 //            if($request->status == "declined")
 //            {
 //                if(now()->diffInDays(Carbon::parse($request->updated_at),false) <= 0)
