@@ -50,7 +50,19 @@
                         <strong><i class="fa fa-tags mr-1"></i> Status</strong>
 
                         <p class="text-muted">
-                            {{ucwords($requestDetail->status)}}
+
+                            @if(auth()->user()->can('update request status'))
+                                <select name="status" class="form-control">
+                                    <option value="pending" @if($requestDetail->status === 'pending') selected @endif>Pending</option>
+                                    <option value="on-going" @if($requestDetail->status === 'on-going') selected @endif>On-going</option>
+                                    <option value="delivered" @if($requestDetail->status === 'delivered') selected @endif>Delivered</option>
+                                    <option value="completed" @if($requestDetail->status === 'completed') selected @endif>Completed</option>
+                                    <option value="declined" @if($requestDetail->status === 'declined') selected @endif>Declined</option>
+                                </select>
+                            @else
+                                {{ucwords($requestDetail->status)}}
+                            @endif
+
                         </p>
                     </div>
                         @if(collect($requestDetail->commissionVoucher)->count() > 0)
@@ -457,6 +469,59 @@
                 }
             });
         })
+        @endif
+
+        @if(auth()->user()->can('update request status'))
+            let currentStatus = $('select[name=status]').val();
+            $(document).on('change','select[name=status]', function(){
+                let requestStatus = $(this).val();
+                Swal.fire({
+                    title: 'Update Status?',
+                    text: "Mark status as "+requestStatus+".",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes'
+                }).then((result) => {
+                    if (result.value) {
+
+                        $.ajax({
+                            url : '{{route('request-status-update',['request' => $requestDetail->id])}}',
+                            type : 'put',
+                            data: {"status" : requestStatus},
+                            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                            beforeSend: function(){
+
+                            },success: function(response){
+                                console.log(response)
+                                if(response.success === true){
+
+                                    setTimeout(function(){
+                                        window.location.reload();
+                                    },1500)
+
+                                    Swal.fire(
+                                        response.message,'','success'
+                                    );
+
+                                }else{
+                                    Swal.fire(
+                                        response.message,'','warning'
+                                    );
+                                }
+                            },error: function(xhr, status, error){
+                                console.log(xhr);
+                            }
+                        }).always(function(){
+
+                        });
+
+                    }else{
+                        $('select[name=status]').val(currentStatus);
+                    }
+                });
+            });
         @endif
     </script>
 @stop

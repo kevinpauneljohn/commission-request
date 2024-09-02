@@ -276,37 +276,41 @@ class RequestService extends \App\Services\TaskService
                 return ucwords($request->user->firstname.' '.$request->user->lastname);
             })
             ->addColumn('progress',function($request) use ($total_task_template){
-                $request_completed_task = $request->tasks()->where('status','completed')->count();
-                $progress = ($request_completed_task / $total_task_template) * 100;
+                if($total_task_template !== 0)
+                {
+                    $request_completed_task = $request->tasks()->where('status','completed')->count();
+                    $progress = ($request_completed_task / $total_task_template) * 100;
 
-                if($request->status == "completed")
-                {
-                    $progress = 100;
-                }
-                if($request->status == "declined")
-                {
-                    $progress = 100;
-                }
+                    if($request->status == "completed")
+                    {
+                        $progress = 100;
+                    }
+                    if($request->status == "declined")
+                    {
+                        $progress = 100;
+                    }
 
-                if ($progress >= 26 && $progress <= 50)
-                {
-                    $backgroundColor = 'bg-warning';
-                }
-                elseif ($progress >= 51 && $progress <= 99)
-                {
-                    $backgroundColor = 'bg-primary';
-                }
-                elseif ($progress == 100)
-                {
-                    $backgroundColor = 'bg-success';
-                }
-                else{
-                    $backgroundColor = 'bg-danger';
-                }
+                    if ($progress >= 26 && $progress <= 50)
+                    {
+                        $backgroundColor = 'bg-warning';
+                    }
+                    elseif ($progress >= 51 && $progress <= 99)
+                    {
+                        $backgroundColor = 'bg-primary';
+                    }
+                    elseif ($progress == 100)
+                    {
+                        $backgroundColor = 'bg-success';
+                    }
+                    else{
+                        $backgroundColor = 'bg-danger';
+                    }
 
-                return '<div class="progress progress-md">
+                    return '<div class="progress progress-md">
                           <div class="progress-bar progress-bar-striped progress-bar-animated '.$backgroundColor.'" style="width: '.$progress.'%">'.$progress.'%</div>
                         </div>';
+                }
+
             })
             ->editColumn('parent_request',function($request){
                 if(!is_null($request->parent_request_id))
@@ -492,7 +496,7 @@ class RequestService extends \App\Services\TaskService
 
     private function total_template_tasks()
     {
-        return $this->automation()->automationTasks->count();
+        return collect($this->automation())->count() > 0 ? $this->automation()->automationTasks->count() : 0;
     }
 
 

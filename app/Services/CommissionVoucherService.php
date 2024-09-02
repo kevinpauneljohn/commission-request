@@ -274,4 +274,11 @@ class CommissionVoucherService
         return (bool)$requestModel->save();
     }
 
+    public function update_status_to($request_id, $status): bool
+    {
+        $requestModel = Request::findOrFail($request_id);
+        $requestModel->status = $status;
+        return (bool)$requestModel->save();
+    }
+
 }

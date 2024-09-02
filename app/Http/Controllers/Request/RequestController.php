@@ -158,6 +158,13 @@ class RequestController extends Controller
             response()->json(['success' => false, 'message' => 'An error occurred']);
     }
 
+    public function updateStatus(Request $request, $id, CommissionVoucherService $commissionVoucherService): \Illuminate\Http\JsonResponse
+    {
+        return $commissionVoucherService->update_status_to($id, $request->input('status')) ?
+            response()->json(['success' => true, 'message' => 'Request completed']):
+            response()->json(['success' => false, 'message' => 'An error occurred']);
+    }
+
     public function setRequestToDisplay(Request $request): void
     {
         if(is_null($request->display))

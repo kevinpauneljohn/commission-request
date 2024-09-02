@@ -9,5 +9,6 @@ Route::middleware(['auth'])->group(function(){
     Route::put('/request-declined/{requestId}',[\App\Http\Controllers\Request\RequestController::class,'declineRequest'])->name('request-declined');
     Route::put('/request-delivered/{request}',[\App\Http\Controllers\Request\RequestController::class,'approveRequest'])->name('request-delivered');
     Route::put('/request-completed/{request}',[\App\Http\Controllers\Request\RequestController::class,'completeRequest'])->name('request-completed');
+    Route::put('/request-status-update/{request}',[\App\Http\Controllers\Request\RequestController::class,'updateStatus'])->name('request-status-update');
     Route::post('/display-request',[\App\Http\Controllers\Request\RequestController::class,'setRequestToDisplay'])->name('display-request');
 });
