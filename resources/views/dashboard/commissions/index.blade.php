@@ -231,7 +231,9 @@
             });
             $(function() {
                 $('#sales_director').select2({
-                    dropdownParent: $('.request-modal')
+                    dropdownParent: $('.request-modal'),
+                    placeholder: "Select an option",
+                    allowClear: true
                 });
 
                 $('#request-list').DataTable({
