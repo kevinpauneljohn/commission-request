@@ -96,7 +96,7 @@
                                         <select class="form-control" name="sales_director" id="sales_director" style="width: 100%">
                                             <option value=""></option>
                                             @foreach($salesDirectors as $salesDirector)
-                                                <option value="{{$salesDirector->id}}">{{$salesDirector->full_name}}</option>
+                                                <option value="{{$salesDirector->id}}">{{ucwords($salesDirector->full_name)}}</option>
                                             @endforeach
                                         </select>
                                     </div>
