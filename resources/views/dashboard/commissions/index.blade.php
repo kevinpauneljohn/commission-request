@@ -230,6 +230,10 @@
                 }
             });
             $(function() {
+                $('#sales_director').select2({
+                    dropdownParent: $('.request-modal')
+                });
+
                 $('#request-list').DataTable({
                     processing: true,
                     serverSide: true,
