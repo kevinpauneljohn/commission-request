@@ -39,7 +39,7 @@ class Task extends Model
 
     public function request()
     {
-        return $this->belongsTo(Request::class);
+        return $this->belongsTo(Request::class, 'request_id');
     }
 
     public function getFormattedRequestIdAttribute()

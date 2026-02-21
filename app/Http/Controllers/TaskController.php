@@ -89,13 +89,28 @@ class TaskController extends Controller
 
     public function tasks(TaskService $taskService, \Illuminate\Http\Request $request)
     {
-        if(!is_null($request->session()->get('task')))
-        {
-         $task = Task::where('assigned_to',auth()->user()->id)->where('status','pending')->get();
-        }else{
-            $task = Task::where('status','pending')->get();
-        }
-        return $taskService->taskList($task);
+//        if(!is_null($request->session()->get('task')))
+//        {
+//         $task = Task::where('assigned_to',auth()->user()->id)->where('status','pending')->get();
+//        }else{
+//            $task = Task::where('status','pending')->get();
+//        }
+//        return $taskService->taskList($task);
+        $query = Task::query()
+            ->where('status', 'pending')
+            ->where(function ($q) use ($request) {
+                if ($request->session()->has('task')) {
+                    $q->where('assigned_to', auth()->id());
+                }
+            })
+            ->where(function ($q) {
+                $q->whereNull('request_id') // allow tasks without request
+                ->orWhereHas('request', function ($r) {
+                    $r->whereNull('deleted_at');
+                });
+            });
+
+        return $taskService->taskList($query->get());
     }
 
     public function getTaskByRequestId(TaskService $taskService, $requestId): \Illuminate\Http\JsonResponse
