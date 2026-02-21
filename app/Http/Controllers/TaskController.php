@@ -52,6 +52,7 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
+        abort_if(is_null($task->request), 404);
         return view('dashboard.tasks.show',compact('task'));
     }
 
