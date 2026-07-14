@@ -101,30 +101,30 @@ class RequestController extends Controller
         //
     }
 
-    public function request_list(RequestService $requestService, Request $request)
-    {
-        $display_request = $request->session()->get('request_display');
-        if(auth()->user()->hasRole('sales director'))
-        {
-            if(is_null($display_request))
-            {
-                $request = User::findOrFail(auth()->user()->id)->requests;
-            }else{
-                $request = User::findOrFail(auth()->user()->id)->requests()->where('status',$display_request)->get();
-            }
+    public function request_list(
+        RequestService $requestService,
+        Request $request
+    ) {
+        $displayRequest = $request->session()->get('request_display');
+        $user = auth()->user();
 
+        if ($user->hasRole('sales director')) {
+            $requests = $user->requests()
+                ->with('user')
+                ->when(
+                    ! is_null($displayRequest),
+                    fn ($query) => $query->where('status', $displayRequest)
+                );
+        } else {
+            $requests = \App\Models\Request::query()
+                ->with('user')
+                ->when(
+                    ! is_null($displayRequest),
+                    fn ($query) => $query->where('status', $displayRequest)
+                );
         }
-        elseif (!auth()->user()->hasAnyRole('sales director'))
-        {
-            if(is_null($display_request))
-            {
-                $request = \App\Models\Request::all();
-            }else{
-                $request = \App\Models\Request::where('status',$display_request);
-            }
 
-        }
-        return $requestService->requestList($request);
+        return $requestService->requestList($requests);
     }
 
     public function requestActivities($requestId, RequestService $requestService): \Illuminate\Http\JsonResponse
