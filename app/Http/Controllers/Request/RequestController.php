@@ -110,14 +110,15 @@ class RequestController extends Controller
 
         if ($user->hasRole('sales director')) {
             $requests = $user->requests()
-                ->with('user')
+                ->whereHas('user')
                 ->when(
                     ! is_null($displayRequest),
                     fn ($query) => $query->where('status', $displayRequest)
                 );
         } else {
             $requests = \App\Models\Request::query()
-                ->with('user')
+                ->whereHas('user')
+
                 ->when(
                     ! is_null($displayRequest),
                     fn ($query) => $query->where('status', $displayRequest)
