@@ -251,7 +251,12 @@
                             @if(!auth()->user()->hasRole('sales director'))
                             { data: 'user_id', name: 'user_id'},
                             @endif
-                        { data: 'parent_request', name: 'parent_request'},
+                        {
+                            data: 'parent_request',
+                            name: 'parent_request_id',
+                            searchable: false,
+                            orderable: false
+                        },
                         { data: 'progress', name: 'progress'},
                         { data: 'percent_released', name: 'percent_released'},
                         { data: 'total_released', name: 'total_released'},
